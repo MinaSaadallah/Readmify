@@ -23,6 +23,7 @@ const MODULE_FILES = [
   'components/sectionLibrary.js',
   'components/techPicker.js',
   'components/sectionEditor.js',
+  'components/interactiveCanvas.js',
   'components/wizard.js',
   'app.js'
 ];

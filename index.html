@@ -93,17 +93,17 @@
 
     <!-- Center Segmented Tabs (shadcn Tabs) -->
     <div class="hidden lg:flex items-center bg-muted p-0.5 rounded-lg border border-border">
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm" data-mode="split" title="Side-by-side Editor and Live Preview">
-        Split View
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm flex items-center gap-1.5" data-mode="canvas" title="Interactive Living Canvas (Direct In-Place Editing)">
+        <span>🎨</span> Canvas
       </button>
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="editor" title="Full screen Editor for distraction-free writing">
-        Editor Focus
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground flex items-center gap-1.5" data-mode="preview" title="Pure GitHub README Preview">
+        <span>👁️</span> Preview
       </button>
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="preview" title="Full screen Live GitHub Preview">
-        Live Preview
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground flex items-center gap-1.5" data-mode="raw" title="Raw Markdown Output & Code Editor">
+        <span>📝</span> Raw Markdown
       </button>
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="raw" title="Raw Markdown Output">
-        Raw Markdown
+      <button class="view-mode-btn px-2.5 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground flex items-center gap-1 opacity-70 hover:opacity-100" data-mode="split" title="Classic Side-by-side Split View">
+        <span>◫</span> Split
       </button>
     </div>
 
@@ -149,41 +149,39 @@
   </header>
 
   <!-- MAIN WORKSPACE LAYOUT -->
-  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+  <main class="flex-1 flex flex-col overflow-hidden relative">
 
-    <!-- LEFT PANE: MODULAR EDITOR -->
-    <div id="editor-left-pane" class="w-full lg:w-1/2 h-full flex flex-col border-r border-border bg-background overflow-hidden">
-      
-      <!-- TOP BAR: HORIZONTAL SECTION PILL BAR & WORKSPACE CONTROLS -->
-      <div class="border-b border-border bg-card/60 px-3 py-2 flex items-center justify-between gap-2 overflow-hidden flex-shrink-0">
+    <!-- 1. FULL-WIDTH INTERACTIVE CANVAS VIEW (Primary Default Mode - No Split View) -->
+    <div id="canvas-view-container" class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+      <!-- Top Section Pill Bar & Canvas Quick Actions -->
+      <div class="border-b border-border bg-card/60 px-4 py-2 flex items-center justify-between gap-3 overflow-hidden flex-shrink-0 select-none">
         <!-- Horizontal scrollable pills for instant section jumping -->
         <div id="section-pill-bar" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 flex-1 min-w-0">
           <!-- Dynamically populated chips -->
         </div>
 
-        <!-- Right Quick Controls -->
-        <div class="flex items-center gap-1.5 flex-shrink-0 border-l border-border pl-2">
-          <button id="pill-add-section-btn" class="h-7 px-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1 shadow-xs" title="Explore Section Library">
-            <span>➕</span> <span class="hidden sm:inline">Add</span>
+        <div class="flex items-center gap-2 flex-shrink-0 border-l border-border pl-3">
+          <button id="pill-add-section-btn" class="h-7 px-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1 shadow-xs cursor-pointer" title="Explore Section Library">
+            <span>➕</span> <span class="hidden sm:inline">Add Section</span>
           </button>
-          <button id="toggle-section-drawer-btn" class="h-7 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition" title="Toggle Section List & Ordering Drawer">
+          <button id="toggle-section-drawer-btn" class="h-7 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition cursor-pointer" title="Toggle Section Outline & Reorder Drawer">
             <span>☰</span>
           </button>
-          <button id="reset-template-btn" class="h-7 px-2 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded border border-border transition" title="Reset to Defaults">
+          <button id="reset-template-btn" class="h-7 px-2 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded border border-border transition cursor-pointer" title="Reset to Defaults">
             <span>↺</span>
           </button>
         </div>
       </div>
 
       <!-- COLLAPSIBLE SECTION REORDER DRAWER (Toggled with ☰) -->
-      <div id="section-drawer-panel" class="hidden border-b border-border bg-card/95 px-3 py-2.5 max-h-56 overflow-y-auto flex-shrink-0 transition-all">
+      <div id="section-drawer-panel" class="hidden border-b border-border bg-card/95 px-4 py-3 max-h-60 overflow-y-auto flex-shrink-0 transition-all">
         <div class="flex items-center justify-between pb-2 mb-2 border-b border-border text-[11px] text-muted-foreground">
-          <span class="font-semibold uppercase tracking-wider text-foreground">All Sections & Reordering</span>
+          <span class="font-semibold uppercase tracking-wider text-foreground">Section Outline &amp; Reordering</span>
           <div class="flex items-center gap-2">
-            <button id="add-custom-sec-btn" class="text-[11px] font-medium text-foreground hover:bg-accent px-1.5 py-0.5 rounded border border-border transition">
+            <button id="add-custom-sec-btn" class="text-[11px] font-medium text-foreground hover:bg-accent px-2 py-0.5 rounded border border-border transition cursor-pointer">
               + Custom
             </button>
-            <button id="close-section-drawer-btn" class="text-xs hover:text-foreground p-0.5">✕</button>
+            <button id="close-section-drawer-btn" class="text-xs hover:text-foreground p-0.5 cursor-pointer">✕</button>
           </div>
         </div>
         <div id="section-list-items" class="space-y-1">
@@ -191,26 +189,27 @@
         </div>
       </div>
 
-      <!-- SECTION FORM INPUTS (Full width, spacious & customizable) -->
-      <div id="section-editor-container" class="flex-1 h-full overflow-y-auto bg-card/10">
-        <!-- Rendered dynamically -->
+      <!-- Centered Living Document Viewport (Full-width, max-w-4xl centered GitHub card) -->
+      <div id="canvas-scroll-viewport" class="flex-1 overflow-y-auto p-3 sm:p-8 bg-zinc-950/40 flex justify-center">
+        <div class="w-full max-w-4xl bg-card/90 border border-border rounded-xl shadow-2xl p-6 sm:p-12 min-h-full my-auto transition-all">
+          <div id="interactive-canvas-body">
+            <!-- Living interactive document rendered by interactiveCanvas.js -->
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- RIGHT PANE: LIVE GITHUB PREVIEW -->
-    <div id="editor-right-pane" class="w-full lg:w-1/2 h-full flex flex-col bg-background overflow-hidden">
-      
-      <!-- Preview Header Bar -->
+    <!-- 2. PURE GITHUB PREVIEW CONTAINER (Read-only, without edit controls) -->
+    <div id="pure-preview-container" class="flex-1 hidden flex-col h-full overflow-hidden bg-background">
       <div class="px-4 py-2.5 bg-background border-b border-border flex items-center justify-between flex-shrink-0">
         <div class="flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="text-xs font-semibold text-foreground">GitHub Preview</span>
+          <span class="text-xs font-semibold text-foreground">GitHub Preview (Pure Mode)</span>
           <span id="health-score-badge" class="ml-2 px-2 py-0.5 text-[10px] font-medium rounded-full border border-border bg-muted">
             <span id="health-score-text">Calculating...</span>
           </span>
         </div>
 
-        <!-- Stats Counter -->
         <div class="flex items-center gap-2 text-[11px] text-muted-foreground">
           <span id="stats-word-count">0 words</span>
           <span>•</span>
@@ -220,32 +219,59 @@
         </div>
       </div>
 
-      <!-- Health Score Tip Bar -->
       <div id="health-score-tip" class="px-4 py-1.5 bg-muted/40 border-b border-border text-[11px] text-muted-foreground truncate">
         💡 Tip: Add a clear description and key features to engage readers.
       </div>
 
-      <!-- Preview Render Tab -->
-      <div id="preview-render-tab" class="flex-1 overflow-y-auto relative">
-        <div id="github-preview-body" class="markdown-body github-dark">
-          <!-- Rendered markdown inserted here -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center">
+        <div class="w-full max-w-4xl bg-card/90 border border-border rounded-xl shadow-xl p-6 sm:p-12 min-h-full">
+          <div id="github-preview-body" class="markdown-body github-dark"></div>
         </div>
       </div>
+    </div>
 
-      <!-- Raw Markdown Code Tab -->
-      <div id="preview-raw-tab" class="flex-1 hidden flex flex-col p-4 bg-background">
-        <textarea 
-          id="raw-markdown-textarea" 
-          class="w-full flex-1 bg-card border border-border rounded-md p-4 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none leading-relaxed" 
-          placeholder="# Markdown code will appear here..."
-        ></textarea>
+    <!-- 3. RAW MARKDOWN CODE TAB (Full Screen Editor) -->
+    <div id="raw-markdown-container" class="flex-1 hidden flex-col h-full p-4 bg-background">
+      <div class="pb-2 flex items-center justify-between text-xs text-muted-foreground border-b border-border mb-3">
+        <span class="font-mono font-semibold text-foreground">README.md (Raw Markdown Code)</span>
+        <button id="raw-copy-btn" class="btn-primary text-xs px-3 py-1 cursor-pointer">
+          📋 Copy Code
+        </button>
+      </div>
+      <textarea 
+        id="raw-markdown-textarea" 
+        class="w-full flex-1 bg-card border border-border rounded-md p-4 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none leading-relaxed" 
+        placeholder="# Markdown code will appear here..."
+      ></textarea>
+    </div>
+
+    <!-- 4. CLASSIC SPLIT VIEW CONTAINER (Optional legacy side-by-side) -->
+    <div id="split-view-container" class="flex-1 hidden flex-col lg:flex-row h-full overflow-hidden">
+      <div id="editor-left-pane" class="w-full lg:w-1/2 h-full flex flex-col border-r border-border bg-background overflow-hidden">
+        <div id="section-editor-container" class="flex-1 h-full overflow-y-auto bg-card/10"></div>
+      </div>
+      <div id="editor-right-pane" class="w-full lg:w-1/2 h-full flex flex-col bg-background overflow-hidden">
+        <div class="flex-1 overflow-y-auto">
+          <div id="split-preview-body" class="markdown-body github-dark p-6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE-OVER INSPECTOR SHEET (Slides in from right when ⚙️ is clicked) -->
+    <div id="slide-over-inspector" class="fixed inset-y-0 right-0 w-[440px] max-w-full bg-card border-l border-border shadow-2xl z-40 transform translate-x-full transition-transform duration-200 flex flex-col">
+      <div class="px-4 py-3 border-b border-border flex items-center justify-between bg-card flex-shrink-0 select-none">
+        <div class="flex items-center gap-2">
+          <span class="text-sm">⚙️</span>
+          <h3 class="text-xs font-semibold text-foreground">Section Settings &amp; Fine-Tuning</h3>
+        </div>
+        <button id="close-inspector-btn" class="text-muted-foreground hover:text-foreground text-xs p-1 cursor-pointer">✕</button>
+      </div>
+      <div id="inspector-form-container" class="flex-1 overflow-y-auto p-4 bg-background">
+        <!-- Rendered by renderSectionEditor in inspector mode -->
       </div>
     </div>
 
   </main>
-
-  <!-- SECTION LIBRARY CATALOG MODAL CONTAINER -->
-  <div id="section-library-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>
 
   <!-- PHOTO / BANNER HUB MODAL CONTAINER -->
   <div id="photo-hub-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>

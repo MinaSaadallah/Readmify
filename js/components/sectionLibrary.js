@@ -179,7 +179,10 @@ export const SECTION_CATALOG = [
   }
 ];
 
-export function openSectionLibrary() {
+let targetInsertIndex = null;
+
+export function openSectionLibrary(insertIndex = null) {
+  targetInsertIndex = typeof insertIndex === 'number' ? insertIndex : null;
   let modal = document.getElementById('section-library-modal');
   if (!modal) {
     modal = document.createElement('div');
@@ -195,6 +198,7 @@ export function openSectionLibrary() {
 }
 
 export function closeSectionLibrary() {
+  targetInsertIndex = null;
   const modal = document.getElementById('section-library-modal');
   if (modal) modal.classList.add('hidden');
 }
@@ -370,7 +374,7 @@ function renderLibraryModal() {
           showToast(`Jumped to "${sec.title}"`, 'info');
         }
       } else {
-        const newId = store.addSectionFromType(type, title);
+        const newId = store.addSectionFromType(type, title, targetInsertIndex);
         closeSectionLibrary();
         fireConfetti();
         showToast(`Added "${title}" to your README!`, 'success');

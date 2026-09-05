@@ -24,7 +24,7 @@ class ReadmifyStore {
               sections: parsed.sections,
               activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
               previewTheme: parsed.previewTheme || 'dark',
-              viewMode: parsed.viewMode || 'split'
+              viewMode: (parsed.viewMode && parsed.viewMode !== 'editor') ? parsed.viewMode : 'canvas'
             };
           }
         }
@@ -37,7 +37,7 @@ class ReadmifyStore {
       sections: JSON.parse(JSON.stringify(INITIAL_SECTIONS)),
       activeSectionId: INITIAL_SECTIONS[0].id,
       previewTheme: 'dark',
-      viewMode: 'split'
+      viewMode: 'canvas'
     };
   }
 
@@ -90,7 +90,7 @@ class ReadmifyStore {
   setViewMode(viewMode) {
     if (this.state.viewMode !== viewMode) {
       this.state.viewMode = viewMode;
-      this.notify({ type: 'SET_VIEW_MODE', viewMode });
+      this.notify({ type: 'SET_VIEW_MODE', viewMode, force: true });
     }
   }
 
@@ -136,7 +136,7 @@ class ReadmifyStore {
     return this.addSectionFromType(SECTION_TYPES.CUSTOM, title);
   }
 
-  addSectionFromType(type, customTitle) {
+  addSectionFromType(type, customTitle, insertIndex = null) {
     // Check if single-instance section already exists but is disabled
     const existing = this.state.sections.find(s => s.type === type && type !== SECTION_TYPES.CUSTOM);
     if (existing) {
@@ -145,13 +145,25 @@ class ReadmifyStore {
         existing.title = customTitle;
         if (existing.data && existing.data.heading) existing.data.heading = customTitle;
       }
+      if (typeof insertIndex === 'number' && insertIndex >= 0) {
+        const curIdx = this.state.sections.findIndex(s => s.id === existing.id);
+        if (curIdx !== -1) {
+          const [removed] = this.state.sections.splice(curIdx, 1);
+          const target = Math.min(insertIndex, this.state.sections.length);
+          this.state.sections.splice(target, 0, removed);
+        }
+      }
       this.state.activeSectionId = existing.id;
       this.notify({ type: 'ADD_SECTION', sectionId: existing.id, force: true });
       return existing.id;
     }
 
     const newSection = createSection(type, customTitle);
-    this.state.sections.push(newSection);
+    if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= this.state.sections.length) {
+      this.state.sections.splice(insertIndex, 0, newSection);
+    } else {
+      this.state.sections.push(newSection);
+    }
     this.state.activeSectionId = newSection.id;
     this.notify({ type: 'ADD_SECTION', sectionId: newSection.id, force: true });
     return newSection.id;

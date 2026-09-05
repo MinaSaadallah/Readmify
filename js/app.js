@@ -1,11 +1,12 @@
 /**
- * Readmify - Main Application Controller (v2)
- * Coordinates store state, sidebar, editor forms, preview rendering, GitHub API, and export actions
+ * Readmify - Main Application Controller (v3 with Interactive Living Canvas)
+ * Coordinates store state, interactive canvas, sidebar, preview rendering, GitHub API, and export actions
  */
 import { store } from './store.js';
 import { generateMarkdown } from './utils/markdownGenerator.js';
 import { copyToClipboard, downloadReadmeFile, showToast, fireConfetti } from './utils/exportUtils.js';
 import { renderSectionEditor } from './components/sectionEditor.js';
+import { renderInteractiveCanvas, openSlideOverInspector, closeSlideOverInspector } from './components/interactiveCanvas.js';
 import { openWizard } from './components/wizard.js';
 import { renderPhotoModal } from './components/photoUploader.js';
 import { openSectionLibrary } from './components/sectionLibrary.js';
@@ -23,6 +24,13 @@ function escapeHtml(str) {
 }
 
 // DOM Elements
+let canvasViewContainer;
+let canvasBodyContainer;
+let purePreviewContainer;
+let rawMarkdownContainer;
+let splitViewContainer;
+let slideOverInspector;
+let inspectorFormContainer;
 let sectionListContainer;
 let sectionPillBar;
 let sectionEditorContainer;
@@ -31,11 +39,24 @@ let rawMarkdownTextarea;
 let currentMarkdown = '';
 
 function initApp() {
+  canvasViewContainer = document.getElementById('canvas-view-container');
+  canvasBodyContainer = document.getElementById('interactive-canvas-body');
+  purePreviewContainer = document.getElementById('pure-preview-container');
+  rawMarkdownContainer = document.getElementById('raw-markdown-container');
+  splitViewContainer = document.getElementById('split-view-container');
+  slideOverInspector = document.getElementById('slide-over-inspector');
+  inspectorFormContainer = document.getElementById('inspector-form-container');
+
   sectionListContainer = document.getElementById('section-list-items');
   sectionPillBar = document.getElementById('section-pill-bar');
   sectionEditorContainer = document.getElementById('section-editor-container');
   previewBody = document.getElementById('github-preview-body');
   rawMarkdownTextarea = document.getElementById('raw-markdown-textarea');
+
+  document.getElementById('close-inspector-btn')?.addEventListener('click', closeSlideOverInspector);
+  document.getElementById('raw-copy-btn')?.addEventListener('click', () => {
+    copyToClipboard(currentMarkdown, 'Copied README.md code to clipboard!');
+  });
 
   setupNavbarControls();
   setupViewModeSwitcher();
@@ -57,9 +78,40 @@ function initApp() {
 }
 
 function renderApp(state, meta = {}) {
+  const mode = state.viewMode || 'canvas';
+
+  // 1. Always update markdown representation & health score
+  currentMarkdown = generateMarkdown(state.sections);
+  updateHealthAndStats(state.sections, currentMarkdown);
+  if (rawMarkdownTextarea) {
+    rawMarkdownTextarea.value = currentMarkdown;
+  }
+
+  // 2. Render Section Pills & Drawer
   renderSidebar(state, meta);
-  renderSectionEditor(sectionEditorContainer, meta);
-  renderPreview(state, meta);
+
+  // 3. Render Inspector if open
+  if (slideOverInspector && !slideOverInspector.classList.contains('translate-x-full')) {
+    if (inspectorFormContainer) {
+      renderSectionEditor(inspectorFormContainer, meta);
+    }
+  }
+
+  // 4. Render Active View Mode
+  applyViewModeDom(mode);
+
+  if (mode === 'canvas') {
+    if (canvasBodyContainer) {
+      renderInteractiveCanvas(canvasBodyContainer, state, meta);
+    }
+  } else if (mode === 'preview') {
+    renderPurePreview(state);
+  } else if (mode === 'split') {
+    if (sectionEditorContainer) {
+      renderSectionEditor(sectionEditorContainer, meta);
+    }
+    renderPurePreview(state);
+  }
 }
 
 // --- 1. HORIZONTAL SECTION PILL BAR & DRAWER REORDERING ---
@@ -95,7 +147,12 @@ function renderSidebar(state, meta = {}) {
 
     sectionPillBar.querySelectorAll('.section-pill').forEach(pill => {
       pill.addEventListener('click', () => {
-        store.setActiveSection(pill.dataset.sectionId);
+        const id = pill.dataset.sectionId;
+        store.setActiveSection(id);
+        const targetEl = document.querySelector(`.interactive-section-block[data-section-id="${id}"]`);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       });
     });
 
@@ -371,59 +428,87 @@ function setupNavbarControls() {
   }
 }
 
-// --- 4. VIEW MODE SWITCHER (SPLIT / EDITOR / PREVIEW / RAW) ---
+// --- 4. VIEW MODE SWITCHER (CANVAS / PREVIEW / RAW / SPLIT) ---
 function setupViewModeSwitcher() {
   const modeBtns = document.querySelectorAll('.view-mode-btn');
-  const leftPane = document.getElementById('editor-left-pane');
-  const rightPane = document.getElementById('editor-right-pane');
-  const previewTab = document.getElementById('preview-render-tab');
-  const rawTab = document.getElementById('preview-raw-tab');
 
   modeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const mode = btn.dataset.mode;
       store.setViewMode(mode);
-
-      modeBtns.forEach(b => {
-        b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground';
-      });
-      btn.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm';
-
-      if (mode === 'split') {
-        leftPane.classList.remove('hidden');
-        leftPane.className = 'w-full lg:w-1/2 h-full flex flex-col border-r border-border bg-background overflow-hidden';
-        rightPane.classList.remove('hidden');
-        rightPane.className = 'w-full lg:w-1/2 h-full flex flex-col bg-background overflow-hidden';
-        previewTab.classList.remove('hidden');
-        rawTab.classList.add('hidden');
-      } else if (mode === 'editor') {
-        leftPane.classList.remove('hidden');
-        leftPane.className = 'w-full flex-1 h-full flex flex-col bg-background overflow-hidden';
-        rightPane.classList.add('hidden');
-      } else if (mode === 'preview') {
-        leftPane.classList.add('hidden');
-        rightPane.classList.remove('hidden');
-        rightPane.className = 'w-full flex-1 h-full overflow-hidden flex flex-col bg-background';
-        previewTab.classList.remove('hidden');
-        rawTab.classList.add('hidden');
-      } else if (mode === 'raw') {
-        leftPane.classList.add('hidden');
-        rightPane.classList.remove('hidden');
-        rightPane.className = 'w-full flex-1 h-full overflow-hidden flex flex-col bg-background';
-        previewTab.classList.add('hidden');
-        rawTab.classList.remove('hidden');
-      }
     });
   });
 
   if (rawMarkdownTextarea) {
     rawMarkdownTextarea.addEventListener('input', (e) => {
       currentMarkdown = e.target.value;
-      if (previewBody && window.marked) {
-        const rawHtml = window.marked.parse(currentMarkdown);
-        previewBody.innerHTML = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
+      const targets = [previewBody, document.getElementById('split-preview-body')].filter(Boolean);
+      try {
+        if (window.marked) {
+          const rawHtml = window.marked.parse(currentMarkdown);
+          const safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
+          targets.forEach(t => t.innerHTML = safeHtml);
+        }
+      } catch (err) {
+        console.error('Markdown parse error:', err);
       }
     });
+  }
+}
+
+function applyViewModeDom(mode) {
+  const modeBtns = document.querySelectorAll('.view-mode-btn');
+  modeBtns.forEach(b => {
+    if (b.dataset.mode === mode) {
+      b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm flex items-center gap-1.5';
+    } else {
+      b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground flex items-center gap-1.5';
+    }
+  });
+
+  if (canvasViewContainer) {
+    canvasViewContainer.classList.toggle('hidden', mode !== 'canvas');
+    if (mode === 'canvas') canvasViewContainer.classList.add('flex');
+    else canvasViewContainer.classList.remove('flex');
+  }
+  if (purePreviewContainer) {
+    purePreviewContainer.classList.toggle('hidden', mode !== 'preview');
+    if (mode === 'preview') purePreviewContainer.classList.add('flex');
+    else purePreviewContainer.classList.remove('flex');
+  }
+  if (rawMarkdownContainer) {
+    rawMarkdownContainer.classList.toggle('hidden', mode !== 'raw');
+    if (mode === 'raw') rawMarkdownContainer.classList.add('flex');
+    else rawMarkdownContainer.classList.remove('flex');
+  }
+  if (splitViewContainer) {
+    splitViewContainer.classList.toggle('hidden', mode !== 'split');
+    if (mode === 'split') splitViewContainer.classList.add('flex');
+    else splitViewContainer.classList.remove('flex');
+  }
+}
+
+function renderPurePreview(state) {
+  const targets = [previewBody, document.getElementById('split-preview-body')].filter(Boolean);
+  if (targets.length === 0) return;
+
+  try {
+    let html = '';
+    if (window.marked) {
+      window.marked.setOptions({ gfm: true, breaks: true });
+      const rawHtml = window.marked.parse(currentMarkdown);
+      html = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
+    } else {
+      html = escapeHtml(currentMarkdown);
+    }
+
+    targets.forEach(el => {
+      el.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
+      el.innerHTML = html;
+    });
+  } catch (err) {
+    console.error('Markdown parse error:', err);
+    targets.forEach(el => el.innerText = currentMarkdown);
   }
 }
 
