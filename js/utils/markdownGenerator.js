@@ -249,7 +249,7 @@ function generateSectionMarkdown(section, context) {
       const items = data.items || [];
       if (items.length === 0) return '';
       const list = items.map(item => {
-        const icon = item.icon ? `${item.icon} ` : '✨ ';
+        const icon = item.icon ? `${item.icon} ` : '';
         return `- ${icon}**${item.title || ''}**: ${item.desc || ''}`;
       }).join('\n');
 
@@ -272,7 +272,7 @@ function generateSectionMarkdown(section, context) {
           imageMd = `![${caption}](${data.imageUrl})`;
         }
       }
-      const liveLinkMd = data.liveUrl && !linkUrl ? `\n\n🔗 **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
+      const liveLinkMd = data.liveUrl && !linkUrl ? `\n\n**Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
       return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${liveLinkMd}`;
     }
 
@@ -300,7 +300,7 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.ENV_VARS: {
       const vars = data.variables || [];
       if (vars.length === 0) return '';
-      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? '✅ Yes' : '❌ No'} |`).join('\n');
+      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? 'Yes' : 'No'} |`).join('\n');
       return `## ${data.heading || 'Environment Variables'}\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
     }
 
@@ -388,9 +388,9 @@ function generateSectionMarkdown(section, context) {
       }
 
       if (presentation === 'summary-table') {
-        const perms = lic.permissions.map(p => `✅ ${p}`).join('<br/>') || '-';
-        const limits = lic.limitations.map(l => `❌ ${l}`).join('<br/>') || '-';
-        const conds = lic.conditions.map(c => `ℹ️ ${c}`).join('<br/>') || '-';
+        const perms = lic.permissions.map(p => `[x] ${p}`).join('<br/>') || '-';
+        const limits = lic.limitations.map(l => `[ ] ${l}`).join('<br/>') || '-';
+        const conds = lic.conditions.map(c => `[!] ${c}`).join('<br/>') || '-';
 
         return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**.\n\n| Permissions | Limitations | Conditions |\n| :--- | :--- | :--- |\n| ${perms} | ${limits} | ${conds} |\n\nCopyright (c) ${year} ${holder}. See [\`LICENSE\`](LICENSE) for the full text.`;
       }

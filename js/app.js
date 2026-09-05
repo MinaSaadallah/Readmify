@@ -28,12 +28,10 @@ let canvasViewContainer;
 let canvasBodyContainer;
 let purePreviewContainer;
 let rawMarkdownContainer;
-let splitViewContainer;
 let slideOverInspector;
 let inspectorFormContainer;
 let sectionListContainer;
 let sectionPillBar;
-let sectionEditorContainer;
 let previewBody;
 let rawMarkdownTextarea;
 let currentMarkdown = '';
@@ -43,13 +41,11 @@ function initApp() {
   canvasBodyContainer = document.getElementById('interactive-canvas-body');
   purePreviewContainer = document.getElementById('pure-preview-container');
   rawMarkdownContainer = document.getElementById('raw-markdown-container');
-  splitViewContainer = document.getElementById('split-view-container');
   slideOverInspector = document.getElementById('slide-over-inspector');
   inspectorFormContainer = document.getElementById('inspector-form-container');
 
   sectionListContainer = document.getElementById('section-list-items');
   sectionPillBar = document.getElementById('section-pill-bar');
-  sectionEditorContainer = document.getElementById('section-editor-container');
   previewBody = document.getElementById('github-preview-body');
   rawMarkdownTextarea = document.getElementById('raw-markdown-textarea');
 
@@ -106,11 +102,6 @@ function renderApp(state, meta = {}) {
     }
   } else if (mode === 'preview') {
     renderPurePreview(state);
-  } else if (mode === 'split') {
-    if (sectionEditorContainer) {
-      renderSectionEditor(sectionEditorContainer, meta);
-    }
-    renderPurePreview(state);
   }
 }
 
@@ -140,7 +131,7 @@ function renderSidebar(state, meta = {}) {
         >
           <span class="text-[10px] opacity-70 font-mono">${idx + 1}</span>
           <span>${escapeHtml(sec.title)}</span>
-          ${!sec.enabled ? '<span class="text-[9px] no-underline">👁️‍🗨️</span>' : ''}
+          ${!sec.enabled ? '<span class="text-[9px] opacity-70 font-mono">(hidden)</span>' : ''}
         </button>
       `;
     }).join('');
@@ -336,10 +327,10 @@ function updateHealthAndStats(sections, markdownText) {
 
   if (scoreTip) {
     if (health.tips.length > 0) {
-      scoreTip.textContent = `💡 Tip: ${health.tips[0]}`;
+      scoreTip.textContent = `Tip: ${health.tips[0]}`;
       scoreTip.classList.remove('hidden');
     } else {
-      scoreTip.textContent = '🎉 Your README is in top-tier shape!';
+      scoreTip.textContent = 'Your README is in top-tier shape!';
     }
   }
 }
@@ -421,14 +412,14 @@ function setupNavbarControls() {
       store.setPreviewTheme(nextTheme);
 
       themeToggleBtn.innerHTML = nextTheme === 'light' 
-        ? '<span>☀️</span>' 
-        : '<span>🌙</span>';
+        ? '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' 
+        : '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
       showToast(`Switched preview to GitHub ${nextTheme} mode`, 'info');
     });
   }
 }
 
-// --- 4. VIEW MODE SWITCHER (CANVAS / PREVIEW / RAW / SPLIT) ---
+// --- 4. VIEW MODE SWITCHER (EDITOR / PREVIEW / CODE) ---
 function setupViewModeSwitcher() {
   const modeBtns = document.querySelectorAll('.view-mode-btn');
 
@@ -442,15 +433,16 @@ function setupViewModeSwitcher() {
   if (rawMarkdownTextarea) {
     rawMarkdownTextarea.addEventListener('input', (e) => {
       currentMarkdown = e.target.value;
-      const targets = [previewBody, document.getElementById('split-preview-body')].filter(Boolean);
-      try {
-        if (window.marked) {
-          const rawHtml = window.marked.parse(currentMarkdown);
-          const safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
-          targets.forEach(t => t.innerHTML = safeHtml);
+      if (previewBody) {
+        try {
+          if (window.marked) {
+            const rawHtml = window.marked.parse(currentMarkdown);
+            const safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
+            previewBody.innerHTML = safeHtml;
+          }
+        } catch (err) {
+          console.error('Markdown parse error:', err);
         }
-      } catch (err) {
-        console.error('Markdown parse error:', err);
       }
     });
   }
@@ -460,9 +452,9 @@ function applyViewModeDom(mode) {
   const modeBtns = document.querySelectorAll('.view-mode-btn');
   modeBtns.forEach(b => {
     if (b.dataset.mode === mode) {
-      b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm flex items-center gap-1.5';
+      b.className = 'view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm';
     } else {
-      b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground flex items-center gap-1.5';
+      b.className = 'view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground';
     }
   });
 
@@ -481,16 +473,10 @@ function applyViewModeDom(mode) {
     if (mode === 'raw') rawMarkdownContainer.classList.add('flex');
     else rawMarkdownContainer.classList.remove('flex');
   }
-  if (splitViewContainer) {
-    splitViewContainer.classList.toggle('hidden', mode !== 'split');
-    if (mode === 'split') splitViewContainer.classList.add('flex');
-    else splitViewContainer.classList.remove('flex');
-  }
 }
 
 function renderPurePreview(state) {
-  const targets = [previewBody, document.getElementById('split-preview-body')].filter(Boolean);
-  if (targets.length === 0) return;
+  if (!previewBody) return;
 
   try {
     let html = '';
@@ -502,13 +488,11 @@ function renderPurePreview(state) {
       html = escapeHtml(currentMarkdown);
     }
 
-    targets.forEach(el => {
-      el.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
-      el.innerHTML = html;
-    });
+    previewBody.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
+    previewBody.innerHTML = html;
   } catch (err) {
     console.error('Markdown parse error:', err);
-    targets.forEach(el => el.innerText = currentMarkdown);
+    previewBody.innerText = currentMarkdown;
   }
 }
 

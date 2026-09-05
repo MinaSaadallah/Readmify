@@ -107,10 +107,10 @@ export const INITIAL_SECTIONS = [
     data: {
       heading: 'Key Features',
       items: [
-        { icon: '⚡', title: 'Lightning Fast Performance', desc: 'Engineered for speed, minimal resource overhead, and instant responsiveness.' },
-        { icon: '🎨', title: 'Modern Intuitive Interface', desc: 'Clean, accessible, and responsive user experience designed for productivity.' },
-        { icon: '🔒', title: 'Secure & Reliable', desc: 'Robust architecture with rigorous error handling and privacy-conscious design.' },
-        { icon: '📦', title: 'Modular & Extensible', desc: 'Easily customizable components with well-documented APIs and configuration.' }
+        { icon: '', title: 'Lightning Fast Performance', desc: 'Engineered for speed, minimal resource overhead, and instant responsiveness.' },
+        { icon: '', title: 'Modern Intuitive Interface', desc: 'Clean, accessible, and responsive user experience designed for productivity.' },
+        { icon: '', title: 'Secure & Reliable', desc: 'Robust architecture with rigorous error handling and privacy-conscious design.' },
+        { icon: '', title: 'Modular & Extensible', desc: 'Easily customizable components with well-documented APIs and configuration.' }
       ]
     }
   },

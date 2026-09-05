@@ -1,14 +1,15 @@
 /**
- * Readmify - Interactive Preview Canvas Engine
- * Renders the living README document with direct in-place editing,
- * hover section actions, interactive widgets, and seamless state sync.
+ * Readmify - Interactive Canvas Engine (v5 Simple Living Document)
+ * Ultra-simple, kid-friendly direct in-place editing:
+ * - 1-Click direct on-image editing (width, corners, crop ratio, file upload, URL swap, delete)
+ * - Clean SVG icons throughout (zero emojis)
+ * - Effortless outline & inline add/remove/reorder
  */
 import { store } from '../store.js';
-import { SECTION_TYPES, createSection } from '../data/defaultSections.js';
-import { TECH_CATALOG, getBadgeUrl, getSkillIconsUrl } from '../data/techCatalog.js';
-import { LICENSE_CATALOG, getLicenseById } from '../data/licenses.js';
+import { SECTION_TYPES } from '../data/defaultSections.js';
+import { TECH_CATALOG, getBadgeUrl } from '../data/techCatalog.js';
+import { getLicenseById } from '../data/licenses.js';
 import { renderTechPickerModal } from './techPicker.js';
-import { renderPhotoModal } from './photoUploader.js';
 import { openSectionLibrary } from './sectionLibrary.js';
 import { showToast, fireConfetti, copyToClipboard, downloadReadmeFile } from '../utils/exportUtils.js';
 import { renderSectionEditor } from './sectionEditor.js';
@@ -23,6 +24,21 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+// Minimalist SVG icons
+const SVG_ICONS = {
+  plus: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
+  up: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>',
+  down: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>',
+  gear: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  copy: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
+  trash: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  upload: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>',
+  link: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  shield: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  download: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
+  image: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>'
+};
 
 /**
  * Main entry point: renders the interactive document canvas
@@ -48,14 +64,17 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
   if (enabledSections.length === 0) {
     container.innerHTML = `
       <div class="p-16 text-center text-muted-foreground space-y-4">
-        <div class="text-4xl">📄</div>
+        <div class="w-12 h-12 mx-auto rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
         <div class="space-y-1">
           <h3 class="text-base font-semibold text-foreground">Your README is Empty</h3>
-          <p class="text-xs">Add sections from the library or use the Easy Guide scanner to get started.</p>
+          <p class="text-xs">Add sections from the library or use the Quick Guide scanner to get started.</p>
         </div>
         <div class="pt-2">
-          <button id="canvas-empty-add-btn" class="btn-primary text-xs px-4 py-2 shadow-sm">
-            ➕ Open Section Library
+          <button id="canvas-empty-add-btn" class="btn-primary text-xs px-4 py-2 shadow-sm flex items-center gap-1.5 mx-auto cursor-pointer">
+            ${SVG_ICONS.plus}
+            <span>Open Section Library</span>
           </button>
         </div>
       </div>
@@ -83,7 +102,8 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
           data-insert-index="${idx}"
           title="Insert section here"
         >
-          <span>➕</span> Add Section
+          ${SVG_ICONS.plus}
+          <span>Add Section</span>
         </button>
       </div>
     `;
@@ -96,14 +116,24 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
         }"
         data-section-id="${sec.id}"
       >
-        <!-- Floating Section Action Pill (Top Right on Hover) -->
+        <!-- Floating Section Action Toolbar (Top Right on Hover) -->
         <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
           <span class="text-[10px] text-zinc-400 font-mono px-1 font-semibold">${idx + 1}</span>
-          <button class="sec-move-up-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isFirst ? 'opacity-30 pointer-events-none' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
-          <button class="sec-move-down-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isLast ? 'opacity-30 pointer-events-none' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
-          <button class="sec-inspector-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Section Settings & Fine-tuning (Inspector)" data-id="${sec.id}">⚙️</button>
-          <button class="sec-duplicate-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Duplicate Section" data-id="${sec.id}">📑</button>
-          <button class="sec-delete-btn p-1 text-rose-400 hover:text-rose-300 rounded hover:bg-rose-950/40 transition" title="Delete Section" data-id="${sec.id}">🗑️</button>
+          <button class="sec-move-up-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isFirst ? 'opacity-30 pointer-events-none' : ''}" title="Move Up" data-id="${sec.id}">
+            ${SVG_ICONS.up}
+          </button>
+          <button class="sec-move-down-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isLast ? 'opacity-30 pointer-events-none' : ''}" title="Move Down" data-id="${sec.id}">
+            ${SVG_ICONS.down}
+          </button>
+          <button class="sec-inspector-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Section Settings" data-id="${sec.id}">
+            ${SVG_ICONS.gear}
+          </button>
+          <button class="sec-duplicate-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Duplicate Section" data-id="${sec.id}">
+            ${SVG_ICONS.copy}
+          </button>
+          <button class="sec-delete-btn p-1 text-rose-400 hover:text-rose-300 rounded hover:bg-rose-950/40 transition" title="Delete Section" data-id="${sec.id}">
+            ${SVG_ICONS.trash}
+          </button>
         </div>
 
         <!-- Section Content -->
@@ -121,9 +151,10 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
       <button 
         class="insert-section-btn px-3 py-1 text-xs font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition"
         data-insert-index="${sections.length}"
-        title="Add section at the bottom"
+        title="Add section to README"
       >
-        <span>➕</span> Add Section to README
+        ${SVG_ICONS.plus}
+        <span>Add Section to README</span>
       </button>
     </div>
   `;
@@ -132,6 +163,137 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
 
   container.innerHTML = html;
   attachCanvasEventListeners(container, state);
+}
+
+/**
+ * Direct 1-Click On-Image Toolbar & Wrapper
+ * Provides 1-click resize pills, corner radius pills, crop ratio presets, replace file picker, and remove button.
+ */
+function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = 'hero') {
+  const { width = '100%', radius = '8px', ratio = 'auto' } = options;
+  const ratioStyle = ratio && ratio !== 'auto' ? `aspect-ratio: ${ratio}; object-fit: cover;` : '';
+
+  return `
+    <div class="direct-image-editor-container group/imgctrl relative inline-block my-3 max-w-full" data-section-id="${sectionId}" data-image-type="${imageType}">
+      <!-- Image Display Card -->
+      <div class="relative inline-block max-w-full overflow-hidden transition-all shadow-md bg-zinc-900 border border-border/60" style="border-radius: ${radius};">
+        <img 
+          src="${imageUrl}" 
+          alt="Image" 
+          style="width: ${width}; ${ratioStyle}" 
+          class="max-w-full mx-auto block transition-all" 
+        />
+      </div>
+
+      <!-- Instant 1-Click On-Image Control Strip (Ultra-easy for kids & beginners) -->
+      <div class="image-control-strip mt-2.5 flex flex-wrap items-center justify-center gap-1.5 bg-zinc-900 border border-zinc-700/80 rounded-lg px-2.5 py-1.5 shadow-xl text-xs select-none">
+        <!-- Size Pills -->
+        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Size:</span>
+        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
+          ${['25%', '50%', '75%', '100%'].map(sz => `
+            <button 
+              type="button"
+              class="img-size-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${width === sz ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
+              data-size="${sz}"
+            >${sz}</button>
+          `).join('')}
+        </div>
+
+        <span class="text-zinc-700 mx-0.5">|</span>
+
+        <!-- Corners Pills -->
+        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Corners:</span>
+        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
+          ${[
+            { r: '0px', label: 'Sharp' },
+            { r: '8px', label: 'Round' },
+            { r: '24px', label: 'Pill' }
+          ].map(cr => `
+            <button 
+              type="button"
+              class="img-radius-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${radius === cr.r ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
+              data-radius="${cr.r}"
+            >${cr.label}</button>
+          `).join('')}
+        </div>
+
+        <span class="text-zinc-700 mx-0.5">|</span>
+
+        <!-- Aspect Ratio / Crop Pills -->
+        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Crop:</span>
+        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
+          ${[
+            { r: 'auto', label: 'Auto' },
+            { r: '3/1', label: '3:1' },
+            { r: '16/9', label: '16:9' },
+            { r: '1/1', label: '1:1' }
+          ].map(rt => `
+            <button 
+              type="button"
+              class="img-ratio-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${ratio === rt.r ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
+              data-ratio="${rt.r}"
+            >${rt.label}</button>
+          `).join('')}
+        </div>
+
+        <span class="text-zinc-700 mx-0.5">|</span>
+
+        <!-- Replace File / URL -->
+        <button 
+          type="button"
+          class="img-replace-file-btn px-2 py-0.5 text-[11px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer flex items-center gap-1 shadow-xs" 
+          title="Pick new image from computer"
+        >
+          ${SVG_ICONS.upload}
+          <span>Replace</span>
+        </button>
+
+        <button 
+          type="button"
+          class="img-replace-url-btn px-2 py-0.5 text-[11px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 border border-zinc-700 transition cursor-pointer" 
+          title="Paste image link"
+        >
+          URL
+        </button>
+
+        <!-- Delete Button -->
+        <button 
+          type="button"
+          class="img-delete-btn p-1 rounded bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/50 transition cursor-pointer ml-1" 
+          title="Remove image"
+        >
+          ${SVG_ICONS.trash}
+        </button>
+
+        <input type="file" class="direct-img-file-input hidden" accept="image/*" />
+      </div>
+    </div>
+  `;
+}
+
+/**
+ * Friendly Kid-friendly Dropzone Box when no image is present
+ */
+function renderKidFriendlyDropzone(sectionId, title = 'Add Project Banner / Logo', imageType = 'hero') {
+  return `
+    <div class="kid-dropzone-box border-2 border-dashed border-zinc-700/80 hover:border-zinc-500 rounded-xl p-5 text-center transition bg-zinc-900/30 hover:bg-zinc-900/60 select-none my-3 cursor-pointer group" data-section-id="${sectionId}" data-image-type="${imageType}">
+      <div class="w-9 h-9 mx-auto rounded-full bg-zinc-800/80 flex items-center justify-center text-zinc-400 group-hover:text-zinc-200 transition mb-2">
+        ${SVG_ICONS.image}
+      </div>
+      <p class="text-xs font-semibold text-foreground">${title}</p>
+      <p class="text-[11px] text-muted-foreground mt-0.5">Click to choose an image from your computer, or drag and drop</p>
+      <div class="mt-2.5 flex items-center justify-center gap-2">
+        <button type="button" class="dropzone-choose-file-btn px-3 py-1 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 shadow-xs cursor-pointer flex items-center gap-1.5">
+          ${SVG_ICONS.upload}
+          <span>Choose File</span>
+        </button>
+        <button type="button" class="dropzone-enter-url-btn px-2.5 py-1 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 border border-zinc-700 shadow-xs cursor-pointer">
+          Paste URL
+        </button>
+      </div>
+      <input type="file" class="dropzone-file-input hidden" accept="image/*" />
+    </div>
+  `;
 }
 
 /**
@@ -146,30 +308,13 @@ function renderSectionInteractiveContent(section, state) {
       const alignClass = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
       const width = data.logoWidth || '100%';
       const radius = data.logoRadius || '8px';
+      const ratio = data.aspectRatio || 'auto';
 
       let bannerHtml = '';
       if (data.showLogo && data.logoUrl) {
-        bannerHtml = `
-          <div class="relative group/banner inline-block my-3 max-w-full">
-            <img src="${data.logoUrl}" alt="${escapeHtml(data.projectName)} Banner" style="width: ${width}; border-radius: ${radius};" class="max-w-full mx-auto block shadow-md" />
-            <div class="absolute inset-0 bg-black/50 backdrop-blur-xs opacity-0 group-hover/banner:opacity-100 transition flex items-center justify-center gap-2 rounded-lg">
-              <button class="open-hero-studio-btn px-3 py-1.5 text-xs font-medium bg-zinc-900 text-white border border-zinc-600 rounded-md shadow-lg flex items-center gap-1.5 hover:bg-zinc-800 cursor-pointer">
-                <span>✂️</span> Image Studio (Crop/Resize)
-              </button>
-              <button class="remove-banner-btn px-2 py-1.5 text-xs font-medium bg-rose-950/80 text-rose-300 border border-rose-800 rounded-md hover:bg-rose-900 cursor-pointer" title="Remove Banner">
-                ✕
-              </button>
-            </div>
-          </div>
-        `;
+        bannerHtml = renderDirectImageEditorHtml(data.logoUrl, { width, radius, ratio }, id, 'hero');
       } else {
-        bannerHtml = `
-          <div class="my-2 select-none">
-            <button class="open-hero-studio-btn text-xs text-muted-foreground hover:text-foreground bg-card/60 hover:bg-muted border border-dashed border-border rounded-lg px-3.5 py-2 inline-flex items-center gap-1.5 transition cursor-pointer">
-              <span>🖼️</span> + Add Project Banner / Logo (Image Studio)
-            </button>
-          </div>
-        `;
+        bannerHtml = renderKidFriendlyDropzone(id, 'Add Project Banner / Logo', 'hero');
       }
 
       return `
@@ -233,7 +378,8 @@ function renderSectionInteractiveContent(section, state) {
               class="open-badge-popover-btn text-xs text-muted-foreground hover:text-foreground bg-card/60 hover:bg-muted border border-border rounded-md px-2.5 py-1 inline-flex items-center gap-1.5 transition cursor-pointer"
               data-id="${id}"
             >
-              <span>🏷️</span> Customize Badges (${badges.length} active) ▾
+              ${SVG_ICONS.shield}
+              <span>Badges (${badges.length}) ▾</span>
             </button>
           </div>
 
@@ -282,7 +428,8 @@ function renderSectionInteractiveContent(section, state) {
 
             <div class="flex items-center gap-1.5 select-none">
               <button class="open-tech-picker-canvas-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs cursor-pointer">
-                <span>➕</span> Add Technology
+                ${SVG_ICONS.plus}
+                <span>Add Technology</span>
               </button>
             </div>
           </div>
@@ -320,8 +467,9 @@ function renderSectionInteractiveContent(section, state) {
               data-section-id="${id}"
             >${escapeHtml(data.heading || 'Key Features')}</h2>
 
-            <button class="add-canvas-feature-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-              <span>➕</span> Add Feature
+            <button class="add-canvas-feature-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
+              ${SVG_ICONS.plus}
+              <span>Add Feature</span>
             </button>
           </div>
 
@@ -330,12 +478,6 @@ function renderSectionInteractiveContent(section, state) {
               <div class="feature-item-card group/feat p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-lg space-y-1 relative hover:border-zinc-700 transition">
                 <button class="delete-canvas-feature-btn absolute top-2 right-2 text-zinc-500 hover:text-rose-400 opacity-0 group-hover/feat:opacity-100 transition text-xs p-1 cursor-pointer" data-idx="${idx}" title="Delete feature">✕</button>
                 <div class="flex items-center gap-2">
-                  <span 
-                    class="canvas-feat-icon text-lg cursor-text outline-none hover:bg-zinc-800/60 rounded px-1"
-                    contenteditable="true"
-                    data-idx="${idx}"
-                    data-subfield="icon"
-                  >${escapeHtml(feat.icon || '✨')}</span>
                   <span 
                     class="canvas-feat-title font-semibold text-sm text-foreground outline-none hover:bg-zinc-800/60 rounded px-1 flex-1 cursor-text"
                     contenteditable="true"
@@ -351,6 +493,36 @@ function renderSectionInteractiveContent(section, state) {
                 >${escapeHtml(feat.desc || 'Feature description...')}</p>
               </div>
             `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    case SECTION_TYPES.DEMO: {
+      const width = data.width || '100%';
+      const radius = data.radius || '8px';
+      const ratio = data.aspectRatio || 'auto';
+
+      let imageHtml = '';
+      if (data.imageUrl) {
+        imageHtml = renderDirectImageEditorHtml(data.imageUrl, { width, radius, ratio }, id, 'demo');
+      } else {
+        imageHtml = renderKidFriendlyDropzone(id, 'Add Preview Screenshot / GIF', 'demo');
+      }
+
+      return `
+        <div class="space-y-3">
+          <div class="border-b border-zinc-800 pb-1.5">
+            <h2 
+              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
+              contenteditable="true"
+              data-field="heading"
+              data-section-id="${id}"
+            >${escapeHtml(data.heading || 'Preview & Screenshots')}</h2>
+          </div>
+
+          <div class="text-center py-1">
+            ${imageHtml}
           </div>
         </div>
       `;
@@ -382,8 +554,9 @@ function renderSectionInteractiveContent(section, state) {
                 `).join('')}
               </div>
 
-              <button class="add-canvas-step-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-                <span>➕</span> Add Step
+              <button class="add-canvas-step-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
+                ${SVG_ICONS.plus}
+                <span>Add Step</span>
               </button>
             </div>
           </div>
@@ -419,6 +592,27 @@ function renderSectionInteractiveContent(section, state) {
       `;
     }
 
+    case SECTION_TYPES.PROJECT_STRUCTURE: {
+      return `
+        <div class="space-y-3">
+          <div class="border-b border-zinc-800 pb-1.5">
+            <h2 
+              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
+              contenteditable="true"
+              data-field="heading"
+              data-section-id="${id}"
+            >${escapeHtml(data.heading || 'Project Structure')}</h2>
+          </div>
+          <pre class="bg-zinc-950 border border-zinc-800 rounded-lg p-3 font-mono text-xs text-zinc-300 overflow-x-auto leading-relaxed"><code 
+            class="outline-none cursor-text block whitespace-pre"
+            contenteditable="true"
+            data-field="tree"
+            data-section-id="${id}"
+          >${escapeHtml(data.tree || '.\n├── src/\n│   ├── index.js\n│   └── utils.js\n├── package.json\n└── README.md')}</code></pre>
+        </div>
+      `;
+    }
+
     case SECTION_TYPES.ROADMAP: {
       const tasks = data.tasks || [];
       return `
@@ -431,8 +625,9 @@ function renderSectionInteractiveContent(section, state) {
               data-section-id="${id}"
             >${escapeHtml(data.heading || 'Roadmap')}</h2>
 
-            <button class="add-canvas-task-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-              <span>➕</span> Add Task
+            <button class="add-canvas-task-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
+              ${SVG_ICONS.plus}
+              <span>Add Task</span>
             </button>
           </div>
 
@@ -479,10 +674,12 @@ function renderSectionInteractiveContent(section, state) {
 
             <div class="flex items-center gap-2 select-none">
               <button class="copy-canvas-lic-btn btn-secondary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-                <span>📋</span> Copy Text
+                ${SVG_ICONS.copy}
+                <span>Copy</span>
               </button>
-              <button class="download-canvas-lic-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-                <span>💾</span> Download LICENSE File
+              <button class="download-canvas-lic-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
+                ${SVG_ICONS.download}
+                <span>Download LICENSE</span>
               </button>
             </div>
           </div>
@@ -507,7 +704,7 @@ function renderSectionInteractiveContent(section, state) {
           </p>
 
           <details class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-3 text-xs text-zinc-400 cursor-pointer">
-            <summary class="font-medium text-zinc-300 hover:text-zinc-100">View Full Legal Text Preview</summary>
+            <summary class="font-medium text-zinc-300 hover:text-zinc-100">View Full Legal Text</summary>
             <pre class="mt-2 text-[11px] font-mono leading-relaxed max-h-40 overflow-y-auto whitespace-pre-wrap text-zinc-400">${escapeHtml(text)}</pre>
           </details>
         </div>
@@ -544,7 +741,12 @@ function renderSectionInteractiveContent(section, state) {
             data-field="heading"
             data-section-id="${id}"
           >${escapeHtml(data.heading || section.title)}</h2>
-          <p class="text-xs text-muted-foreground">Click the ⚙️ gear icon in the top right to customize this section's parameters.</p>
+          <p class="text-xs text-muted-foreground flex items-center gap-1.5">
+            <span>Configure this section via the settings icon:</span>
+            <button class="sec-inspector-btn inline-flex items-center gap-1 text-foreground underline" data-id="${id}">
+              ${SVG_ICONS.gear} Settings
+            </button>
+          </p>
         </div>
       `;
     }
@@ -699,19 +901,204 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 4. Hero Banner Studio & Remove Handlers
-  container.querySelectorAll('.open-hero-studio-btn').forEach(btn => {
-    btn.addEventListener('click', () => renderPhotoModal('hero'));
-  });
+  // 4. DIRECT ON-IMAGE CONTROLS (Size, Radius, Ratio, Replace File/URL, Delete)
+  container.querySelectorAll('.img-size-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const imgType = ctrl?.dataset.imageType;
+      const sz = btn.dataset.size;
+      if (!secId || !sz) return;
 
-  container.querySelectorAll('.remove-banner-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      if (secId) store.updateSectionData(secId, { showLogo: false, logoUrl: '' });
+      if (imgType === 'hero') {
+        store.updateSectionData(secId, { logoWidth: sz });
+      } else if (imgType === 'demo') {
+        store.updateSectionData(secId, { width: sz });
+      }
     });
   });
 
-  // 5. Tech Stack Handlers
+  container.querySelectorAll('.img-radius-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const imgType = ctrl?.dataset.imageType;
+      const rad = btn.dataset.radius;
+      if (!secId || !rad) return;
+
+      if (imgType === 'hero') {
+        store.updateSectionData(secId, { logoRadius: rad });
+      } else if (imgType === 'demo') {
+        store.updateSectionData(secId, { radius: rad });
+      }
+    });
+  });
+
+  container.querySelectorAll('.img-ratio-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const ratio = btn.dataset.ratio;
+      if (!secId || !ratio) return;
+      store.updateSectionData(secId, { aspectRatio: ratio });
+    });
+  });
+
+  container.querySelectorAll('.img-replace-file-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const fileInput = ctrl?.querySelector('.direct-img-file-input');
+      fileInput?.click();
+    });
+  });
+
+  container.querySelectorAll('.direct-img-file-input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const ctrl = input.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const imgType = ctrl?.dataset.imageType;
+      if (!secId) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const url = evt.target.result;
+        if (imgType === 'hero') {
+          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
+        } else if (imgType === 'demo') {
+          store.updateSectionData(secId, { imageUrl: url });
+        }
+        showToast('Image replaced successfully!', 'success');
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  container.querySelectorAll('.img-replace-url-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const imgType = ctrl?.dataset.imageType;
+      if (!secId) return;
+
+      const sec = getSec(secId);
+      const currentUrl = (imgType === 'hero' ? sec?.data?.logoUrl : sec?.data?.imageUrl) || '';
+      const inputUrl = prompt('Enter image URL (PNG, JPG, GIF, SVG):', currentUrl);
+      if (inputUrl && inputUrl.trim()) {
+        const clean = inputUrl.trim();
+        if (imgType === 'hero') {
+          store.updateSectionData(secId, { showLogo: true, logoUrl: clean });
+        } else if (imgType === 'demo') {
+          store.updateSectionData(secId, { imageUrl: clean });
+        }
+        showToast('Image URL updated!', 'success');
+      }
+    });
+  });
+
+  container.querySelectorAll('.img-delete-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const ctrl = btn.closest('.direct-image-editor-container');
+      const secId = ctrl?.dataset.sectionId;
+      const imgType = ctrl?.dataset.imageType;
+      if (!secId) return;
+
+      if (imgType === 'hero') {
+        store.updateSectionData(secId, { showLogo: false, logoUrl: '' });
+      } else if (imgType === 'demo') {
+        store.updateSectionData(secId, { imageUrl: '' });
+      }
+      showToast('Image removed', 'info');
+    });
+  });
+
+  // 5. KID-FRIENDLY DROPZONE HANDLERS (When no image is present)
+  container.querySelectorAll('.kid-dropzone-box').forEach(box => {
+    const secId = box.dataset.sectionId;
+    const imgType = box.dataset.imageType;
+    const fileInput = box.querySelector('.dropzone-file-input');
+
+    // Clicking box or choose button opens file selector
+    box.addEventListener('click', (e) => {
+      if (e.target.closest('.dropzone-enter-url-btn')) return;
+      fileInput?.click();
+    });
+
+    box.querySelector('.dropzone-choose-file-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput?.click();
+    });
+
+    fileInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (!file || !secId) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const url = evt.target.result;
+        if (imgType === 'hero') {
+          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
+        } else if (imgType === 'demo') {
+          store.updateSectionData(secId, { imageUrl: url });
+        }
+        showToast('Image uploaded successfully!', 'success');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    box.querySelector('.dropzone-enter-url-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!secId) return;
+      const inputUrl = prompt('Enter image URL (PNG, JPG, GIF, SVG):', '');
+      if (inputUrl && inputUrl.trim()) {
+        const clean = inputUrl.trim();
+        if (imgType === 'hero') {
+          store.updateSectionData(secId, { showLogo: true, logoUrl: clean });
+        } else if (imgType === 'demo') {
+          store.updateSectionData(secId, { imageUrl: clean });
+        }
+        showToast('Image added successfully!', 'success');
+      }
+    });
+
+    // Drag and drop support directly on canvas
+    box.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      box.classList.add('border-primary', 'bg-zinc-800/50');
+    });
+
+    box.addEventListener('dragleave', () => {
+      box.classList.remove('border-primary', 'bg-zinc-800/50');
+    });
+
+    box.addEventListener('drop', (e) => {
+      e.preventDefault();
+      box.classList.remove('border-primary', 'bg-zinc-800/50');
+      const file = e.dataTransfer?.files?.[0];
+      if (!file || !secId) return;
+
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        const url = evt.target.result;
+        if (imgType === 'hero') {
+          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
+        } else if (imgType === 'demo') {
+          store.updateSectionData(secId, { imageUrl: url });
+        }
+        showToast('Image uploaded successfully!', 'success');
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // 6. Tech Stack Handlers
   container.querySelectorAll('.open-tech-picker-canvas-btn').forEach(btn => {
     btn.addEventListener('click', () => renderTechPickerModal());
   });
@@ -729,14 +1116,14 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 6. Feature List Handlers
+  // 7. Feature List Handlers
   container.querySelectorAll('.add-canvas-feature-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
       if (!secId) return;
       const sec = getSec(secId);
       const items = [...(sec?.data?.items || [])];
-      items.push({ icon: '✨', title: 'New Feature', desc: 'Describe your new feature in a few clear sentences.' });
+      items.push({ title: 'New Feature', desc: 'Describe your feature in a few clear sentences.' });
       store.updateSectionData(secId, { items });
     });
   });
@@ -753,7 +1140,7 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 7. Installation Steps & Package Manager Handlers
+  // 8. Installation Steps & Package Manager Handlers
   container.querySelectorAll('.add-canvas-step-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
@@ -785,7 +1172,7 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 8. Roadmap Task Checkboxes & Adders
+  // 9. Roadmap Task Checkboxes & Adders
   container.querySelectorAll('.canvas-task-checkbox').forEach(cb => {
     cb.addEventListener('change', () => {
       const secId = cb.closest('.interactive-section-block')?.dataset.sectionId;
@@ -823,7 +1210,7 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 9. License Studio Pills & Actions
+  // 10. License Studio Pills & Actions
   container.querySelectorAll('.lic-pill-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
@@ -862,7 +1249,7 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 10. Badge Popover Handlers
+  // 11. Badge Popover Handlers
   container.querySelectorAll('.open-badge-popover-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();

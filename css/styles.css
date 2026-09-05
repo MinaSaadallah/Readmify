@@ -242,3 +242,20 @@ body {
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Direct On-Image Floating Toolbar & Kid-Friendly Dropzone */
+.direct-image-editor-container {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-control-strip {
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7);
+  z-index: 20;
+}
+
+.kid-dropzone-box {
+  border-style: dashed;
+}
+

@@ -23,13 +23,16 @@ export function renderSectionEditor(container, meta = {}) {
     currentRenderedSectionId = null;
     container.innerHTML = `
       <div class="p-12 text-center text-muted-foreground text-xs space-y-3">
-        <div class="text-2xl">📋</div>
+        <div class="w-10 h-10 mx-auto rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
         <div class="space-y-1">
           <p class="font-medium text-foreground">No Section Selected</p>
           <p>Select a section from the bar above, or add a new section from the library.</p>
         </div>
-        <button id="empty-add-sec-btn" class="btn-primary text-xs px-3.5 py-1.5 shadow-sm">
-          ➕ Open Section Library
+        <button id="empty-add-sec-btn" class="btn-primary text-xs px-3.5 py-1.5 shadow-sm inline-flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          <span>Open Section Library</span>
         </button>
       </div>
     `;
