@@ -67,65 +67,71 @@
           </svg>
         </div>
         <span class="text-sm font-semibold tracking-tight text-foreground">Readmify</span>
-        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded border border-border bg-muted text-muted-foreground">v2.0</span>
-      </div>
-
-      <!-- Quick Template Selector -->
-      <div class="hidden xl:block ml-2">
-        <select id="template-select" class="h-8 text-xs border border-border bg-background text-muted-foreground hover:text-foreground rounded-md px-2.5 focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer transition">
-          <!-- Populated dynamically -->
-        </select>
+        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded border border-border bg-muted text-muted-foreground">v3.0</span>
       </div>
     </div>
 
-    <!-- Free GitHub API Auto-Detect Bar (Center) -->
-    <div class="flex items-center flex-1 max-w-md mx-2">
+    <!-- GitHub Deep Scanner & Auto-Detect Bar (Center) -->
+    <div class="flex items-center flex-1 max-w-lg mx-2">
       <div class="relative w-full flex items-center">
         <span class="absolute left-2.5 text-muted-foreground text-xs pointer-events-none">🐙</span>
         <input 
           type="text" 
           id="nav-github-input" 
-          placeholder="Auto-detect repo (e.g. facebook/react)..." 
-          class="h-8 w-full pl-7 pr-20 text-xs border border-border bg-card text-foreground placeholder:text-muted-foreground rounded-md focus:outline-none focus:ring-1 focus:ring-ring transition"
+          placeholder="Paste repo link (e.g. facebook/react or github.com/owner/repo)..." 
+          class="h-8 w-full pl-7 pr-24 text-xs border border-border bg-card text-foreground placeholder:text-muted-foreground rounded-md focus:outline-none focus:ring-1 focus:ring-ring transition"
         />
         <button 
           id="nav-github-detect-btn" 
           class="absolute right-1 h-6 px-2.5 bg-primary text-primary-foreground hover:bg-zinc-200 text-[11px] font-medium rounded transition flex items-center gap-1 shadow-xs"
-          title="Free GitHub API: Auto-fetch languages, description, topics, stars"
+          title="Deep Repo Scan: file tree, manifests, dependencies, env vars, scripts"
         >
-          <span>⚡</span> Detect
+          <span>⚡</span> Deep Scan
         </button>
       </div>
     </div>
 
     <!-- Center Segmented Tabs (shadcn Tabs) -->
     <div class="hidden lg:flex items-center bg-muted p-0.5 rounded-lg border border-border">
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm" data-mode="split">
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm" data-mode="split" title="Side-by-side Editor and Live Preview">
         Split View
       </button>
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="preview">
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="editor" title="Full screen Editor for distraction-free writing">
+        Editor Focus
+      </button>
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="preview" title="Full screen Live GitHub Preview">
         Live Preview
       </button>
-      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="raw">
+      <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="raw" title="Raw Markdown Output">
         Raw Markdown
       </button>
     </div>
 
     <!-- Action Buttons -->
     <div class="flex items-center gap-2">
-      <!-- Photo Presets / Uploader -->
-      <button id="nav-photos-btn" class="h-8 px-2.5 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition hidden sm:inline-flex items-center gap-1.5" title="Curated Banners & Image Upload">
-        <span>🖼️</span> Banners
+      <!-- Add Section Catalog Button -->
+      <button id="nav-add-section-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-border transition flex items-center gap-1.5 shadow-sm" title="Explore 16+ pre-built sections">
+        <span>➕</span> <span class="hidden sm:inline font-semibold">Add Section</span>
       </button>
 
-      <!-- 3-Min Wizard Button -->
-      <button id="nav-wizard-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-muted text-foreground border border-border hover:bg-accent transition flex items-center gap-1.5 shadow-sm">
-        <span>🪄</span> <span class="hidden sm:inline">3-Min</span> Wizard
+      <!-- Photo Presets / Uploader / Cropper Studio -->
+      <button id="nav-photos-btn" class="h-8 px-2.5 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition hidden sm:inline-flex items-center gap-1.5" title="Interactive Image Cropper, Resizer & Banner Hub">
+        <span>🎨</span> Image Studio
+      </button>
+
+      <!-- Easy Guide Button -->
+      <button id="nav-wizard-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-muted text-foreground border border-border hover:bg-accent transition flex items-center gap-1.5 shadow-sm" title="Open Easy Guide & Deep Scanner">
+        <span>📖</span> <span class="hidden sm:inline">Easy</span> Guide
       </button>
 
       <!-- Theme Switcher (Dark / Light) -->
       <button id="theme-toggle-btn" class="h-8 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition flex items-center gap-1" title="Toggle GitHub Preview Light/Dark">
         <span>🌙</span>
+      </button>
+
+      <!-- Import Button -->
+      <button id="nav-import-btn" class="h-8 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition hidden sm:inline-flex items-center gap-1" title="Import existing README">
+        <span>📥</span>
       </button>
 
       <!-- Copy Button -->
@@ -146,32 +152,47 @@
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
 
     <!-- LEFT PANE: MODULAR EDITOR -->
-    <div id="editor-left-pane" class="w-full lg:w-1/2 h-full flex flex-col sm:flex-row border-r border-border bg-background overflow-hidden">
+    <div id="editor-left-pane" class="w-full lg:w-1/2 h-full flex flex-col border-r border-border bg-background overflow-hidden">
       
-      <!-- Section Sidebar (Left sub-panel) -->
-      <div class="w-full sm:w-56 border-b sm:border-b-0 sm:border-r border-border flex flex-col bg-background/50 flex-shrink-0">
-        <div class="p-3 border-b border-border flex items-center justify-between">
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Sections</span>
-          <button id="add-custom-sec-btn" class="text-[11px] font-medium text-foreground hover:bg-accent px-1.5 py-0.5 rounded border border-border transition">
-            + Custom
-          </button>
+      <!-- TOP BAR: HORIZONTAL SECTION PILL BAR & WORKSPACE CONTROLS -->
+      <div class="border-b border-border bg-card/60 px-3 py-2 flex items-center justify-between gap-2 overflow-hidden flex-shrink-0">
+        <!-- Horizontal scrollable pills for instant section jumping -->
+        <div id="section-pill-bar" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 flex-1 min-w-0">
+          <!-- Dynamically populated chips -->
         </div>
 
-        <!-- Section list items -->
-        <div id="section-list-items" class="flex-1 p-2 space-y-1 overflow-y-auto">
-          <!-- Dynamically populated -->
-        </div>
-
-        <div class="p-2.5 border-t border-border bg-background flex justify-between items-center text-xs">
-          <button id="reset-template-btn" class="text-[11px] text-muted-foreground hover:text-rose-400 transition">
-            Reset
+        <!-- Right Quick Controls -->
+        <div class="flex items-center gap-1.5 flex-shrink-0 border-l border-border pl-2">
+          <button id="pill-add-section-btn" class="h-7 px-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1 shadow-xs" title="Explore Section Library">
+            <span>➕</span> <span class="hidden sm:inline">Add</span>
           </button>
-          <span class="text-[10px] text-zinc-600">Auto-saved</span>
+          <button id="toggle-section-drawer-btn" class="h-7 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition" title="Toggle Section List & Ordering Drawer">
+            <span>☰</span>
+          </button>
+          <button id="reset-template-btn" class="h-7 px-2 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded border border-border transition" title="Reset to Defaults">
+            <span>↺</span>
+          </button>
         </div>
       </div>
 
-      <!-- Section Form Inputs (Right sub-panel) -->
-      <div id="section-editor-container" class="flex-1 h-full overflow-y-auto bg-card/20">
+      <!-- COLLAPSIBLE SECTION REORDER DRAWER (Toggled with ☰) -->
+      <div id="section-drawer-panel" class="hidden border-b border-border bg-card/95 px-3 py-2.5 max-h-56 overflow-y-auto flex-shrink-0 transition-all">
+        <div class="flex items-center justify-between pb-2 mb-2 border-b border-border text-[11px] text-muted-foreground">
+          <span class="font-semibold uppercase tracking-wider text-foreground">All Sections & Reordering</span>
+          <div class="flex items-center gap-2">
+            <button id="add-custom-sec-btn" class="text-[11px] font-medium text-foreground hover:bg-accent px-1.5 py-0.5 rounded border border-border transition">
+              + Custom
+            </button>
+            <button id="close-section-drawer-btn" class="text-xs hover:text-foreground p-0.5">✕</button>
+          </div>
+        </div>
+        <div id="section-list-items" class="space-y-1">
+          <!-- Dynamically populated list with up/down/toggle -->
+        </div>
+      </div>
+
+      <!-- SECTION FORM INPUTS (Full width, spacious & customizable) -->
+      <div id="section-editor-container" class="flex-1 h-full overflow-y-auto bg-card/10">
         <!-- Rendered dynamically -->
       </div>
     </div>
@@ -222,6 +243,9 @@
     </div>
 
   </main>
+
+  <!-- SECTION LIBRARY CATALOG MODAL CONTAINER -->
+  <div id="section-library-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>
 
   <!-- PHOTO / BANNER HUB MODAL CONTAINER -->
   <div id="photo-hub-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>

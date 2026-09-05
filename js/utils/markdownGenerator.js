@@ -4,7 +4,8 @@
  * Supports SkillIcons, Shields.io, GitHub Stats, Contributors, and Star History
  */
 import { SECTION_TYPES } from '../data/defaultSections.js';
-import { TECH_CATALOG, getBadgeUrl, getSkillIconsUrl } from '../data/techCatalog.js';
+import { TECH_CATALOG, TECH_CATEGORIES, getBadgeUrl, getSkillIconsUrl, getTechDocUrl } from '../data/techCatalog.js';
+import { getLicenseById } from '../data/licenses.js';
 
 export function generateMarkdown(sections) {
   if (!sections || !Array.isArray(sections)) return '';
@@ -32,10 +33,16 @@ function generateSectionMarkdown(section, context) {
 
   switch (type) {
     case SECTION_TYPES.HERO: {
-      const isCentered = data.align === 'center';
-      const logoTag = data.showLogo && data.logoUrl
-        ? `<img src="${data.logoUrl}" alt="${data.projectName} Banner" width="100%" style="border-radius: 8px; margin-bottom: 1rem;" />\n  <br/>`
-        : '';
+      const align = data.align || 'center';
+      const isCentered = align === 'center';
+      const width = data.logoWidth || '100%';
+      const radius = data.logoRadius || '8px';
+      let logoTag = '';
+      if (data.showLogo && data.logoUrl) {
+        const rawImg = `<img src="${data.logoUrl}" alt="${data.projectName || 'Project'} Banner" width="${width}" style="border-radius: ${radius}; margin-bottom: 1rem; max-width: 100%;" />`;
+        const wrappedImg = data.logoLinkUrl ? `<a href="${data.logoLinkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
+        logoTag = `${wrappedImg}\n  <br/>`;
+      }
 
       if (isCentered) {
         return `<div align="center">
@@ -43,33 +50,80 @@ function generateSectionMarkdown(section, context) {
   <h1>${data.projectName || 'Project Title'}</h1>
   <p>${data.tagline || ''}</p>
 </div>`;
+      } else if (align === 'right') {
+        return `<div align="right">
+  ${logoTag}
+  <h1>${data.projectName || 'Project Title'}</h1>
+  <p>${data.tagline || ''}</p>
+</div>`;
       } else {
-        const logo = data.showLogo && data.logoUrl ? `![Banner](${data.logoUrl})\n\n` : '';
+        const logo = data.showLogo && data.logoUrl
+          ? (data.logoLinkUrl ? `[![Banner](${data.logoUrl})](${data.logoLinkUrl})\n\n` : `![Banner](${data.logoUrl})\n\n`)
+          : '';
         return `${logo}# ${data.projectName || 'Project Title'}\n\n> ${data.tagline || ''}`;
       }
     }
 
     case SECTION_TYPES.BADGES: {
+      const bOwner = data.repoOwner || repoOwner;
+      const bRepo = data.repoName || repoName;
       const style = data.style || 'for-the-badge';
+      const align = data.align || 'center';
+      const format = data.format || 'html';
       const badges = [];
 
+      function addBadge(label, imgUrl, linkUrl) {
+        if (format === 'html') {
+          if (linkUrl) {
+            badges.push(`<a href="${linkUrl}"><img src="${imgUrl}" alt="${label}" /></a>`);
+          } else {
+            badges.push(`<img src="${imgUrl}" alt="${label}" />`);
+          }
+        } else {
+          if (linkUrl) {
+            badges.push(`[![${label}](${imgUrl})](${linkUrl})`);
+          } else {
+            badges.push(`![${label}](${imgUrl})`);
+          }
+        }
+      }
+
       if (data.showStars) {
-        badges.push(`[![GitHub Stars](https://img.shields.io/github/stars/${repoOwner}/${repoName}?style=${style})](https://github.com/${repoOwner}/${repoName}/stargazers)`);
+        addBadge('GitHub Stars', `https://img.shields.io/github/stars/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/stargazers`);
       }
       if (data.showForks) {
-        badges.push(`[![GitHub Forks](https://img.shields.io/github/forks/${repoOwner}/${repoName}?style=${style})](https://github.com/${repoOwner}/${repoName}/network/members)`);
+        addBadge('GitHub Forks', `https://img.shields.io/github/forks/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/network/members`);
       }
       if (data.showIssues) {
-        badges.push(`[![GitHub Issues](https://img.shields.io/github/issues/${repoOwner}/${repoName}?style=${style})](https://github.com/${repoOwner}/${repoName}/issues)`);
+        addBadge('GitHub Issues', `https://img.shields.io/github/issues/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/issues`);
+      }
+      if (data.showPRs) {
+        addBadge('GitHub Pull Requests', `https://img.shields.io/github/issues-pr/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/pulls`);
       }
       if (data.showLicense) {
-        badges.push(`[![GitHub License](https://img.shields.io/github/license/${repoOwner}/${repoName}?style=${style})](https://github.com/${repoOwner}/${repoName}/blob/main/LICENSE)`);
+        addBadge('GitHub License', `https://img.shields.io/github/license/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/blob/main/LICENSE`);
       }
       if (data.showRelease) {
-        badges.push(`[![GitHub Release](https://img.shields.io/github/v/release/${repoOwner}/${repoName}?style=${style})](https://github.com/${repoOwner}/${repoName}/releases)`);
+        addBadge('GitHub Release', `https://img.shields.io/github/v/release/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/releases`);
       }
       if (data.showLastCommit) {
-        badges.push(`![GitHub Last Commit](https://img.shields.io/github/last-commit/${repoOwner}/${repoName}?style=${style})`);
+        addBadge('GitHub Last Commit', `https://img.shields.io/github/last-commit/${bOwner}/${bRepo}?style=${style}`);
+      }
+      if (data.showCodeSize) {
+        addBadge('GitHub Code Size', `https://img.shields.io/github/languages/code-size/${bOwner}/${bRepo}?style=${style}`);
+      }
+      if (data.showContributors) {
+        addBadge('GitHub Contributors', `https://img.shields.io/github/contributors/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/graphs/contributors`);
+      }
+      if (data.showActionsCI) {
+        const wf = data.ciWorkflowFile || 'ci.yml';
+        addBadge('CI Status', `https://github.com/${bOwner}/${bRepo}/actions/workflows/${wf}/badge.svg`, `https://github.com/${bOwner}/${bRepo}/actions`);
+      }
+      if (data.showTopLang) {
+        addBadge('Top Language', `https://img.shields.io/github/languages/top/${bOwner}/${bRepo}?style=${style}`);
+      }
+      if (data.showWatchers) {
+        addBadge('GitHub Watchers', `https://img.shields.io/github/watchers/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/watchers`);
       }
 
       if (Array.isArray(data.customBadges)) {
@@ -77,12 +131,24 @@ function generateSectionMarkdown(section, context) {
           if (!cb.label || !cb.message) continue;
           const logoPart = cb.logo ? `&logo=${encodeURIComponent(cb.logo)}` : '';
           const url = `https://img.shields.io/badge/${encodeURIComponent(cb.label)}-${encodeURIComponent(cb.message)}-${cb.color || 'blue'}?style=${style}${logoPart}`;
-          badges.push(`![${cb.label}](${url})`);
+          addBadge(cb.label, url);
         }
       }
 
       if (badges.length === 0) return '';
-      return `<div align="center">\n  ${badges.join('  \n  ')}\n</div>`;
+
+      if (format === 'html') {
+        const inner = badges.join('\n  ');
+        return `<p align="${align}">\n  ${inner}\n</p>`;
+      } else {
+        if (align === 'center') {
+          return `<div align="center">\n\n${badges.join('  \n')}\n\n</div>`;
+        } else if (align === 'right') {
+          return `<div align="right">\n\n${badges.join('  \n')}\n\n</div>`;
+        } else {
+          return badges.join('  \n');
+        }
+      }
     }
 
     case SECTION_TYPES.ABOUT: {
@@ -90,37 +156,93 @@ function generateSectionMarkdown(section, context) {
     }
 
     case SECTION_TYPES.TECH_STACK: {
-      const style = data.style || 'skillicons';
+      const layout = data.layout || 'categorized';
+      const style = data.style || 'for-the-badge';
+      const align = data.align || 'center';
       const techIds = data.technologies || [];
 
       if (techIds.length === 0) {
         return `## ${data.heading || 'Built With'}\n\n*(No technologies selected yet)*`;
       }
 
-      // 1. SkillIcons Style
-      if (style === 'skillicons') {
-        const skillUrl = getSkillIconsUrl(techIds, 'dark');
+      const sizeMap = { small: 28, medium: 40, large: 52, xlarge: 64 };
+      const iconPx = sizeMap[data.iconSize] || (parseInt(data.iconSize, 10) || 40);
+      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+
+      // 1. Categorized Layout (Real-world industry standard)
+      if (layout === 'categorized') {
+        const catMap = {};
+        for (const item of items) {
+          const catId = item.category || 'tools';
+          if (!catMap[catId]) catMap[catId] = [];
+          catMap[catId].push(item);
+        }
+
+        const catBlocks = [];
+        for (const catDef of TECH_CATEGORIES) {
+          if (catDef.id === 'all') continue;
+          const catItems = catMap[catDef.id];
+          if (!catItems || catItems.length === 0) continue;
+
+          const badgeRows = catItems.map(item => {
+            const docUrl = getTechDocUrl(item);
+            const badgeUrl = getBadgeUrl(item, style);
+            return `[![${item.name}](${badgeUrl})](${docUrl})`;
+          }).join(' ');
+
+          catBlocks.push(`### ${catDef.name}\n\n${badgeRows}`);
+        }
+
+        return `## ${data.heading || 'Built With'}\n\n${catBlocks.join('\n\n')}`;
+      }
+
+      // 2. Devicon / SimpleIcons Interactive Grid with Doc Links
+      if (layout === 'devicon-grid') {
+        const marginPx = data.spacing === 'compact' ? 4 : data.spacing === 'relaxed' ? 12 : 8;
+        const rows = items.map(item => {
+          const docUrl = getTechDocUrl(item);
+          const labelHtml = data.showLabels ? `<br/><sub style="font-size:10px">${item.name}</sub>` : '';
+          return `  <a href="${docUrl}" target="_blank" rel="noreferrer" style="margin: ${marginPx}px; display: inline-block; text-align: center; text-decoration: none;">\n    <img src="https://cdn.simpleicons.org/${item.logo}/${item.color}" alt="${item.name}" width="${iconPx}" height="${iconPx}" title="${item.name}" />${labelHtml}\n  </a>`;
+        }).join('\n');
+
+        return `## ${data.heading || 'Built With'}\n\n<p align="${align}">\n${rows}\n</p>`;
+      }
+
+      // 3. SkillIcons Ribbon
+      if (layout === 'skillicons') {
+        const theme = data.skilliconsTheme || 'dark';
+        const perline = data.skilliconsPerline || 10;
+        const skillUrl = getSkillIconsUrl(techIds, theme, perline);
         if (skillUrl) {
-          return `## ${data.heading || 'Built With'}\n\n<p align="center">\n  <a href="https://skillicons.dev">\n    <img src="${skillUrl}" alt="Tech Stack" />\n  </a>\n</p>`;
+          return `## ${data.heading || 'Built With'}\n\n<p align="${align}">\n  <a href="https://skillicons.dev">\n    <img src="${skillUrl}" alt="Tech Stack" />\n  </a>\n</p>`;
         }
       }
 
-      // 2. GitHub Top Languages Card
-      if (style === 'github-stats') {
-        return `## ${data.heading || 'Languages & Tech'}\n\n<p align="center">\n  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${repoOwner}&repo=${repoName}&layout=compact&theme=radical" alt="Top Languages" />\n</p>`;
+      // 4. Matrix / Comparison Table
+      if (layout === 'matrix-table') {
+        const tableRows = items.map(item => {
+          const catName = TECH_CATEGORIES.find(c => c.id === item.category)?.name || 'General';
+          const docUrl = getTechDocUrl(item);
+          return `| **${item.name}** | ${catName} | Core Dependency | [Documentation](${docUrl}) |`;
+        }).join('\n');
+
+        return `## ${data.heading || 'Built With'}\n\n| Technology | Category | Role | Official Docs |\n| :--- | :--- | :--- | :--- |\n${tableRows}`;
       }
 
-      // 3. Devicon Logo Grid
-      if (style === 'devicon-grid') {
-        const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
-        const rows = items.map(item => `  <img src="https://cdn.simpleicons.org/${item.logo}" alt="${item.name}" width="36" height="36" style="margin: 6px;" title="${item.name}" />`).join('\n');
-        return `## ${data.heading || 'Built With'}\n\n<p align="center">\n${rows}\n</p>`;
-      }
+      // 5. Default Shields.io Badges
+      const badgeList = items.map(item => {
+        const docUrl = getTechDocUrl(item);
+        const badgeUrl = getBadgeUrl(item, style);
+        return `[![${item.name}](${badgeUrl})](${docUrl})`;
+      });
 
-      // 4. Default: Shields.io Badges
-      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
-      const badgeMarkdown = items.map(item => `![${item.name}](${getBadgeUrl(item, style)})`).join(' ');
-      return `## ${data.heading || 'Built With'}\n\n${badgeMarkdown}`;
+      if (align === 'center') {
+        return `## ${data.heading || 'Built With'}\n\n<p align="center">\n  ${badgeList.join('\n  ')}\n</p>`;
+      } else if (align === 'right') {
+        return `## ${data.heading || 'Built With'}\n\n<p align="right">\n  ${badgeList.join('\n  ')}\n</p>`;
+      } else {
+        return `## ${data.heading || 'Built With'}\n\n${badgeList.join(' ')}`;
+      }
     }
 
     case SECTION_TYPES.FEATURES: {
@@ -136,9 +258,22 @@ function generateSectionMarkdown(section, context) {
 
     case SECTION_TYPES.DEMO: {
       const caption = data.caption || 'Project Preview';
-      const imageMd = data.imageUrl ? `![${caption}](${data.imageUrl})` : '';
-      const linkMd = data.liveUrl ? `\n\n🔗 **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
-      return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${linkMd}`;
+      const width = data.width || '100%';
+      const radius = data.radius || '8px';
+      const align = data.align || 'center';
+      const linkUrl = data.linkUrl || data.liveUrl;
+      let imageMd = '';
+      if (data.imageUrl) {
+        const rawImg = `<img src="${data.imageUrl}" alt="${caption}" width="${width}" style="border-radius: ${radius}; max-width: 100%;" />`;
+        const wrappedImg = linkUrl ? `<a href="${linkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
+        if (width !== '100%' || align !== 'left' || radius !== '0px' || linkUrl) {
+          imageMd = `<div align="${align}">\n  ${wrappedImg}\n</div>`;
+        } else {
+          imageMd = `![${caption}](${data.imageUrl})`;
+        }
+      }
+      const liveLinkMd = data.liveUrl && !linkUrl ? `\n\n🔗 **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
+      return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${liveLinkMd}`;
     }
 
     case SECTION_TYPES.INSTALLATION: {
@@ -156,6 +291,12 @@ function generateSectionMarkdown(section, context) {
       return lines.join('\n');
     }
 
+    case SECTION_TYPES.PROJECT_STRUCTURE: {
+      const tree = data.tree || '';
+      if (!tree.trim()) return '';
+      return `## ${data.heading || 'Project Structure'}\n\n\`\`\`text\n${tree.trim()}\n\`\`\``;
+    }
+
     case SECTION_TYPES.ENV_VARS: {
       const vars = data.variables || [];
       if (vars.length === 0) return '';
@@ -168,6 +309,28 @@ function generateSectionMarkdown(section, context) {
       const codeBlock = data.code ? `\`\`\`${lang}\n${data.code}\n\`\`\`` : '';
       const note = data.note ? `\n\n> [!NOTE]\n> ${data.note}` : '';
       return `## ${data.heading || 'Usage'}\n\n${codeBlock}${note}`;
+    }
+
+    case SECTION_TYPES.API_REFERENCE: {
+      const endpoints = data.endpoints || [];
+      if (endpoints.length === 0) return '';
+      const rows = endpoints.map(ep => `| \`${ep.method || 'GET'}\` | \`${ep.path || '/'}\` | ${ep.desc || '-'} | \`${ep.auth || 'None'}\` |`).join('\n');
+      return `## ${data.heading || 'API Reference'}\n\n| Method | Endpoint | Description | Auth |\n| :--- | :--- | :--- | :--- |\n${rows}`;
+    }
+
+    case SECTION_TYPES.BENCHMARKS: {
+      const rows = data.rows || [];
+      const subtitle = data.subtitle ? `*${data.subtitle}*\n\n` : '';
+      if (rows.length === 0) return '';
+      const tableRows = rows.map(r => `| **${r.task}** | ${r.baseline || '-'} | **${r.current || '-'}** | \`${r.diff || '-'}\` |`).join('\n');
+      return `## ${data.heading || 'Benchmarks'}\n\n${subtitle}| Benchmark Task | Baseline | Project | Improvement |\n| :--- | :--- | :--- | :--- |\n${tableRows}`;
+    }
+
+    case SECTION_TYPES.FAQ: {
+      const questions = data.questions || [];
+      if (questions.length === 0) return '';
+      const details = questions.map(q => `<details>\n<summary><strong>${q.q || 'Question'}</strong></summary>\n<br/>\n\n${q.a || 'Answer'}\n\n</details>`).join('\n\n');
+      return `## ${data.heading || 'Frequently Asked Questions'}\n\n${details}`;
     }
 
     case SECTION_TYPES.ROADMAP: {
@@ -184,8 +347,56 @@ function generateSectionMarkdown(section, context) {
       return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}\n\n${contribAvatars}`;
     }
 
+    case SECTION_TYPES.SPONSORS: {
+      const msg = data.message ? `${data.message}\n\n` : '';
+      const badges = [];
+      if (data.buyMeACoffee) {
+        badges.push(`[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/${data.buyMeACoffee})`);
+      }
+      if (data.githubSponsor) {
+        badges.push(`[![GitHub Sponsors](https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/${data.githubSponsor})`);
+      }
+      if (data.patreon) {
+        badges.push(`[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/${data.patreon})`);
+      }
+      const badgeStr = badges.length > 0 ? `<p align="center">\n  ${badges.join('  \n  ')}\n</p>` : '';
+      return `## ${data.heading || 'Support & Sponsors'}\n\n${msg}${badgeStr}`;
+    }
+
+    case SECTION_TYPES.CHANGELOG: {
+      const releases = data.releases || [];
+      if (releases.length === 0) return '';
+      const list = releases.map(rel => {
+        const changes = (rel.changes || []).map(c => `- ${c}`).join('\n');
+        return `### ${rel.version || 'v1.0.0'} (${rel.date || 'Latest'})\n\n${changes}`;
+      }).join('\n\n');
+      return `## ${data.heading || 'Changelog'}\n\n${list}`;
+    }
+
     case SECTION_TYPES.LICENSE: {
-      return `## ${data.heading || 'License'}\n\nDistributed under the ${data.type || 'MIT'} License. See \`LICENSE\` for more information.\n\nCopyright (c) ${data.year || '2026'} ${data.holder || 'Your Name'}`;
+      const lic = getLicenseById(data.type || 'MIT');
+      const year = data.year || new Date().getFullYear().toString();
+      const holder = data.holder || 'The Authors';
+      const projectName = data.projectName || repoName || 'This project';
+      const presentation = data.presentation || 'badge-minimal';
+
+      const badgeTag = `<p align="center">\n  <a href="${lic.url}">\n    <img src="${lic.badgeUrl}" alt="License: ${lic.id}" />\n  </a>\n</p>`;
+
+      if (presentation === 'collapsible-details') {
+        const fullText = lic.generateText(year, holder, projectName);
+        return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**. See [\`LICENSE\`](LICENSE) for more information.\n\n<details>\n<summary><strong>View Full ${lic.name} Agreement</strong></summary>\n<br/>\n\n\`\`\`text\n${fullText}\n\`\`\`\n\n</details>\n\nCopyright (c) ${year} ${holder}`;
+      }
+
+      if (presentation === 'summary-table') {
+        const perms = lic.permissions.map(p => `✅ ${p}`).join('<br/>') || '-';
+        const limits = lic.limitations.map(l => `❌ ${l}`).join('<br/>') || '-';
+        const conds = lic.conditions.map(c => `ℹ️ ${c}`).join('<br/>') || '-';
+
+        return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**.\n\n| Permissions | Limitations | Conditions |\n| :--- | :--- | :--- |\n| ${perms} | ${limits} | ${conds} |\n\nCopyright (c) ${year} ${holder}. See [\`LICENSE\`](LICENSE) for the full text.`;
+      }
+
+      // Default: badge-minimal
+      return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**. See [\`LICENSE\`](LICENSE) for more information.\n\nCopyright (c) ${year} ${holder}`;
     }
 
     case SECTION_TYPES.AUTHOR: {

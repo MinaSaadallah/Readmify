@@ -79,6 +79,8 @@ export const TECH_CATALOG = [
   { id: 'supabase', name: 'Supabase', category: 'database', color: '3ECF8E', logo: 'supabase', logoColor: 'black', skillSlug: 'supabase' },
   { id: 'firebase', name: 'Firebase', category: 'database', color: 'FFCA28', logo: 'firebase', logoColor: 'black', skillSlug: 'firebase' },
   { id: 'prisma', name: 'Prisma', category: 'database', color: '2D3748', logo: 'prisma', logoColor: 'white', skillSlug: 'prisma' },
+  { id: 'drizzle', name: 'Drizzle ORM', category: 'database', color: 'C5F74F', logo: 'drizzle', logoColor: 'black', skillSlug: null },
+  { id: 'sqlalchemy', name: 'SQLAlchemy', category: 'database', color: 'D71F00', logo: 'sqlalchemy', logoColor: 'white', skillSlug: null },
 
   // --- CLOUD & DEVOPS ---
   { id: 'docker', name: 'Docker', category: 'devops', color: '2496ED', logo: 'docker', logoColor: 'white', skillSlug: 'docker' },
@@ -94,13 +96,21 @@ export const TECH_CATALOG = [
   { id: 'nginx', name: 'Nginx', category: 'devops', color: '009639', logo: 'nginx', logoColor: 'white', skillSlug: 'nginx' },
   { id: 'linux', name: 'Linux', category: 'devops', color: 'FCC624', logo: 'linux', logoColor: 'black', skillSlug: 'linux' },
 
-  // --- TOOLS & AI ---
+  // --- TOOLS & TESTING ---
   { id: 'git', name: 'Git', category: 'tools', color: 'F05032', logo: 'git', logoColor: 'white', skillSlug: 'git' },
   { id: 'github', name: 'GitHub', category: 'tools', color: '181717', logo: 'github', logoColor: 'white', skillSlug: 'github' },
   { id: 'figma', name: 'Figma', category: 'tools', color: 'F24E1E', logo: 'figma', logoColor: 'white', skillSlug: 'figma' },
   { id: 'postman', name: 'Postman', category: 'tools', color: 'FF6C37', logo: 'postman', logoColor: 'white', skillSlug: 'postman' },
   { id: 'jest', name: 'Jest', category: 'tools', color: 'C21325', logo: 'jest', logoColor: 'white', skillSlug: 'jest' },
   { id: 'vitest', name: 'Vitest', category: 'tools', color: '6E9F18', logo: 'vitest', logoColor: 'white', skillSlug: 'vitest' },
+  { id: 'cypress', name: 'Cypress', category: 'tools', color: '69D3A7', logo: 'cypress', logoColor: 'black', skillSlug: 'cypress' },
+  { id: 'playwright', name: 'Playwright', category: 'tools', color: '2EAD33', logo: 'playwright', logoColor: 'white', skillSlug: 'playwright' },
+  { id: 'eslint', name: 'ESLint', category: 'tools', color: '4B32C3', logo: 'eslint', logoColor: 'white', skillSlug: null },
+  { id: 'prettier', name: 'Prettier', category: 'tools', color: 'F7B93E', logo: 'prettier', logoColor: 'black', skillSlug: null },
+  { id: 'pnpm', name: 'pnpm', category: 'tools', color: 'F69220', logo: 'pnpm', logoColor: 'white', skillSlug: 'pnpm' },
+  { id: 'bun', name: 'Bun', category: 'tools', color: '000000', logo: 'bun', logoColor: 'white', skillSlug: 'bun' },
+  { id: 'yarn', name: 'Yarn', category: 'tools', color: '2C8EBB', logo: 'yarn', logoColor: 'white', skillSlug: 'yarn' },
+  { id: 'npm', name: 'npm', category: 'tools', color: 'CB3837', logo: 'npm', logoColor: 'white', skillSlug: 'npm' },
   { id: 'pytorch', name: 'PyTorch', category: 'tools', color: 'EE4C2C', logo: 'pytorch', logoColor: 'white', skillSlug: 'pytorch' },
   { id: 'tensorflow', name: 'TensorFlow', category: 'tools', color: 'FF6F00', logo: 'tensorflow', logoColor: 'white', skillSlug: 'tensorflow' }
 ];
@@ -110,11 +120,93 @@ export function getBadgeUrl(item, style = 'for-the-badge') {
   return `https://img.shields.io/badge/${encodedName}-${item.color}?style=${style}&logo=${item.logo}&logoColor=${item.logoColor}`;
 }
 
-export function getSkillIconsUrl(techIds, theme = 'dark') {
+export function getSkillIconsUrl(techIds, theme = 'dark', perline = 10) {
   const slugs = techIds
     .map(id => TECH_CATALOG.find(t => t.id === id)?.skillSlug)
     .filter(Boolean);
   
   if (slugs.length === 0) return null;
-  return `https://skillicons.dev/icons?i=${slugs.join(',')}&theme=${theme}`;
+  return `https://skillicons.dev/icons?i=${slugs.join(',')}&theme=${theme}&perline=${perline || 10}`;
+}
+
+export const TECH_DOC_MAP = {
+  typescript: 'https://www.typescriptlang.org',
+  javascript: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+  python: 'https://www.python.org',
+  rust: 'https://www.rust-lang.org',
+  go: 'https://go.dev',
+  java: 'https://www.java.com',
+  csharp: 'https://dotnet.microsoft.com/en-us/languages/csharp',
+  cpp: 'https://isocpp.org',
+  c: 'https://en.cppreference.com/w/c',
+  php: 'https://www.php.net',
+  swift: 'https://www.swift.org',
+  kotlin: 'https://kotlinlang.org',
+  dart: 'https://dart.dev',
+  ruby: 'https://www.ruby-lang.org',
+  html5: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+  css3: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
+  react: 'https://react.dev',
+  nextjs: 'https://nextjs.org',
+  vue: 'https://vuejs.org',
+  nuxtjs: 'https://nuxt.com',
+  svelte: 'https://svelte.dev',
+  angular: 'https://angular.dev',
+  tailwind: 'https://tailwindcss.com',
+  vite: 'https://vite.dev',
+  astro: 'https://astro.build',
+  redux: 'https://redux.js.org',
+  flutter: 'https://flutter.dev',
+  reactnative: 'https://reactnative.dev',
+  bootstrap: 'https://getbootstrap.com',
+  sass: 'https://sass-lang.com',
+  threejs: 'https://threejs.org',
+  electron: 'https://www.electronjs.org',
+  nodejs: 'https://nodejs.org',
+  express: 'https://expressjs.com',
+  fastapi: 'https://fastapi.tiangolo.com',
+  nestjs: 'https://nestjs.com',
+  django: 'https://www.djangoproject.com',
+  flask: 'https://flask.palletsprojects.com',
+  spring: 'https://spring.io',
+  graphql: 'https://graphql.org',
+  trpc: 'https://trpc.io',
+  hono: 'https://hono.dev',
+  bun: 'https://bun.sh',
+  deno: 'https://deno.com',
+  postgres: 'https://www.postgresql.org',
+  mongodb: 'https://www.mongodb.com',
+  redis: 'https://redis.io',
+  mysql: 'https://www.mysql.com',
+  sqlite: 'https://www.sqlite.org',
+  prisma: 'https://www.prisma.io',
+  drizzle: 'https://orm.drizzle.team',
+  supabase: 'https://supabase.com',
+  firebase: 'https://firebase.google.com',
+  docker: 'https://www.docker.com',
+  kubernetes: 'https://kubernetes.io',
+  aws: 'https://aws.amazon.com',
+  gcp: 'https://cloud.google.com',
+  azure: 'https://azure.microsoft.com',
+  vercel: 'https://vercel.com',
+  netlify: 'https://www.netlify.com',
+  cloudflare: 'https://www.cloudflare.com',
+  githubactions: 'https://github.com/features/actions',
+  git: 'https://git-scm.com',
+  github: 'https://github.com',
+  figma: 'https://www.figma.com',
+  postman: 'https://www.postman.com',
+  jest: 'https://jestjs.io',
+  vitest: 'https://vitest.dev',
+  cypress: 'https://www.cypress.io',
+  playwright: 'https://playwright.dev',
+  pnpm: 'https://pnpm.io',
+  yarn: 'https://yarnpkg.com',
+  npm: 'https://www.npmjs.com'
+};
+
+export function getTechDocUrl(itemOrId) {
+  const id = typeof itemOrId === 'string' ? itemOrId : itemOrId?.id;
+  if (!id) return 'https://github.com';
+  return TECH_DOC_MAP[id] || `https://github.com/topics/${encodeURIComponent(id)}`;
 }

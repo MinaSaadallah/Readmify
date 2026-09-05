@@ -1,48 +1,53 @@
 /**
- * Readmify - 3-Minute Quick Wizard (shadcn/ui style)
+ * Readmify - Easy Guide & Deep Repository Scanner Hub
+ * Smart auto-detection, live scanning visualizer, and streamlined manual setup
  */
 import { store } from '../store.js';
 import { SECTION_TYPES } from '../data/defaultSections.js';
 import { TECH_CATALOG } from '../data/techCatalog.js';
 import { fireConfetti, showToast } from '../utils/exportUtils.js';
+import { fetchGitHubRepoFullDetails, parseGitHubRepoInput } from '../services/githubApi.js';
 
-let currentStep = 1;
-const TOTAL_STEPS = 5;
+// Guide states: 'hub' | 'scanning' | 'report' | 'manual-step-1' | 'manual-step-2' | 'manual-step-3'
+let guideView = 'hub';
+let currentScanAnalysis = null;
+let currentScanProgress = { step: 1, message: 'Initializing deep scan...' };
+let currentRepoInput = '';
 
-let wizardData = {
+let manualData = {
   projectName: '',
   tagline: '',
   repoOwner: '',
   repoName: '',
-  align: 'center',
-  badges: {
-    showStars: true,
-    showForks: true,
-    showIssues: true,
-    showLicense: true,
-    showRelease: true,
-    style: 'for-the-badge'
-  },
-  technologies: ['javascript', 'html5', 'css3', 'git'],
-  features: [
-    { icon: '⚡', title: 'Lightning Fast', desc: 'Built for speed with minimal overhead.' },
-    { icon: '🔒', title: 'Secure & Private', desc: 'Runs entirely in your browser with zero tracking.' },
-    { icon: '🎯', title: 'Easy to Use', desc: 'Designed for beginners and pros alike.' }
-  ],
   packageManager: 'npm',
-  licenseType: 'MIT',
-  authorName: ''
+  technologies: ['javascript', 'html5', 'css3', 'git']
 };
 
-export function openWizard() {
-  currentStep = 1;
+const POPULAR_SAMPLE_REPOS = [
+  { label: 'Express.js', repo: 'expressjs/express' },
+  { label: 'FastAPI', repo: 'fastapi/fastapi' },
+  { label: 'Tailwind CSS', repo: 'tailwindlabs/tailwindcss' },
+  { label: 'React', repo: 'facebook/react' },
+  { label: 'shadcn/ui', repo: 'shadcn-ui/ui' }
+];
+
+export function openWizard(initialRepo = '', autoScan = false) {
   const state = store.getState();
   const hero = state.sections.find(s => s.type === SECTION_TYPES.HERO);
-  if (hero?.data?.projectName && hero.data.projectName !== 'Project Title') {
-    wizardData.projectName = hero.data.projectName;
-    wizardData.tagline = hero.data.tagline || '';
-    wizardData.repoOwner = hero.data.repoOwner || '';
-    wizardData.repoName = hero.data.repoName || '';
+
+  if (initialRepo) {
+    currentRepoInput = initialRepo;
+  } else if (hero?.data?.repoOwner && hero?.data?.repoName && hero.data.repoName !== 'your-awesome-project') {
+    currentRepoInput = `${hero.data.repoOwner}/${hero.data.repoName}`;
+  } else {
+    currentRepoInput = '';
+  }
+
+  if (hero?.data?.projectName && hero.data.projectName !== 'Readmify' && hero.data.projectName !== 'My Project') {
+    manualData.projectName = hero.data.projectName;
+    manualData.tagline = hero.data.tagline || '';
+    manualData.repoOwner = hero.data.repoOwner || '';
+    manualData.repoName = hero.data.repoName || '';
   }
 
   let modal = document.getElementById('quick-wizard-modal');
@@ -53,8 +58,14 @@ export function openWizard() {
     document.body.appendChild(modal);
   }
 
-  renderWizardStep();
   modal.classList.remove('hidden');
+
+  if (autoScan && currentRepoInput) {
+    startDeepScan(currentRepoInput);
+  } else {
+    guideView = 'hub';
+    renderGuideView();
+  }
 }
 
 export function closeWizard() {
@@ -64,365 +75,549 @@ export function closeWizard() {
   }
 }
 
-function renderWizardStep() {
+function renderGuideView() {
   const modal = document.getElementById('quick-wizard-modal');
   if (!modal) return;
 
-  const progressPercent = Math.round((currentStep / TOTAL_STEPS) * 100);
-
   modal.innerHTML = `
-    <div class="bg-card border border-border rounded-lg w-full max-w-xl shadow-2xl flex flex-col overflow-hidden">
-      <!-- Wizard Top Header -->
-      <div class="px-5 py-3.5 border-b border-border bg-card flex items-center justify-between">
+    <div class="bg-card border border-border rounded-lg w-full max-w-xl shadow-2xl flex flex-col overflow-hidden max-h-[88vh]">
+      <!-- Header -->
+      <div class="px-5 py-3.5 border-b border-border bg-card flex items-center justify-between flex-shrink-0">
         <div class="flex items-center gap-2.5">
           <div class="w-7 h-7 rounded-md bg-muted border border-border flex items-center justify-center text-foreground font-semibold text-xs">
-            🪄
+            📖
           </div>
           <div>
-            <h3 class="text-xs font-semibold text-foreground">3-Minute Quick Wizard</h3>
-            <p class="text-[11px] text-muted-foreground">Step ${currentStep} of ${TOTAL_STEPS}: ${getStepTitle(currentStep)}</p>
+            <h3 class="text-xs font-semibold text-foreground">Readmify Easy Guide</h3>
+            <p class="text-[11px] text-muted-foreground">${getGuideSubtitle()}</p>
           </div>
         </div>
-        <button id="close-wizard-btn" class="text-muted-foreground hover:text-foreground text-xs p-1">✕</button>
+        <button id="close-guide-btn" class="text-muted-foreground hover:text-foreground text-xs p-1">✕</button>
       </div>
 
-      <!-- Progress Bar -->
-      <div class="w-full bg-border h-0.5">
-        <div class="bg-foreground h-0.5 transition-all duration-300" style="width: ${progressPercent}%"></div>
+      <!-- Main Body -->
+      <div class="p-5 overflow-y-auto flex-1 space-y-4 bg-background">
+        ${getGuideBodyHtml()}
       </div>
 
-      <!-- Step Content Area -->
-      <div class="p-5 overflow-y-auto max-h-[60vh] space-y-3.5 bg-background">
-        ${getStepHtml(currentStep)}
-      </div>
-
-      <!-- Wizard Bottom Navigation -->
-      <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between">
-        <button id="wizard-prev-btn" class="btn-secondary text-xs ${currentStep === 1 ? 'invisible' : ''}">
-          ← Back
-        </button>
-        <div class="flex items-center gap-2">
-          ${currentStep < TOTAL_STEPS ? `
-            <button id="wizard-next-btn" class="btn-primary text-xs px-3.5 py-1.5">
-              Next Step →
-            </button>
-          ` : `
-            <button id="wizard-finish-btn" class="btn-primary text-xs px-4 py-1.5">
-              ✨ Finish & Generate
-            </button>
-          `}
-        </div>
+      <!-- Footer Navigation -->
+      <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between flex-shrink-0">
+        ${getGuideFooterHtml()}
       </div>
     </div>
   `;
 
-  modal.querySelector('#close-wizard-btn')?.addEventListener('click', closeWizard);
-
-  const prevBtn = modal.querySelector('#wizard-prev-btn');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      saveStepData(currentStep);
-      if (currentStep > 1) {
-        currentStep--;
-        renderWizardStep();
-      }
-    });
-  }
-
-  const nextBtn = modal.querySelector('#wizard-next-btn');
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      saveStepData(currentStep);
-      if (currentStep < TOTAL_STEPS) {
-        currentStep++;
-        renderWizardStep();
-      }
-    });
-  }
-
-  const finishBtn = modal.querySelector('#wizard-finish-btn');
-  if (finishBtn) {
-    finishBtn.addEventListener('click', () => {
-      saveStepData(currentStep);
-      applyWizardDataToStore();
-      closeWizard();
-      fireConfetti();
-      showToast('README generated successfully!', 'success');
-    });
-  }
-
-  attachStepSpecificListeners(currentStep, modal);
+  modal.querySelector('#close-guide-btn')?.addEventListener('click', closeWizard);
+  attachGuideListeners(modal);
 }
 
-function getStepTitle(step) {
-  switch (step) {
-    case 1: return 'Project Identity';
-    case 2: return 'Badges & Stats';
-    case 3: return 'Tech Stack';
-    case 4: return 'Key Features';
-    case 5: return 'Installation & License';
-    default: return '';
+function getGuideSubtitle() {
+  switch (guideView) {
+    case 'hub':
+      return 'The smartest way to generate a README from your repo';
+    case 'scanning':
+      return 'Deep scanning repository files, manifests & scripts...';
+    case 'report':
+      return 'Repository analyzed! Review insights before generating';
+    case 'manual-step-1':
+      return 'Manual Guide: Step 1 of 3 (Project Identity)';
+    case 'manual-step-2':
+      return 'Manual Guide: Step 2 of 3 (Tech Stack)';
+    case 'manual-step-3':
+      return 'Manual Guide: Step 3 of 3 (Run & Install)';
+    default:
+      return 'Create a stunning README';
   }
 }
 
-function getStepHtml(step) {
-  switch (step) {
-    case 1:
+function getGuideBodyHtml() {
+  switch (guideView) {
+    case 'hub':
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1.5">Project Name</label>
-          <input type="text" id="wiz-project-name" value="${wizardData.projectName}" placeholder="e.g. MyAwesomeApp" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1.5">Tagline / Short Description</label>
-          <input type="text" id="wiz-tagline" value="${wizardData.tagline}" placeholder="e.g. Fast, reliable web application" class="form-input text-xs" />
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1.5">GitHub Username / Org</label>
-            <input type="text" id="wiz-repo-owner" value="${wizardData.repoOwner}" placeholder="e.g. yourname" class="form-input text-xs" />
+        <!-- Main Card: Auto-Detect with Repo Link -->
+        <div class="p-4 bg-card border border-border rounded-lg space-y-3.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <h4 class="text-xs font-semibold text-foreground uppercase tracking-wider">Fastest: Scan Your GitHub Repo</h4>
           </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1.5">Repository Name</label>
-            <input type="text" id="wiz-repo-name" value="${wizardData.repoName}" placeholder="e.g. my-project" class="form-input text-xs" />
-          </div>
-        </div>
-      `;
+          <p class="text-xs text-muted-foreground leading-relaxed">
+            Paste your repository link. Readmify will deeply inspect your file tree, <code class="text-[11px] px-1 py-0.5 rounded bg-muted text-foreground">package.json</code>, lockfiles, environment variables, and scripts to construct an entire tailored README.
+          </p>
 
-    case 2:
-      return `
-        <p class="text-xs text-muted-foreground">Select automated badges for the top of your README:</p>
-        <div class="grid grid-cols-2 gap-2 p-3 bg-card border border-border rounded-md">
-          <label class="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input type="checkbox" id="wiz-badge-stars" ${wizardData.badges.showStars ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <span>GitHub Stars</span>
-          </label>
-          <label class="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input type="checkbox" id="wiz-badge-forks" ${wizardData.badges.showForks ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <span>GitHub Forks</span>
-          </label>
-          <label class="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input type="checkbox" id="wiz-badge-issues" ${wizardData.badges.showIssues ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <span>Open Issues</span>
-          </label>
-          <label class="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input type="checkbox" id="wiz-badge-license" ${wizardData.badges.showLicense ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <span>License Badge</span>
-          </label>
-          <label class="flex items-center gap-2 text-xs text-foreground cursor-pointer">
-            <input type="checkbox" id="wiz-badge-release" ${wizardData.badges.showRelease ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <span>Latest Release</span>
-          </label>
-        </div>
-      `;
-
-    case 3:
-      return `
-        <div class="flex items-center justify-between">
-          <p class="text-xs text-muted-foreground">Click to toggle project technologies:</p>
-          <span class="text-xs font-medium text-foreground" id="wiz-tech-count">${wizardData.technologies.length} selected</span>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 p-2.5 bg-card border border-border rounded-md max-h-56 overflow-y-auto">
-          ${TECH_CATALOG.slice(0, 36).map(item => {
-            const isSel = wizardData.technologies.includes(item.id);
-            return `
-              <div class="wiz-tech-chip flex items-center justify-between p-2 rounded-md border text-xs cursor-pointer select-none transition ${isSel ? 'bg-muted border-foreground/60 text-foreground font-medium ring-1 ring-ring' : 'bg-background border-border text-muted-foreground hover:text-foreground'}" data-id="${item.id}">
-                <span class="truncate">${item.name}</span>
-                <span class="text-[10px] ${isSel ? 'text-foreground' : 'text-transparent'}">✓</span>
+          <div class="space-y-2">
+            <div class="flex gap-2">
+              <div class="relative flex-1">
+                <span class="absolute left-2.5 top-2.5 text-muted-foreground text-xs pointer-events-none">🐙</span>
+                <input 
+                  type="text" 
+                  id="guide-repo-input" 
+                  value="${currentRepoInput}"
+                  placeholder="https://github.com/owner/repo or owner/repo..." 
+                  class="form-input text-xs pl-7 pr-3 h-9" 
+                />
               </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-
-    case 4:
-      return `
-        <div class="flex items-center justify-between">
-          <p class="text-xs text-muted-foreground">List key project highlights:</p>
-          <button id="wiz-add-feature-btn" class="text-xs text-foreground hover:underline font-medium">+ Add</button>
-        </div>
-        <div id="wiz-features-list" class="space-y-2">
-          ${wizardData.features.map((f, i) => `
-            <div class="flex items-center gap-2 p-2 bg-card border border-border rounded-md" data-wiz-f-idx="${i}">
-              <input type="text" class="wiz-f-icon w-8 text-center bg-background border border-border rounded text-xs py-1" value="${f.icon || '✨'}" />
-              <input type="text" class="wiz-f-title form-input py-1 text-xs flex-1" value="${f.title || ''}" placeholder="Feature Title" />
-              <input type="text" class="wiz-f-desc form-input py-1 text-xs flex-1" value="${f.desc || ''}" placeholder="Short description" />
-              <button class="wiz-f-remove text-muted-foreground hover:text-rose-400 text-xs px-1">×</button>
+              <button id="guide-deep-scan-btn" class="btn-primary text-xs px-4 h-9 whitespace-nowrap flex items-center gap-1.5 shadow-sm">
+                <span>⚡</span> Deep Scan & Generate
+              </button>
             </div>
-          `).join('')}
+
+            <!-- Quick Example Chips -->
+            <div class="flex flex-wrap items-center gap-1.5 pt-1">
+              <span class="text-[10px] text-muted-foreground mr-1">Try sample:</span>
+              ${POPULAR_SAMPLE_REPOS.map(sample => `
+                <button class="sample-repo-chip text-[10px] px-2 py-0.5 rounded border border-border bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground transition" data-repo="${sample.repo}">
+                  ${sample.label}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Alternative: Manual Setup -->
+        <div class="p-4 rounded-lg border border-dashed border-border bg-card/30 flex items-center justify-between gap-3">
+          <div class="space-y-0.5">
+            <div class="text-xs font-medium text-foreground">Building locally without a GitHub link yet?</div>
+            <p class="text-[11px] text-muted-foreground">Answer 3 simple questions to set up your project manually.</p>
+          </div>
+          <button id="guide-start-manual-btn" class="btn-secondary text-xs px-3 py-1.5 whitespace-nowrap">
+            1-Min Manual Guide →
+          </button>
         </div>
       `;
 
-    case 5:
+    case 'scanning':
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1.5">Package Manager / Quickstart</label>
-          <select id="wiz-package-manager" class="form-input text-xs">
-            <option value="npm" ${wizardData.packageManager === 'npm' ? 'selected' : ''}>Node.js / npm (npm install && npm start)</option>
-            <option value="pnpm" ${wizardData.packageManager === 'pnpm' ? 'selected' : ''}>pnpm (pnpm install && pnpm dev)</option>
-            <option value="pip" ${wizardData.packageManager === 'pip' ? 'selected' : ''}>Python / pip (pip install -r requirements.txt)</option>
-            <option value="cargo" ${wizardData.packageManager === 'cargo' ? 'selected' : ''}>Rust / Cargo (cargo build --release)</option>
-            <option value="docker" ${wizardData.packageManager === 'docker' ? 'selected' : ''}>Docker (docker compose up -d)</option>
-            <option value="static" ${wizardData.packageManager === 'static' ? 'selected' : ''}>Static HTML (Open index.html directly)</option>
-          </select>
-        </div>
+        <div class="py-8 px-4 flex flex-col items-center justify-center text-center space-y-4">
+          <div class="w-12 h-12 rounded-full border-2 border-border border-t-foreground animate-spin flex items-center justify-center text-xs">
+            ⚡
+          </div>
+          <div class="space-y-1">
+            <h4 class="text-xs font-semibold text-foreground">Analyzing Repository Architecture</h4>
+            <p id="guide-live-status-text" class="text-xs text-muted-foreground">${currentScanProgress.message}</p>
+          </div>
 
-        <div class="grid grid-cols-2 gap-3">
+          <div class="w-full max-w-sm bg-muted/40 border border-border rounded-lg p-3 text-left space-y-2 text-[11px] font-mono text-muted-foreground">
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 1 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step > 1 ? '✅' : '⏳'}</span> 1. Verify repository & metadata
+            </div>
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 2 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step > 2 ? '✅' : '⏳'}</span> 2. Scan recursive git file tree
+            </div>
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 3 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step > 3 ? '✅' : '⏳'}</span> 3. Inspect package manifests & lockfiles
+            </div>
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 4 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step > 4 ? '✅' : '⏳'}</span> 4. Extract dependencies & frameworks
+            </div>
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 5 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step > 5 ? '✅' : '⏳'}</span> 5. Parse environment variables (.env.example)
+            </div>
+            <div class="flex items-center gap-2 ${currentScanProgress.step >= 6 ? 'text-foreground font-medium' : 'opacity-40'}">
+              <span>${currentScanProgress.step >= 6 ? '✅' : '⏳'}</span> 6. Map directory tree & synthesize features
+            </div>
+          </div>
+        </div>
+      `;
+
+    case 'report':
+      if (!currentScanAnalysis) return '<p class="text-xs text-muted-foreground">No analysis data available.</p>';
+      const a = currentScanAnalysis;
+      const langSummary = a.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
+
+      return `
+        <div class="space-y-3.5">
+          <!-- Summary Header Box -->
+          <div class="p-3.5 bg-card border border-border rounded-lg flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-md bg-muted border border-border flex items-center justify-center text-sm font-semibold text-foreground">
+                📦
+              </div>
+              <div>
+                <h4 class="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                  <span>${a.owner} / ${a.repo}</span>
+                  <span class="text-[10px] px-1.5 py-0.2 rounded border border-border bg-muted text-muted-foreground font-normal">${a.license}</span>
+                </h4>
+                <p class="text-[11px] text-muted-foreground truncate max-w-sm">${a.description || 'No description provided'}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-right">
+              <span class="text-xs font-medium text-foreground">⭐ ${a.stars.toLocaleString()}</span>
+              <span class="text-[11px] text-muted-foreground">🍴 ${a.forks.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <!-- Discovered Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div class="p-2.5 bg-card border border-border rounded-md text-center">
+              <div class="text-[10px] text-muted-foreground">Package Mgr</div>
+              <div class="text-xs font-semibold text-foreground uppercase mt-0.5">${a.packageManager}</div>
+            </div>
+            <div class="p-2.5 bg-card border border-border rounded-md text-center">
+              <div class="text-[10px] text-muted-foreground">Files Scanned</div>
+              <div class="text-xs font-semibold text-foreground mt-0.5">${a.totalFiles || 'All'}</div>
+            </div>
+            <div class="p-2.5 bg-card border border-border rounded-md text-center">
+              <div class="text-[10px] text-muted-foreground">Env Variables</div>
+              <div class="text-xs font-semibold text-foreground mt-0.5">${a.envVars.length} found</div>
+            </div>
+            <div class="p-2.5 bg-card border border-border rounded-md text-center">
+              <div class="text-[10px] text-muted-foreground">CI Workflows</div>
+              <div class="text-xs font-semibold text-foreground mt-0.5">${a.workflowBadges.length} detected</div>
+            </div>
+          </div>
+
+          <!-- Detected Tech Badges -->
+          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-medium text-foreground">Discovered Tech Stack (${a.matchedTechIds.length})</span>
+              <span class="text-[10px] text-muted-foreground">${langSummary}</span>
+            </div>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${a.matchedTechIds.map(id => {
+                const item = TECH_CATALOG.find(t => t.id === id);
+                return `
+                  <span class="text-[11px] px-2 py-0.5 rounded-full border border-border bg-muted text-foreground flex items-center gap-1 font-medium">
+                    ${item?.name || id}
+                  </span>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Synthesized Features Preview -->
+          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5">
+            <span class="text-xs font-medium text-foreground">Synthesized Features (${a.features.length})</span>
+            <div class="space-y-1 pt-1 text-[11px]">
+              ${a.features.map(f => `
+                <div class="flex items-start gap-1.5 text-muted-foreground">
+                  <span>${f.icon}</span>
+                  <div><strong class="text-foreground">${f.title}:</strong> ${f.desc}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+    case 'manual-step-1':
+      return `
+        <div class="space-y-3">
           <div>
-            <label class="block text-xs font-medium text-foreground mb-1.5">Open Source License</label>
-            <select id="wiz-license" class="form-input text-xs">
-              <option value="MIT" ${wizardData.licenseType === 'MIT' ? 'selected' : ''}>MIT License</option>
-              <option value="Apache-2.0" ${wizardData.licenseType === 'Apache-2.0' ? 'selected' : ''}>Apache 2.0</option>
-              <option value="GPL-3.0" ${wizardData.licenseType === 'GPL-3.0' ? 'selected' : ''}>GNU GPL v3</option>
+            <label class="block text-xs font-medium text-foreground mb-1">Project Name</label>
+            <input type="text" id="man-project-name" value="${manualData.projectName}" placeholder="e.g. MyAwesomeApp" class="form-input text-xs" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Tagline / What does it do?</label>
+            <input type="text" id="man-tagline" value="${manualData.tagline}" placeholder="e.g. Blazing-fast web app for managing data" class="form-input text-xs" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-foreground mb-1">GitHub Username / Org</label>
+              <input type="text" id="man-repo-owner" value="${manualData.repoOwner}" placeholder="e.g. yourname" class="form-input text-xs" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-foreground mb-1">Repository Name</label>
+              <input type="text" id="man-repo-name" value="${manualData.repoName}" placeholder="e.g. my-awesome-app" class="form-input text-xs" />
+            </div>
+          </div>
+        </div>
+      `;
+
+    case 'manual-step-2':
+      const popularTech = ['typescript', 'javascript', 'python', 'react', 'nextjs', 'vue', 'tailwind', 'nodejs', 'express', 'fastapi', 'postgres', 'docker', 'git'];
+      return `
+        <div class="space-y-3">
+          <p class="text-xs text-muted-foreground">Click to select the primary technologies used in this project:</p>
+          <div class="flex flex-wrap gap-2 max-h-56 overflow-y-auto p-1">
+            ${popularTech.map(id => {
+              const item = TECH_CATALOG.find(t => t.id === id);
+              if (!item) return '';
+              const selected = manualData.technologies.includes(id);
+              return `
+                <button type="button" class="man-tech-chip px-3 py-1.5 rounded-md border text-xs font-medium flex items-center gap-1.5 transition ${
+                  selected 
+                    ? 'border-foreground bg-foreground text-background shadow-xs font-semibold' 
+                    : 'border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted'
+                }" data-tech="${id}">
+                  <span>${selected ? '✓' : '+'}</span>
+                  <span>${item.name}</span>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+
+    case 'manual-step-3':
+      return `
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Package Manager / Toolchain</label>
+            <select id="man-package-manager" class="form-input text-xs">
+              <option value="npm" ${manualData.packageManager === 'npm' ? 'selected' : ''}>npm (Node.js)</option>
+              <option value="pnpm" ${manualData.packageManager === 'pnpm' ? 'selected' : ''}>pnpm (Node.js)</option>
+              <option value="yarn" ${manualData.packageManager === 'yarn' ? 'selected' : ''}>yarn (Node.js)</option>
+              <option value="bun" ${manualData.packageManager === 'bun' ? 'selected' : ''}>bun (JavaScript/TypeScript)</option>
+              <option value="pip" ${manualData.packageManager === 'pip' ? 'selected' : ''}>pip (Python)</option>
+              <option value="cargo" ${manualData.packageManager === 'cargo' ? 'selected' : ''}>cargo (Rust)</option>
+              <option value="go" ${manualData.packageManager === 'go' ? 'selected' : ''}>go (Go)</option>
             </select>
           </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1.5">Author Name</label>
-            <input type="text" id="wiz-author" value="${wizardData.authorName}" placeholder="Your Name" class="form-input text-xs" />
-          </div>
+          <p class="text-xs text-muted-foreground">Standard installation and running steps will be created automatically based on your choice.</p>
+        </div>
+      `;
+  }
+}
+
+function getGuideFooterHtml() {
+  switch (guideView) {
+    case 'hub':
+      return `
+        <button id="guide-cancel-btn" class="btn-secondary text-xs px-3 py-1.5">
+          Close
+        </button>
+        <div class="text-[10px] text-muted-foreground">
+          Zero sign-up required • Free GitHub API
         </div>
       `;
 
-    default:
-      return '';
+    case 'scanning':
+      return `
+        <div class="text-xs text-muted-foreground">
+          Please wait a moment...
+        </div>
+        <button id="guide-cancel-scan-btn" class="btn-secondary text-xs px-3 py-1.5">
+          Cancel
+        </button>
+      `;
+
+    case 'report':
+      return `
+        <button id="guide-back-to-hub-btn" class="btn-secondary text-xs px-3 py-1.5">
+          ← Scan Another Repo
+        </button>
+        <button id="guide-apply-report-btn" class="btn-primary text-xs px-4 py-1.5 shadow-sm">
+          ✨ Generate Full README
+        </button>
+      `;
+
+    case 'manual-step-1':
+      return `
+        <button id="guide-back-to-hub-btn" class="btn-secondary text-xs px-3 py-1.5">
+          ← Back
+        </button>
+        <button id="guide-manual-next-1-btn" class="btn-primary text-xs px-3.5 py-1.5">
+          Next: Tech Stack →
+        </button>
+      `;
+
+    case 'manual-step-2':
+      return `
+        <button id="guide-manual-prev-1-btn" class="btn-secondary text-xs px-3 py-1.5">
+          ← Back
+        </button>
+        <button id="guide-manual-next-2-btn" class="btn-primary text-xs px-3.5 py-1.5">
+          Next: Install & Run →
+        </button>
+      `;
+
+    case 'manual-step-3':
+      return `
+        <button id="guide-manual-prev-2-btn" class="btn-secondary text-xs px-3 py-1.5">
+          ← Back
+        </button>
+        <button id="guide-manual-finish-btn" class="btn-primary text-xs px-4 py-1.5 shadow-sm">
+          ✨ Generate README
+        </button>
+      `;
   }
 }
 
-function saveStepData(step) {
-  const modal = document.getElementById('quick-wizard-modal');
-  if (!modal) return;
+function attachGuideListeners(modal) {
+  modal.querySelector('#guide-cancel-btn')?.addEventListener('click', closeWizard);
+  modal.querySelector('#guide-cancel-scan-btn')?.addEventListener('click', () => {
+    guideView = 'hub';
+    renderGuideView();
+  });
 
-  if (step === 1) {
-    wizardData.projectName = modal.querySelector('#wiz-project-name')?.value || 'My Project';
-    wizardData.tagline = modal.querySelector('#wiz-tagline')?.value || '';
-    wizardData.repoOwner = modal.querySelector('#wiz-repo-owner')?.value || 'username';
-    wizardData.repoName = modal.querySelector('#wiz-repo-name')?.value || 'repo';
-  } else if (step === 2) {
-    wizardData.badges.showStars = modal.querySelector('#wiz-badge-stars')?.checked ?? true;
-    wizardData.badges.showForks = modal.querySelector('#wiz-badge-forks')?.checked ?? true;
-    wizardData.badges.showIssues = modal.querySelector('#wiz-badge-issues')?.checked ?? true;
-    wizardData.badges.showLicense = modal.querySelector('#wiz-badge-license')?.checked ?? true;
-    wizardData.badges.showRelease = modal.querySelector('#wiz-badge-release')?.checked ?? true;
-  } else if (step === 4) {
-    const list = modal.querySelectorAll('[data-wiz-f-idx]');
-    const features = [];
-    list.forEach(row => {
-      features.push({
-        icon: row.querySelector('.wiz-f-icon')?.value || '✨',
-        title: row.querySelector('.wiz-f-title')?.value || 'Feature',
-        desc: row.querySelector('.wiz-f-desc')?.value || ''
-      });
-    });
-    if (features.length > 0) {
-      wizardData.features = features;
+  // Hub Scan trigger
+  const scanBtn = modal.querySelector('#guide-deep-scan-btn');
+  const inputEl = modal.querySelector('#guide-repo-input');
+
+  function triggerScan() {
+    const val = inputEl?.value?.trim();
+    if (!val) {
+      showToast('Please enter a GitHub repository URL or owner/repo', 'error');
+      return;
     }
-  } else if (step === 5) {
-    wizardData.packageManager = modal.querySelector('#wiz-package-manager')?.value || 'npm';
-    wizardData.licenseType = modal.querySelector('#wiz-license')?.value || 'MIT';
-    wizardData.authorName = modal.querySelector('#wiz-author')?.value || 'Your Name';
+    startDeepScan(val);
   }
-}
 
-function attachStepSpecificListeners(step, modal) {
-  if (step === 3) {
-    modal.querySelectorAll('.wiz-tech-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const id = chip.dataset.id;
-        const idx = wizardData.technologies.indexOf(id);
-        if (idx !== -1) {
-          wizardData.technologies.splice(idx, 1);
-        } else {
-          wizardData.technologies.push(id);
-        }
-        renderWizardStep();
-      });
-    });
-  } else if (step === 4) {
-    const addBtn = modal.querySelector('#wiz-add-feature-btn');
-    if (addBtn) {
-      addBtn.addEventListener('click', () => {
-        wizardData.features.push({ icon: '✨', title: 'New Highlight', desc: 'Description' });
-        renderWizardStep();
-      });
-    }
-
-    modal.querySelectorAll('.wiz-f-remove').forEach((btn, idx) => {
-      btn.addEventListener('click', () => {
-        wizardData.features.splice(idx, 1);
-        renderWizardStep();
-      });
-    });
-  }
-}
-
-function applyWizardDataToStore() {
-  store.batchUpdate(sections => {
-    const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
-    if (hero) {
-      hero.enabled = true;
-      hero.data.projectName = wizardData.projectName;
-      hero.data.tagline = wizardData.tagline;
-      hero.data.repoOwner = wizardData.repoOwner;
-      hero.data.repoName = wizardData.repoName;
-    }
-
-    const badges = sections.find(s => s.type === SECTION_TYPES.BADGES);
-    if (badges) {
-      badges.enabled = true;
-      badges.data.showStars = wizardData.badges.showStars;
-      badges.data.showForks = wizardData.badges.showForks;
-      badges.data.showIssues = wizardData.badges.showIssues;
-      badges.data.showLicense = wizardData.badges.showLicense;
-      badges.data.showRelease = wizardData.badges.showRelease;
-    }
-
-    const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-    if (tech) {
-      tech.enabled = true;
-      tech.data.technologies = [...wizardData.technologies];
-    }
-
-    const feat = sections.find(s => s.type === SECTION_TYPES.FEATURES);
-    if (feat) {
-      feat.enabled = true;
-      feat.data.items = [...wizardData.features];
-    }
-
-    const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
-    if (install) {
-      install.enabled = true;
-      const pm = wizardData.packageManager;
-      if (pm === 'npm') {
-        install.data.steps = [
-          { title: 'Clone the repository', cmd: `git clone https://github.com/${wizardData.repoOwner}/${wizardData.repoName}.git` },
-          { title: 'Install dependencies', cmd: 'npm install' },
-          { title: 'Start the app', cmd: 'npm start' }
-        ];
-      } else if (pm === 'pip') {
-        install.data.steps = [
-          { title: 'Clone the repository', cmd: `git clone https://github.com/${wizardData.repoOwner}/${wizardData.repoName}.git` },
-          { title: 'Install packages', cmd: 'pip install -r requirements.txt' },
-          { title: 'Run app', cmd: 'python main.py' }
-        ];
-      } else {
-        install.data.steps = [
-          { title: 'Clone the repository', cmd: `git clone https://github.com/${wizardData.repoOwner}/${wizardData.repoName}.git` },
-          { title: 'Open in browser', cmd: '# Open index.html directly' }
-        ];
-      }
-    }
-
-    const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE);
-    if (lic) {
-      lic.enabled = true;
-      lic.data.type = wizardData.licenseType;
-      lic.data.holder = wizardData.authorName || 'Your Name';
-    }
-
-    const auth = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
-    if (auth && wizardData.authorName) {
-      auth.data.name = wizardData.authorName;
-      auth.data.github = wizardData.repoOwner;
+  scanBtn?.addEventListener('click', triggerScan);
+  inputEl?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      triggerScan();
     }
   });
+
+  // Sample Chips
+  modal.querySelectorAll('.sample-repo-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const repo = chip.dataset.repo;
+      if (inputEl) inputEl.value = repo;
+      startDeepScan(repo);
+    });
+  });
+
+  // Start Manual Guide
+  modal.querySelector('#guide-start-manual-btn')?.addEventListener('click', () => {
+    guideView = 'manual-step-1';
+    renderGuideView();
+  });
+
+  // Back to Hub
+  modal.querySelector('#guide-back-to-hub-btn')?.addEventListener('click', () => {
+    guideView = 'hub';
+    renderGuideView();
+  });
+
+  // Apply Report
+  modal.querySelector('#guide-apply-report-btn')?.addEventListener('click', () => {
+    if (currentScanAnalysis) {
+      store.applyRepoAnalysis(currentScanAnalysis);
+      closeWizard();
+      fireConfetti();
+      showToast(`README created for ${currentScanAnalysis.repo}!`, 'success');
+    }
+  });
+
+  // Manual Step 1 -> 2
+  modal.querySelector('#guide-manual-next-1-btn')?.addEventListener('click', () => {
+    const nameEl = modal.querySelector('#man-project-name');
+    const tagEl = modal.querySelector('#man-tagline');
+    const ownerEl = modal.querySelector('#man-repo-owner');
+    const repoEl = modal.querySelector('#man-repo-name');
+
+    manualData.projectName = nameEl?.value?.trim() || 'My Project';
+    manualData.tagline = tagEl?.value?.trim() || 'An open-source application.';
+    manualData.repoOwner = ownerEl?.value?.trim() || '';
+    manualData.repoName = repoEl?.value?.trim() || (nameEl?.value ? nameEl.value.toLowerCase().replace(/\s+/g, '-') : 'project');
+
+    guideView = 'manual-step-2';
+    renderGuideView();
+  });
+
+  // Manual Step 2: Tech chips
+  modal.querySelectorAll('.man-tech-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const techId = chip.dataset.tech;
+      if (manualData.technologies.includes(techId)) {
+        manualData.technologies = manualData.technologies.filter(t => t !== techId);
+      } else {
+        manualData.technologies.push(techId);
+      }
+      renderGuideView();
+    });
+  });
+
+  modal.querySelector('#guide-manual-prev-1-btn')?.addEventListener('click', () => {
+    guideView = 'manual-step-1';
+    renderGuideView();
+  });
+
+  modal.querySelector('#guide-manual-next-2-btn')?.addEventListener('click', () => {
+    guideView = 'manual-step-3';
+    renderGuideView();
+  });
+
+  modal.querySelector('#guide-manual-prev-2-btn')?.addEventListener('click', () => {
+    guideView = 'manual-step-2';
+    renderGuideView();
+  });
+
+  // Manual Finish
+  modal.querySelector('#guide-manual-finish-btn')?.addEventListener('click', () => {
+    const pkgEl = modal.querySelector('#man-package-manager');
+    manualData.packageManager = pkgEl?.value || 'npm';
+
+    // Apply manual data to store
+    store.batchUpdate(sections => {
+      const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
+      if (hero) {
+        hero.enabled = true;
+        hero.data.projectName = manualData.projectName;
+        hero.data.tagline = manualData.tagline;
+        hero.data.repoOwner = manualData.repoOwner;
+        hero.data.repoName = manualData.repoName;
+      }
+
+      const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+      if (tech) {
+        tech.enabled = true;
+        tech.data.technologies = manualData.technologies;
+      }
+
+      const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
+      if (install) {
+        install.enabled = true;
+        install.data.packageManager = manualData.packageManager;
+        install.data.steps = [
+          {
+            title: 'Clone repository',
+            cmd: manualData.repoOwner && manualData.repoName 
+              ? `git clone https://github.com/${manualData.repoOwner}/${manualData.repoName}.git\ncd ${manualData.repoName}`
+              : `git clone <your-repo-url>\ncd <project-folder>`
+          },
+          {
+            title: 'Install dependencies',
+            cmd: `${manualData.packageManager} install`
+          },
+          {
+            title: 'Run application',
+            cmd: `${manualData.packageManager} run dev`
+          }
+        ];
+      }
+    });
+
+    closeWizard();
+    fireConfetti();
+    showToast('README generated successfully!', 'success');
+  });
+}
+
+/**
+ * Perform deep repository scanning with live progress updates
+ */
+async function startDeepScan(repoInput) {
+  const parsed = parseGitHubRepoInput(repoInput);
+  if (!parsed) {
+    showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
+    guideView = 'hub';
+    renderGuideView();
+    return;
+  }
+
+  currentRepoInput = `${parsed.owner}/${parsed.repo}`;
+  guideView = 'scanning';
+  currentScanProgress = { step: 1, message: `Connecting to GitHub API for ${parsed.owner}/${parsed.repo}...` };
+  renderGuideView();
+
+  try {
+    const analysis = await fetchGitHubRepoFullDetails(parsed.owner, parsed.repo, progress => {
+      currentScanProgress = progress;
+      const statusEl = document.getElementById('guide-live-status-text');
+      if (statusEl) statusEl.innerText = progress.message;
+      renderGuideView();
+    });
+
+    currentScanAnalysis = analysis;
+    guideView = 'report';
+    renderGuideView();
+  } catch (err) {
+    showToast(err.message || 'Failed to scan repository', 'error');
+    guideView = 'hub';
+    renderGuideView();
+  }
 }

@@ -2,7 +2,7 @@
  * Readmify - Central Reactive State Store
  * Manages section order, user edits, templates, and localStorage persistence
  */
-import { INITIAL_SECTIONS, SECTION_TYPES } from './data/defaultSections.js';
+import { INITIAL_SECTIONS, SECTION_TYPES, createSection } from './data/defaultSections.js';
 import { TEMPLATES } from './data/templates.js';
 
 const STORAGE_KEY = 'readmify_v1_state';
@@ -15,16 +15,18 @@ class ReadmifyStore {
 
   loadInitialState() {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-          return {
-            sections: parsed.sections,
-            activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
-            previewTheme: parsed.previewTheme || 'dark',
-            viewMode: parsed.viewMode || 'split'
-          };
+      if (typeof localStorage !== 'undefined') {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+            return {
+              sections: parsed.sections,
+              activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
+              previewTheme: parsed.previewTheme || 'dark',
+              viewMode: parsed.viewMode || 'split'
+            };
+          }
         }
       }
     } catch (e) {
@@ -41,7 +43,9 @@ class ReadmifyStore {
 
   saveToStorage() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+      }
     } catch (e) {
       console.warn('Could not persist state to localStorage:', e);
     }
@@ -129,21 +133,58 @@ class ReadmifyStore {
   }
 
   addCustomSection(title = 'Custom Section') {
-    const newId = `sec-custom-${Date.now()}`;
-    const newSection = {
-      id: newId,
-      type: SECTION_TYPES.CUSTOM,
-      title: title || 'Custom Section',
-      enabled: true,
-      data: {
-        heading: title || 'Custom Section',
-        markdown: 'Add your custom documentation, diagrams, or notes here.'
+    return this.addSectionFromType(SECTION_TYPES.CUSTOM, title);
+  }
+
+  addSectionFromType(type, customTitle) {
+    // Check if single-instance section already exists but is disabled
+    const existing = this.state.sections.find(s => s.type === type && type !== SECTION_TYPES.CUSTOM);
+    if (existing) {
+      existing.enabled = true;
+      if (customTitle) {
+        existing.title = customTitle;
+        if (existing.data && existing.data.heading) existing.data.heading = customTitle;
       }
-    };
+      this.state.activeSectionId = existing.id;
+      this.notify();
+      return existing.id;
+    }
+
+    const newSection = createSection(type, customTitle);
     this.state.sections.push(newSection);
-    this.state.activeSectionId = newId;
+    this.state.activeSectionId = newSection.id;
     this.notify();
-    return newId;
+    return newSection.id;
+  }
+
+  duplicateSection(sectionId) {
+    const index = this.state.sections.findIndex(s => s.id === sectionId);
+    if (index === -1) return null;
+
+    const orig = this.state.sections[index];
+    const cloned = JSON.parse(JSON.stringify(orig));
+    cloned.id = `sec-${cloned.type}-${Date.now().toString(36)}`;
+    cloned.title = `${orig.title} (Copy)`;
+    if (cloned.data && cloned.data.heading) {
+      cloned.data.heading = `${cloned.data.heading} (Copy)`;
+    }
+    cloned.enabled = true;
+
+    this.state.sections.splice(index + 1, 0, cloned);
+    this.state.activeSectionId = cloned.id;
+    this.notify();
+    return cloned.id;
+  }
+
+  renameSection(sectionId, newTitle) {
+    const sec = this.state.sections.find(s => s.id === sectionId);
+    if (sec && newTitle && newTitle.trim()) {
+      sec.title = newTitle.trim();
+      if (sec.data && typeof sec.data.heading === 'string') {
+        sec.data.heading = newTitle.trim();
+      }
+      this.notify();
+    }
   }
 
   removeSection(sectionId) {
@@ -172,9 +213,140 @@ class ReadmifyStore {
     this.notify();
   }
 
-  // Update multiple sections (e.g. from wizard)
+  // Update multiple sections (e.g. from wizard or deep scanner)
   batchUpdate(updaterFn) {
     updaterFn(this.state.sections);
+    this.notify();
+  }
+
+  // Apply complete deep repository analysis across all relevant sections
+  applyRepoAnalysis(analysis) {
+    if (!analysis) return;
+
+    this.batchUpdate(sections => {
+      // 1. Hero
+      const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
+      if (hero) {
+        hero.enabled = true;
+        hero.data.projectName = analysis.repo || hero.data.projectName;
+        hero.data.tagline = analysis.description || hero.data.tagline;
+        hero.data.repoOwner = analysis.owner || hero.data.repoOwner;
+        hero.data.repoName = analysis.repo || hero.data.repoName;
+      }
+
+      // 2. Badges
+      const badges = sections.find(s => s.type === SECTION_TYPES.BADGES);
+      if (badges) {
+        badges.enabled = true;
+        badges.data.showStars = true;
+        badges.data.showForks = true;
+        badges.data.showIssues = true;
+        badges.data.showLicense = !!analysis.license;
+        badges.data.showRelease = true;
+        badges.data.showLastCommit = true;
+
+        if (Array.isArray(analysis.workflowBadges) && analysis.workflowBadges.length > 0) {
+          badges.data.customBadges = analysis.workflowBadges.map(wb => ({
+            label: 'CI',
+            message: 'Passing',
+            color: 'brightgreen',
+            logo: 'githubactions'
+          }));
+        }
+      }
+
+      // 3. About
+      const about = sections.find(s => s.type === SECTION_TYPES.ABOUT);
+      if (about) {
+        about.enabled = true;
+        const desc = analysis.description ? `${analysis.description}\n\n` : '';
+        const topics = Array.isArray(analysis.topics) && analysis.topics.length > 0
+          ? `**Key topics**: ${analysis.topics.map(t => `\`${t}\``).join(', ')}.\n\n`
+          : '';
+        about.data.content = `${desc}${topics}Engineered for high performance, reliability, and clean developer workflows.`;
+      }
+
+      // 4. Tech Stack
+      const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+      if (tech) {
+        tech.enabled = true;
+        if (Array.isArray(analysis.matchedTechIds) && analysis.matchedTechIds.length > 0) {
+          tech.data.technologies = Array.from(new Set(analysis.matchedTechIds));
+        }
+      }
+
+      // 5. Features
+      const features = sections.find(s => s.type === SECTION_TYPES.FEATURES);
+      if (features) {
+        features.enabled = true;
+        if (Array.isArray(analysis.features) && analysis.features.length > 0) {
+          features.data.items = analysis.features;
+        }
+      }
+
+      // 6. Project Structure
+      const structure = sections.find(s => s.type === SECTION_TYPES.PROJECT_STRUCTURE);
+      if (structure) {
+        if (analysis.projectTree && analysis.projectTree.trim().length > 0) {
+          structure.enabled = true;
+          structure.data.tree = analysis.projectTree;
+        } else {
+          structure.enabled = false;
+        }
+      }
+
+      // 7. Installation
+      const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
+      if (install) {
+        install.enabled = true;
+        if (analysis.prerequisites) {
+          install.data.prerequisites = analysis.prerequisites;
+        }
+        if (Array.isArray(analysis.installSteps) && analysis.installSteps.length > 0) {
+          install.data.steps = analysis.installSteps;
+        }
+        if (analysis.packageManager) {
+          install.data.packageManager = analysis.packageManager;
+        }
+      }
+
+      // 8. Environment Variables
+      const env = sections.find(s => s.type === SECTION_TYPES.ENV_VARS);
+      if (env) {
+        if (Array.isArray(analysis.envVars) && analysis.envVars.length > 0) {
+          env.enabled = true;
+          env.data.variables = analysis.envVars;
+        } else {
+          env.enabled = false;
+        }
+      }
+
+      // 9. License
+      const license = sections.find(s => s.type === SECTION_TYPES.LICENSE);
+      if (license) {
+        license.enabled = true;
+        if (analysis.license && analysis.license !== 'NOASSERTION') {
+          license.data.type = analysis.license;
+        }
+        if (analysis.owner) {
+          license.data.holder = analysis.owner;
+        }
+      }
+
+      // 10. Author
+      const author = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
+      if (author) {
+        author.enabled = true;
+        if (analysis.owner) {
+          author.data.name = analysis.owner;
+          author.data.github = analysis.owner;
+        }
+      }
+    });
+
+    if (this.state.sections[0]) {
+      this.state.activeSectionId = this.state.sections[0].id;
+    }
     this.notify();
   }
 }

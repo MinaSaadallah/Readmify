@@ -8,13 +8,23 @@ import { copyToClipboard, downloadReadmeFile, showToast, fireConfetti } from './
 import { renderSectionEditor } from './components/sectionEditor.js';
 import { openWizard } from './components/wizard.js';
 import { renderPhotoModal } from './components/photoUploader.js';
+import { openSectionLibrary } from './components/sectionLibrary.js';
 import { calculateReadmeScore } from './components/healthScore.js';
-import { fetchGitHubRepoDetails, parseGitHubRepoInput } from './services/githubApi.js';
-import { TEMPLATES } from './data/templates.js';
+import { parseGitHubRepoInput } from './services/githubApi.js';
 import { SECTION_TYPES } from './data/defaultSections.js';
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 // DOM Elements
 let sectionListContainer;
+let sectionPillBar;
 let sectionEditorContainer;
 let previewBody;
 let rawMarkdownTextarea;
@@ -22,6 +32,7 @@ let currentMarkdown = '';
 
 function initApp() {
   sectionListContainer = document.getElementById('section-list-items');
+  sectionPillBar = document.getElementById('section-pill-bar');
   sectionEditorContainer = document.getElementById('section-editor-container');
   previewBody = document.getElementById('github-preview-body');
   rawMarkdownTextarea = document.getElementById('raw-markdown-textarea');
@@ -51,75 +62,136 @@ function renderApp(state) {
   renderPreview(state);
 }
 
-// --- 1. SIDEBAR RENDERING & REORDERING ---
+// --- 1. HORIZONTAL SECTION PILL BAR & DRAWER REORDERING ---
 function renderSidebar(state) {
-  if (!sectionListContainer) return;
-
   const { sections, activeSectionId } = state;
 
-  sectionListContainer.innerHTML = sections.map((sec, idx) => {
-    const isActive = sec.id === activeSectionId;
-    return `
-      <div 
-        class="section-item group flex items-center justify-between px-2.5 py-2 rounded-md border cursor-pointer select-none transition-all ${
-          isActive 
-            ? 'active bg-muted border-border text-foreground font-medium shadow-xs' 
-            : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
-        } ${!sec.enabled ? 'opacity-50' : ''}"
-        data-section-id="${sec.id}"
-        data-index="${idx}"
-      >
-        <div class="flex items-center gap-2 flex-1 min-w-0">
-          <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
-          <span class="text-xs truncate">${sec.title}</span>
-        </div>
+  // 1A. Render Horizontal Pill Bar
+  if (sectionPillBar) {
+    sectionPillBar.innerHTML = sections.map((sec, idx) => {
+      const isActive = sec.id === activeSectionId;
+      const isHidden = !sec.enabled;
+      return `
+        <button 
+          class="section-pill px-2.5 py-1 text-xs rounded-md transition-all whitespace-nowrap flex items-center gap-1.5 border flex-shrink-0 cursor-pointer select-none ${
+            isActive 
+              ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100 shadow-sm' 
+              : 'bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground border-border'
+          } ${isHidden ? 'opacity-50 line-through' : ''}"
+          data-section-id="${sec.id}"
+          title="${escapeHtml(sec.title)} (${sec.enabled ? 'visible' : 'hidden'})"
+        >
+          <span class="text-[10px] opacity-70 font-mono">${idx + 1}</span>
+          <span>${escapeHtml(sec.title)}</span>
+          ${!sec.enabled ? '<span class="text-[9px] no-underline">👁️‍🗨️</span>' : ''}
+        </button>
+      `;
+    }).join('');
 
-        <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
-          <div class="flex items-center">
-            <button class="move-up-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === 0 ? 'invisible' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
-            <button class="move-down-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === sections.length - 1 ? 'invisible' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
+    sectionPillBar.querySelectorAll('.section-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        store.setActiveSection(pill.dataset.sectionId);
+      });
+    });
+
+    // Auto-scroll active pill into view
+    const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
+    if (activePill) {
+      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    }
+  }
+
+  // 1B. Render Drawer List Items
+  if (sectionListContainer) {
+    sectionListContainer.innerHTML = sections.map((sec, idx) => {
+      const isActive = sec.id === activeSectionId;
+      return `
+        <div 
+          class="section-item group flex items-center justify-between px-2.5 py-1.5 rounded-md border cursor-pointer select-none transition-all ${
+            isActive 
+              ? 'active bg-muted border-border text-foreground font-medium shadow-xs' 
+              : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
+          } ${!sec.enabled ? 'opacity-50' : ''}"
+          data-section-id="${sec.id}"
+          data-index="${idx}"
+        >
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
+            <span class="text-xs truncate">${escapeHtml(sec.title)}</span>
           </div>
 
-          <input 
-            type="checkbox" 
-            class="toggle-section-cb rounded border-border text-foreground focus:ring-0 cursor-pointer ml-1" 
-            ${sec.enabled ? 'checked' : ''} 
-            data-id="${sec.id}" 
-            title="Toggle section visibility" 
-          />
+          <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
+            <div class="flex items-center">
+              <button class="move-up-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === 0 ? 'invisible' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
+              <button class="move-down-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === sections.length - 1 ? 'invisible' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
+            </div>
+
+            <input 
+              type="checkbox" 
+              class="toggle-section-cb rounded border-border text-foreground focus:ring-0 cursor-pointer ml-1" 
+              ${sec.enabled ? 'checked' : ''} 
+              data-id="${sec.id}" 
+              title="Toggle section visibility" 
+            />
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
 
-  sectionListContainer.querySelectorAll('.section-item').forEach(el => {
-    el.addEventListener('click', (e) => {
-      if (e.target.closest('button') || e.target.closest('input')) return;
-      const id = el.dataset.sectionId;
-      store.setActiveSection(id);
+    sectionListContainer.querySelectorAll('.section-item').forEach(el => {
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('input')) return;
+        const id = el.dataset.sectionId;
+        store.setActiveSection(id);
+      });
     });
-  });
 
-  sectionListContainer.querySelectorAll('.move-up-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      store.moveSection(btn.dataset.id, 'up');
+    sectionListContainer.querySelectorAll('.move-up-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        store.moveSection(btn.dataset.id, 'up');
+      });
     });
-  });
 
-  sectionListContainer.querySelectorAll('.move-down-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      store.moveSection(btn.dataset.id, 'down');
+    sectionListContainer.querySelectorAll('.move-down-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        store.moveSection(btn.dataset.id, 'down');
+      });
     });
-  });
 
-  sectionListContainer.querySelectorAll('.toggle-section-cb').forEach(cb => {
-    cb.addEventListener('change', (e) => {
-      e.stopPropagation();
-      store.toggleSection(cb.dataset.id, cb.checked);
+    sectionListContainer.querySelectorAll('.toggle-section-cb').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        e.stopPropagation();
+        store.toggleSection(cb.dataset.id, cb.checked);
+      });
     });
-  });
+  }
+
+  // 1C. Pill Bar & Drawer Buttons (Bind once)
+  const pillAddSecBtn = document.getElementById('pill-add-section-btn');
+  if (pillAddSecBtn && !pillAddSecBtn.dataset.bound) {
+    pillAddSecBtn.dataset.bound = 'true';
+    pillAddSecBtn.addEventListener('click', () => openSectionLibrary());
+  }
+
+  const toggleDrawerBtn = document.getElementById('toggle-section-drawer-btn');
+  const closeDrawerBtn = document.getElementById('close-section-drawer-btn');
+  const drawerPanel = document.getElementById('section-drawer-panel');
+
+  if (toggleDrawerBtn && drawerPanel && !toggleDrawerBtn.dataset.bound) {
+    toggleDrawerBtn.dataset.bound = 'true';
+    toggleDrawerBtn.addEventListener('click', () => {
+      drawerPanel.classList.toggle('hidden');
+    });
+  }
+
+  if (closeDrawerBtn && drawerPanel && !closeDrawerBtn.dataset.bound) {
+    closeDrawerBtn.dataset.bound = 'true';
+    closeDrawerBtn.addEventListener('click', () => {
+      drawerPanel.classList.add('hidden');
+    });
+  }
 
   const addCustomBtn = document.getElementById('add-custom-sec-btn');
   if (addCustomBtn && !addCustomBtn.dataset.bound) {
@@ -212,69 +284,39 @@ function updateHealthAndStats(sections, markdownText) {
 
 // --- 3. NAVBAR CONTROLS ---
 function setupNavbarControls() {
-  // GitHub Auto-Detect Bar
+  // GitHub Deep Scanner Bar
   const navGithubInput = document.getElementById('nav-github-input');
   const navGithubDetectBtn = document.getElementById('nav-github-detect-btn');
 
-  async function handleNavAutoDetect() {
-    if (!navGithubInput) return;
-    const parsed = parseGitHubRepoInput(navGithubInput.value);
+  function handleNavDeepScan() {
+    const val = navGithubInput?.value?.trim() || '';
+    if (!val) {
+      openWizard('', false);
+      return;
+    }
+    const parsed = parseGitHubRepoInput(val);
     if (!parsed) {
       showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
       return;
     }
-
-    navGithubDetectBtn.innerHTML = '<span>⏳</span> Fetching...';
-    navGithubDetectBtn.disabled = true;
-
-    try {
-      const info = await fetchGitHubRepoDetails(parsed.owner, parsed.repo);
-      store.batchUpdate(sections => {
-        const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
-        if (hero) {
-          hero.data.projectName = info.repo;
-          hero.data.tagline = info.description || hero.data.tagline;
-          hero.data.repoOwner = info.owner;
-          hero.data.repoName = info.repo;
-        }
-
-        const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-        if (tech && info.matchedTechIds.length > 0) {
-          const set = new Set([...(tech.data.technologies || []), ...info.matchedTechIds]);
-          tech.data.technologies = Array.from(set);
-        }
-
-        const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE);
-        if (lic && info.license && info.license !== 'NOASSERTION') {
-          lic.data.type = info.license;
-          lic.data.holder = info.owner;
-        }
-
-        const auth = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
-        if (auth && info.owner) {
-          auth.data.github = info.owner;
-        }
-      });
-
-      const langCount = info.languages.length;
-      const langSummary = info.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
-      fireConfetti();
-      showToast(`Detected ${info.repo}! [${langSummary}]`, 'success');
-    } catch (err) {
-      showToast(err.message || 'Failed to fetch from GitHub API', 'error');
-    } finally {
-      navGithubDetectBtn.innerHTML = '<span>⚡</span> Detect';
-      navGithubDetectBtn.disabled = false;
-    }
+    openWizard(val, true);
   }
 
   if (navGithubDetectBtn && navGithubInput) {
-    navGithubDetectBtn.addEventListener('click', handleNavAutoDetect);
+    navGithubDetectBtn.addEventListener('click', handleNavDeepScan);
     navGithubInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        handleNavAutoDetect();
+        handleNavDeepScan();
       }
+    });
+  }
+
+  // Add Section Catalog Button in Navbar
+  const navAddSecBtn = document.getElementById('nav-add-section-btn');
+  if (navAddSecBtn) {
+    navAddSecBtn.addEventListener('click', () => {
+      openSectionLibrary();
     });
   }
 
@@ -286,32 +328,10 @@ function setupNavbarControls() {
     });
   }
 
-  // Wizard Launch Button
+  // Easy Guide Launch Button
   const wizardBtn = document.getElementById('nav-wizard-btn');
   if (wizardBtn) {
-    wizardBtn.addEventListener('click', () => openWizard());
-  }
-
-  // Template Dropdown
-  const templateSelect = document.getElementById('template-select');
-  if (templateSelect) {
-    templateSelect.innerHTML = `
-      <option value="" disabled selected>✨ 1-Click Starters...</option>
-      ${TEMPLATES.map(t => `
-        <option value="${t.id}">${t.icon} ${t.name}</option>
-      `).join('')}
-    `;
-
-    templateSelect.addEventListener('change', (e) => {
-      const tplId = e.target.value;
-      if (tplId) {
-        if (confirm('Load this starter template? Your current sections will be updated.')) {
-          store.loadTemplate(tplId);
-          showToast(`Loaded ${TEMPLATES.find(t => t.id === tplId)?.name} starter!`, 'success');
-        }
-        templateSelect.value = '';
-      }
-    });
+    wizardBtn.addEventListener('click', () => openWizard(navGithubInput?.value?.trim() || '', false));
   }
 
   // Copy Markdown Button
@@ -346,7 +366,7 @@ function setupNavbarControls() {
   }
 }
 
-// --- 4. VIEW MODE SWITCHER (SPLIT / PREVIEW / RAW) ---
+// --- 4. VIEW MODE SWITCHER (SPLIT / EDITOR / PREVIEW / RAW) ---
 function setupViewModeSwitcher() {
   const modeBtns = document.querySelectorAll('.view-mode-btn');
   const leftPane = document.getElementById('editor-left-pane');
@@ -366,21 +386,25 @@ function setupViewModeSwitcher() {
 
       if (mode === 'split') {
         leftPane.classList.remove('hidden');
-        leftPane.classList.add('w-full', 'lg:w-1/2');
+        leftPane.className = 'w-full lg:w-1/2 h-full flex flex-col border-r border-border bg-background overflow-hidden';
         rightPane.classList.remove('hidden');
-        rightPane.classList.add('w-full', 'lg:w-1/2');
+        rightPane.className = 'w-full lg:w-1/2 h-full flex flex-col bg-background overflow-hidden';
         previewTab.classList.remove('hidden');
         rawTab.classList.add('hidden');
+      } else if (mode === 'editor') {
+        leftPane.classList.remove('hidden');
+        leftPane.className = 'w-full flex-1 h-full flex flex-col bg-background overflow-hidden';
+        rightPane.classList.add('hidden');
       } else if (mode === 'preview') {
         leftPane.classList.add('hidden');
         rightPane.classList.remove('hidden');
-        rightPane.className = 'flex-1 h-full overflow-hidden flex flex-col';
+        rightPane.className = 'w-full flex-1 h-full overflow-hidden flex flex-col bg-background';
         previewTab.classList.remove('hidden');
         rawTab.classList.add('hidden');
       } else if (mode === 'raw') {
         leftPane.classList.add('hidden');
         rightPane.classList.remove('hidden');
-        rightPane.className = 'flex-1 h-full overflow-hidden flex flex-col';
+        rightPane.className = 'w-full flex-1 h-full overflow-hidden flex flex-col bg-background';
         previewTab.classList.add('hidden');
         rawTab.classList.remove('hidden');
       }
