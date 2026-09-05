@@ -60,11 +60,11 @@ class ReadmifyStore {
     return () => this.listeners.delete(listener);
   }
 
-  notify() {
+  notify(meta = {}) {
     this.saveToStorage();
     for (const listener of this.listeners) {
       try {
-        listener(this.state);
+        listener(this.state, meta);
       } catch (err) {
         console.error('Error in store listener:', err);
       }
@@ -76,21 +76,21 @@ class ReadmifyStore {
   setActiveSection(sectionId) {
     if (this.state.activeSectionId !== sectionId) {
       this.state.activeSectionId = sectionId;
-      this.notify();
+      this.notify({ type: 'SET_ACTIVE_SECTION', sectionId, force: true });
     }
   }
 
   setPreviewTheme(theme) {
     if (this.state.previewTheme !== theme) {
       this.state.previewTheme = theme;
-      this.notify();
+      this.notify({ type: 'SET_THEME', theme });
     }
   }
 
   setViewMode(viewMode) {
     if (this.state.viewMode !== viewMode) {
       this.state.viewMode = viewMode;
-      this.notify();
+      this.notify({ type: 'SET_VIEW_MODE', viewMode });
     }
   }
 
@@ -98,7 +98,7 @@ class ReadmifyStore {
     const section = this.state.sections.find(s => s.id === sectionId);
     if (section) {
       section.enabled = enabled !== undefined ? enabled : !section.enabled;
-      this.notify();
+      this.notify({ type: 'TOGGLE_SECTION', sectionId, enabled: section.enabled, force: true });
     }
   }
 
@@ -106,7 +106,7 @@ class ReadmifyStore {
     const section = this.state.sections.find(s => s.id === sectionId);
     if (section) {
       section.data = { ...section.data, ...partialData };
-      this.notify();
+      this.notify({ type: 'UPDATE_SECTION_DATA', sectionId, partialData });
     }
   }
 
@@ -119,7 +119,7 @@ class ReadmifyStore {
 
     const [item] = this.state.sections.splice(index, 1);
     this.state.sections.splice(targetIndex, 0, item);
-    this.notify();
+    this.notify({ type: 'MOVE_SECTION', force: true });
   }
 
   reorderSections(fromIndex, toIndex) {
@@ -129,7 +129,7 @@ class ReadmifyStore {
 
     const [item] = this.state.sections.splice(fromIndex, 1);
     this.state.sections.splice(toIndex, 0, item);
-    this.notify();
+    this.notify({ type: 'REORDER_SECTIONS', force: true });
   }
 
   addCustomSection(title = 'Custom Section') {
@@ -146,14 +146,14 @@ class ReadmifyStore {
         if (existing.data && existing.data.heading) existing.data.heading = customTitle;
       }
       this.state.activeSectionId = existing.id;
-      this.notify();
+      this.notify({ type: 'ADD_SECTION', sectionId: existing.id, force: true });
       return existing.id;
     }
 
     const newSection = createSection(type, customTitle);
     this.state.sections.push(newSection);
     this.state.activeSectionId = newSection.id;
-    this.notify();
+    this.notify({ type: 'ADD_SECTION', sectionId: newSection.id, force: true });
     return newSection.id;
   }
 
@@ -172,7 +172,7 @@ class ReadmifyStore {
 
     this.state.sections.splice(index + 1, 0, cloned);
     this.state.activeSectionId = cloned.id;
-    this.notify();
+    this.notify({ type: 'DUPLICATE_SECTION', sectionId: cloned.id, force: true });
     return cloned.id;
   }
 
@@ -183,7 +183,7 @@ class ReadmifyStore {
       if (sec.data && typeof sec.data.heading === 'string') {
         sec.data.heading = newTitle.trim();
       }
-      this.notify();
+      this.notify({ type: 'RENAME_SECTION', sectionId, newTitle: sec.title });
     }
   }
 
@@ -194,7 +194,7 @@ class ReadmifyStore {
       if (this.state.activeSectionId === sectionId) {
         this.state.activeSectionId = this.state.sections[0]?.id || null;
       }
-      this.notify();
+      this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
     }
   }
 
@@ -203,20 +203,20 @@ class ReadmifyStore {
     if (tpl) {
       this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
       this.state.activeSectionId = this.state.sections[0]?.id || null;
-      this.notify();
+      this.notify({ type: 'LOAD_TEMPLATE', templateId, force: true });
     }
   }
 
   resetToDefault() {
     this.state.sections = JSON.parse(JSON.stringify(INITIAL_SECTIONS));
     this.state.activeSectionId = INITIAL_SECTIONS[0].id;
-    this.notify();
+    this.notify({ type: 'RESET_DEFAULT', force: true });
   }
 
   // Update multiple sections (e.g. from wizard or deep scanner)
   batchUpdate(updaterFn) {
     updaterFn(this.state.sections);
-    this.notify();
+    this.notify({ type: 'BATCH_UPDATE', force: true });
   }
 
   // Apply complete deep repository analysis across all relevant sections
@@ -347,7 +347,7 @@ class ReadmifyStore {
     if (this.state.sections[0]) {
       this.state.activeSectionId = this.state.sections[0].id;
     }
-    this.notify();
+    this.notify({ type: 'APPLY_REPO_ANALYSIS', force: true });
   }
 }
 

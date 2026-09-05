@@ -3158,11 +3158,11 @@ class ReadmifyStore {
     return () => this.listeners.delete(listener);
   }
 
-  notify() {
+  notify(meta = {}) {
     this.saveToStorage();
     for (const listener of this.listeners) {
       try {
-        listener(this.state);
+        listener(this.state, meta);
       } catch (err) {
         console.error('Error in store listener:', err);
       }
@@ -3174,21 +3174,21 @@ class ReadmifyStore {
   setActiveSection(sectionId) {
     if (this.state.activeSectionId !== sectionId) {
       this.state.activeSectionId = sectionId;
-      this.notify();
+      this.notify({ type: 'SET_ACTIVE_SECTION', sectionId, force: true });
     }
   }
 
   setPreviewTheme(theme) {
     if (this.state.previewTheme !== theme) {
       this.state.previewTheme = theme;
-      this.notify();
+      this.notify({ type: 'SET_THEME', theme });
     }
   }
 
   setViewMode(viewMode) {
     if (this.state.viewMode !== viewMode) {
       this.state.viewMode = viewMode;
-      this.notify();
+      this.notify({ type: 'SET_VIEW_MODE', viewMode });
     }
   }
 
@@ -3196,7 +3196,7 @@ class ReadmifyStore {
     const section = this.state.sections.find(s => s.id === sectionId);
     if (section) {
       section.enabled = enabled !== undefined ? enabled : !section.enabled;
-      this.notify();
+      this.notify({ type: 'TOGGLE_SECTION', sectionId, enabled: section.enabled, force: true });
     }
   }
 
@@ -3204,7 +3204,7 @@ class ReadmifyStore {
     const section = this.state.sections.find(s => s.id === sectionId);
     if (section) {
       section.data = { ...section.data, ...partialData };
-      this.notify();
+      this.notify({ type: 'UPDATE_SECTION_DATA', sectionId, partialData });
     }
   }
 
@@ -3217,7 +3217,7 @@ class ReadmifyStore {
 
     const [item] = this.state.sections.splice(index, 1);
     this.state.sections.splice(targetIndex, 0, item);
-    this.notify();
+    this.notify({ type: 'MOVE_SECTION', force: true });
   }
 
   reorderSections(fromIndex, toIndex) {
@@ -3227,7 +3227,7 @@ class ReadmifyStore {
 
     const [item] = this.state.sections.splice(fromIndex, 1);
     this.state.sections.splice(toIndex, 0, item);
-    this.notify();
+    this.notify({ type: 'REORDER_SECTIONS', force: true });
   }
 
   addCustomSection(title = 'Custom Section') {
@@ -3244,14 +3244,14 @@ class ReadmifyStore {
         if (existing.data && existing.data.heading) existing.data.heading = customTitle;
       }
       this.state.activeSectionId = existing.id;
-      this.notify();
+      this.notify({ type: 'ADD_SECTION', sectionId: existing.id, force: true });
       return existing.id;
     }
 
     const newSection = createSection(type, customTitle);
     this.state.sections.push(newSection);
     this.state.activeSectionId = newSection.id;
-    this.notify();
+    this.notify({ type: 'ADD_SECTION', sectionId: newSection.id, force: true });
     return newSection.id;
   }
 
@@ -3270,7 +3270,7 @@ class ReadmifyStore {
 
     this.state.sections.splice(index + 1, 0, cloned);
     this.state.activeSectionId = cloned.id;
-    this.notify();
+    this.notify({ type: 'DUPLICATE_SECTION', sectionId: cloned.id, force: true });
     return cloned.id;
   }
 
@@ -3281,7 +3281,7 @@ class ReadmifyStore {
       if (sec.data && typeof sec.data.heading === 'string') {
         sec.data.heading = newTitle.trim();
       }
-      this.notify();
+      this.notify({ type: 'RENAME_SECTION', sectionId, newTitle: sec.title });
     }
   }
 
@@ -3292,7 +3292,7 @@ class ReadmifyStore {
       if (this.state.activeSectionId === sectionId) {
         this.state.activeSectionId = this.state.sections[0]?.id || null;
       }
-      this.notify();
+      this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
     }
   }
 
@@ -3301,20 +3301,20 @@ class ReadmifyStore {
     if (tpl) {
       this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
       this.state.activeSectionId = this.state.sections[0]?.id || null;
-      this.notify();
+      this.notify({ type: 'LOAD_TEMPLATE', templateId, force: true });
     }
   }
 
   resetToDefault() {
     this.state.sections = JSON.parse(JSON.stringify(INITIAL_SECTIONS));
     this.state.activeSectionId = INITIAL_SECTIONS[0].id;
-    this.notify();
+    this.notify({ type: 'RESET_DEFAULT', force: true });
   }
 
   // Update multiple sections (e.g. from wizard or deep scanner)
   batchUpdate(updaterFn) {
     updaterFn(this.state.sections);
-    this.notify();
+    this.notify({ type: 'BATCH_UPDATE', force: true });
   }
 
   // Apply complete deep repository analysis across all relevant sections
@@ -3445,7 +3445,7 @@ class ReadmifyStore {
     if (this.state.sections[0]) {
       this.state.activeSectionId = this.state.sections[0].id;
     }
-    this.notify();
+    this.notify({ type: 'APPLY_REPO_ANALYSIS', force: true });
   }
 }
 const store = new ReadmifyStore();
@@ -5096,13 +5096,24 @@ function toggleTechItem(techId) {
 /**
  * Readmify - Dynamic Section Form Editor (v3 with Image Studio, Section Library & Full Customizability)
  */
-function renderSectionEditor(container) {
+
+
+
+
+
+
+
+
+
+let currentRenderedSectionId = null;
+function renderSectionEditor(container, meta = {}) {
   if (!container) return;
 
   const state = store.getState();
   const section = state.sections.find(s => s.id === state.activeSectionId);
 
   if (!section) {
+    currentRenderedSectionId = null;
     container.innerHTML = `
       <div class="p-12 text-center text-muted-foreground text-xs space-y-3">
         <div class="text-2xl">📋</div>
@@ -5120,6 +5131,26 @@ function renderSectionEditor(container) {
   }
 
   const { type, data, title, id, enabled } = section;
+
+  // Prevent input focus loss: if user is typing inside an input/textarea of this section, do NOT rebuild innerHTML
+  const activeEl = document.activeElement;
+  const isTyping = activeEl && container.contains(activeEl) && (
+    (activeEl.tagName === 'INPUT' && activeEl.type !== 'checkbox' && activeEl.type !== 'radio' && activeEl.type !== 'button' && activeEl.type !== 'submit') ||
+    activeEl.tagName === 'TEXTAREA'
+  );
+
+  if (currentRenderedSectionId === id && isTyping && !meta.force) {
+    if (type === SECTION_TYPES.LICENSE) {
+      const licPre = container.querySelector('#license-preview-pre');
+      if (licPre) {
+        const activeLic = getLicenseById(data.type || 'MIT');
+        licPre.textContent = activeLic.generateText(data.year, data.holder, data.projectName);
+      }
+    }
+    return;
+  }
+  currentRenderedSectionId = id;
+
   const currentIndex = state.sections.findIndex(s => s.id === id);
   const totalSections = state.sections.length;
 
@@ -5174,8 +5205,10 @@ function renderSectionEditor(container) {
 
   // Rename Section Input
   const renameInput = container.querySelector('#section-title-rename-input');
-  renameInput?.addEventListener('change', (e) => {
+  renameInput?.addEventListener('input', (e) => {
     store.renameSection(id, e.target.value);
+  });
+  renameInput?.addEventListener('change', (e) => {
     showToast(`Renamed section to "${e.target.value}"`, 'info');
   });
 
@@ -6066,7 +6099,7 @@ function renderFormFieldsByType(type, data, state) {
 
           <div>
             <label class="block text-[11px] text-muted-foreground mb-1">Live Generated Legal Agreement Preview:</label>
-            <pre class="bg-background border border-border rounded p-3 font-mono text-[10.5px] leading-relaxed text-muted-foreground max-h-40 overflow-y-auto select-all whitespace-pre-wrap">${legalTextPreview}</pre>
+            <pre id="license-preview-pre" class="bg-background border border-border rounded p-3 font-mono text-[10.5px] leading-relaxed text-muted-foreground max-h-40 overflow-y-auto select-all whitespace-pre-wrap">${legalTextPreview}</pre>
           </div>
         </div>
       `;
@@ -6128,6 +6161,8 @@ function renderFormFieldsByType(type, data, state) {
 }
 
 function attachFieldListeners(container, sectionId, type, currentData) {
+  const getSecData = () => store.getState().sections.find(s => s.id === sectionId)?.data || currentData || {};
+
   // Generic [data-field] inputs
   container.querySelectorAll('[data-field]').forEach(el => {
     const field = el.dataset.field;
@@ -6188,7 +6223,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const removeId = btn.dataset.id;
-      const currentList = currentData.technologies || [];
+      const data = getSecData();
+      const currentList = data.technologies || [];
       const updated = currentList.filter(id => id !== removeId);
       store.updateSectionData(sectionId, { technologies: updated });
     });
@@ -6197,14 +6233,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Feature items handlers
   const featureList = container.querySelector('#feature-items-list');
   container.querySelector('#add-feature-btn')?.addEventListener('click', () => {
-    const items = [...(currentData.items || [])];
+    const data = getSecData();
+    const items = [...(data.items || [])];
     items.push({ icon: '✨', title: 'New Feature', desc: 'Description of your new feature.' });
     store.updateSectionData(sectionId, { items });
   });
 
   featureList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const items = [...(currentData.items || [])];
+    const data = getSecData();
+    const items = JSON.parse(JSON.stringify(data.items || []));
     if (!items[idx]) return;
 
     if (e.target.classList.contains('feat-icon-input')) items[idx].icon = e.target.value;
@@ -6218,7 +6256,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-feature-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const items = (currentData.items || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const items = (data.items || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { items });
     }
   });
@@ -6226,14 +6265,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Installation steps handlers
   const stepsList = container.querySelector('#install-steps-list');
   container.querySelector('#add-install-step-btn')?.addEventListener('click', () => {
-    const steps = [...(currentData.steps || [])];
+    const data = getSecData();
+    const steps = [...(data.steps || [])];
     steps.push({ title: 'New step', cmd: 'echo "Step command"' });
     store.updateSectionData(sectionId, { steps });
   });
 
   stepsList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const steps = [...(currentData.steps || [])];
+    const data = getSecData();
+    const steps = JSON.parse(JSON.stringify(data.steps || []));
     if (!steps[idx]) return;
 
     if (e.target.classList.contains('step-title-input')) steps[idx].title = e.target.value;
@@ -6246,7 +6287,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-step-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const steps = (currentData.steps || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const steps = (data.steps || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { steps });
     }
   });
@@ -6254,14 +6296,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Environment variables handlers
   const envList = container.querySelector('#env-vars-list');
   container.querySelector('#add-env-var-btn')?.addEventListener('click', () => {
-    const variables = [...(currentData.variables || [])];
+    const data = getSecData();
+    const variables = [...(data.variables || [])];
     variables.push({ key: 'NEW_VAR', desc: 'Description of variable', default: '-', required: false });
     store.updateSectionData(sectionId, { variables });
   });
 
   envList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const variables = [...(currentData.variables || [])];
+    const data = getSecData();
+    const variables = JSON.parse(JSON.stringify(data.variables || []));
     if (!variables[idx]) return;
 
     if (e.target.classList.contains('env-key-input')) variables[idx].key = e.target.value;
@@ -6275,7 +6319,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-env-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const variables = (currentData.variables || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const variables = (data.variables || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { variables });
     }
   });
@@ -6283,14 +6328,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Roadmap tasks handlers
   const tasksList = container.querySelector('#tasks-list');
   container.querySelector('#add-task-btn')?.addEventListener('click', () => {
-    const tasks = [...(currentData.tasks || [])];
+    const data = getSecData();
+    const tasks = [...(data.tasks || [])];
     tasks.push({ text: 'New milestone', completed: false });
     store.updateSectionData(sectionId, { tasks });
   });
 
   tasksList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const tasks = [...(currentData.tasks || [])];
+    const data = getSecData();
+    const tasks = JSON.parse(JSON.stringify(data.tasks || []));
     if (!tasks[idx]) return;
 
     if (e.target.classList.contains('task-text-input')) tasks[idx].text = e.target.value;
@@ -6299,7 +6346,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
 
   tasksList?.addEventListener('change', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const tasks = [...(currentData.tasks || [])];
+    const data = getSecData();
+    const tasks = JSON.parse(JSON.stringify(data.tasks || []));
     if (!tasks[idx]) return;
 
     if (e.target.classList.contains('task-check')) tasks[idx].completed = e.target.checked;
@@ -6310,7 +6358,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-task-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const tasks = (currentData.tasks || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const tasks = (data.tasks || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { tasks });
     }
   });
@@ -6318,14 +6367,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // FAQ Handlers
   const faqList = container.querySelector('#faq-items-list');
   container.querySelector('#add-faq-btn')?.addEventListener('click', () => {
-    const questions = [...(currentData.questions || [])];
+    const data = getSecData();
+    const questions = [...(data.questions || [])];
     questions.push({ q: 'New question?', a: 'Answer to the question.' });
     store.updateSectionData(sectionId, { questions });
   });
 
   faqList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const questions = [...(currentData.questions || [])];
+    const data = getSecData();
+    const questions = JSON.parse(JSON.stringify(data.questions || []));
     if (!questions[idx]) return;
 
     if (e.target.classList.contains('faq-q-input')) questions[idx].q = e.target.value;
@@ -6338,7 +6389,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-faq-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const questions = (currentData.questions || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const questions = (data.questions || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { questions });
     }
   });
@@ -6346,14 +6398,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Benchmarks Handlers
   const benchList = container.querySelector('#benchmark-items-list');
   container.querySelector('#add-benchmark-btn')?.addEventListener('click', () => {
-    const rows = [...(currentData.rows || [])];
+    const data = getSecData();
+    const rows = [...(data.rows || [])];
     rows.push({ task: 'Task Name', baseline: '100ms', current: '20ms', diff: '5x faster' });
     store.updateSectionData(sectionId, { rows });
   });
 
   benchList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const rows = [...(currentData.rows || [])];
+    const data = getSecData();
+    const rows = JSON.parse(JSON.stringify(data.rows || []));
     if (!rows[idx]) return;
 
     if (e.target.classList.contains('bench-task-input')) rows[idx].task = e.target.value;
@@ -6368,7 +6422,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-bench-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const rows = (currentData.rows || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const rows = (data.rows || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { rows });
     }
   });
@@ -6376,14 +6431,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // API Reference Handlers
   const apiList = container.querySelector('#api-endpoints-list');
   container.querySelector('#add-endpoint-btn')?.addEventListener('click', () => {
-    const endpoints = [...(currentData.endpoints || [])];
+    const data = getSecData();
+    const endpoints = [...(data.endpoints || [])];
     endpoints.push({ method: 'GET', path: '/api/v1/new', desc: 'Endpoint description', auth: 'None' });
     store.updateSectionData(sectionId, { endpoints });
   });
 
   apiList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const endpoints = [...(currentData.endpoints || [])];
+    const data = getSecData();
+    const endpoints = JSON.parse(JSON.stringify(data.endpoints || []));
     if (!endpoints[idx]) return;
 
     if (e.target.classList.contains('ep-path-input')) endpoints[idx].path = e.target.value;
@@ -6395,7 +6452,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
 
   apiList?.addEventListener('change', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const endpoints = [...(currentData.endpoints || [])];
+    const data = getSecData();
+    const endpoints = JSON.parse(JSON.stringify(data.endpoints || []));
     if (!endpoints[idx]) return;
 
     if (e.target.classList.contains('ep-method-select')) endpoints[idx].method = e.target.value;
@@ -6406,7 +6464,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-ep-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const endpoints = (currentData.endpoints || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const endpoints = (data.endpoints || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { endpoints });
     }
   });
@@ -6414,14 +6473,16 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   // Changelog Releases Handlers
   const relList = container.querySelector('#releases-list');
   container.querySelector('#add-release-btn')?.addEventListener('click', () => {
-    const releases = [...(currentData.releases || [])];
+    const data = getSecData();
+    const releases = [...(data.releases || [])];
     releases.push({ version: 'v1.1.0', date: new Date().toISOString().slice(0, 10), changes: ['New feature added'] });
     store.updateSectionData(sectionId, { releases });
   });
 
   relList?.addEventListener('input', (e) => {
     const idx = parseInt(e.target.dataset.idx, 10);
-    const releases = [...(currentData.releases || [])];
+    const data = getSecData();
+    const releases = JSON.parse(JSON.stringify(data.releases || []));
     if (!releases[idx]) return;
 
     if (e.target.classList.contains('rel-version-input')) releases[idx].version = e.target.value;
@@ -6437,7 +6498,8 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     const btn = e.target.closest('.delete-rel-btn');
     if (btn) {
       const idx = parseInt(btn.dataset.idx, 10);
-      const releases = (currentData.releases || []).filter((_, i) => i !== idx);
+      const data = getSecData();
+      const releases = (data.releases || []).filter((_, i) => i !== idx);
       store.updateSectionData(sectionId, { releases });
     }
   });
@@ -6451,8 +6513,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   });
 
   container.querySelector('#download-license-file-btn')?.addEventListener('click', () => {
-    const sec = store.getState().sections.find(s => s.id === sectionId);
-    const data = sec ? sec.data : currentData;
+    const data = getSecData();
     const lic = getLicenseById(data.type || 'MIT');
     const year = data.year || new Date().getFullYear().toString();
     const holder = data.holder || 'Your Name';
@@ -6464,8 +6525,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   });
 
   container.querySelector('#copy-license-text-btn')?.addEventListener('click', () => {
-    const sec = store.getState().sections.find(s => s.id === sectionId);
-    const data = sec ? sec.data : currentData;
+    const data = getSecData();
     const lic = getLicenseById(data.type || 'MIT');
     const year = data.year || new Date().getFullYear().toString();
     const holder = data.holder || 'Your Name';
@@ -7136,7 +7196,7 @@ function initApp() {
   store.subscribe(renderApp);
 
   // Initial render
-  renderApp(store.getState());
+  renderApp(store.getState(), { force: true });
 
   // Check if first time user, offer quick wizard
   if (!localStorage.getItem('readmify_visited')) {
@@ -7147,14 +7207,19 @@ function initApp() {
   }
 }
 
-function renderApp(state) {
-  renderSidebar(state);
-  renderSectionEditor(sectionEditorContainer);
-  renderPreview(state);
+function renderApp(state, meta = {}) {
+  renderSidebar(state, meta);
+  renderSectionEditor(sectionEditorContainer, meta);
+  renderPreview(state, meta);
 }
 
 // --- 1. HORIZONTAL SECTION PILL BAR & DRAWER REORDERING ---
-function renderSidebar(state) {
+function renderSidebar(state, meta = {}) {
+  // If only section data fields changed (typing in inputs), skip re-rendering pills and drawer
+  if (meta && meta.type === 'UPDATE_SECTION_DATA') {
+    return;
+  }
+
   const { sections, activeSectionId } = state;
 
   // 1A. Render Horizontal Pill Bar

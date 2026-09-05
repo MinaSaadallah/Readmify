@@ -45,7 +45,7 @@ function initApp() {
   store.subscribe(renderApp);
 
   // Initial render
-  renderApp(store.getState());
+  renderApp(store.getState(), { force: true });
 
   // Check if first time user, offer quick wizard
   if (!localStorage.getItem('readmify_visited')) {
@@ -56,14 +56,19 @@ function initApp() {
   }
 }
 
-function renderApp(state) {
-  renderSidebar(state);
-  renderSectionEditor(sectionEditorContainer);
-  renderPreview(state);
+function renderApp(state, meta = {}) {
+  renderSidebar(state, meta);
+  renderSectionEditor(sectionEditorContainer, meta);
+  renderPreview(state, meta);
 }
 
 // --- 1. HORIZONTAL SECTION PILL BAR & DRAWER REORDERING ---
-function renderSidebar(state) {
+function renderSidebar(state, meta = {}) {
+  // If only section data fields changed (typing in inputs), skip re-rendering pills and drawer
+  if (meta && meta.type === 'UPDATE_SECTION_DATA') {
+    return;
+  }
+
   const { sections, activeSectionId } = state;
 
   // 1A. Render Horizontal Pill Bar
