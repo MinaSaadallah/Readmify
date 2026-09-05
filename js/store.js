@@ -1,426 +1,229 @@
 /**
- * Readmify - Central Reactive State Store
- * Manages section order, user edits, templates, and localStorage persistence
+ * Central reactive state store. Single unconditional subscribe path —
+ * no debounce branch is needed here because the editing surface is plain
+ * form inputs, not contenteditable, so there's no cursor/focus to protect.
  */
 import { INITIAL_SECTIONS, SECTION_TYPES, createSection } from './data/defaultSections.js';
 import { TEMPLATES } from './data/templates.js';
 
-const STORAGE_KEY = 'readmify_v1_state';
+const STORAGE_KEY = 'readmify_v2_state';
 
 class ReadmifyStore {
   constructor() {
     this.listeners = new Set();
     this.state = this.loadInitialState();
     this._saveTimer = null;
-    this.lastSavedAt = Date.now();
     this._undoStack = [];
-  }
-
-  flushSave() {
-    if (this._saveTimer) {
-      clearTimeout(this._saveTimer);
-      this._saveTimer = null;
-    }
-    this.saveToStorage(true);
   }
 
   loadInitialState() {
     try {
-      if (typeof localStorage !== 'undefined') {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-            return {
-              sections: parsed.sections,
-              activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
-              previewTheme: parsed.previewTheme || 'dark',
-              viewMode: (parsed.viewMode && parsed.viewMode !== 'editor') ? parsed.viewMode : 'canvas'
-            };
-          }
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+          return {
+            sections: parsed.sections,
+            activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
+            previewTheme: parsed.previewTheme || 'dark',
+            viewMode: parsed.viewMode || 'editor'
+          };
         }
       }
     } catch (e) {
-      console.warn('Could not restore saved state from localStorage:', e);
+      console.warn('Could not restore saved state:', e);
     }
-
     return {
       sections: JSON.parse(JSON.stringify(INITIAL_SECTIONS)),
       activeSectionId: INITIAL_SECTIONS[0].id,
       previewTheme: 'dark',
-      viewMode: 'canvas'
+      viewMode: 'editor'
     };
   }
 
-  saveToStorage(immediate = false) {
-    // Debounced persist: big base64 images make JSON.stringify expensive.
-    // Coalesce rapid typing into one write ~700ms after last change.
-    if (!immediate) {
-      if (this._saveTimer) return;
-      this._saveTimer = setTimeout(() => {
-        this._saveTimer = null;
-        this.saveToStorage(true);
-      }, 700);
-      return;
-    }
-    try {
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-        this.lastSavedAt = Date.now();
-        // Notify save indicator without full re-render
-        try {
-          window.dispatchEvent(new CustomEvent('readmify:saved', { detail: { at: this.lastSavedAt } }));
-        } catch (e) { /* noop */ }
-      }
-    } catch (e) {
-      console.warn('Could not persist state to localStorage:', e);
-    }
-  }
+  getState() { return this.state; }
 
-  getState() {
-    return this.state;
-  }
-
-  subscribe(listener) {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+  subscribe(fn) {
+    this.listeners.add(fn);
+    return () => this.listeners.delete(fn);
   }
 
   notify(meta = {}) {
+    for (const fn of this.listeners) fn(this.state, meta);
+    this.scheduleSave();
+  }
+
+  scheduleSave() {
+    if (this._saveTimer) clearTimeout(this._saveTimer);
+    this._saveTimer = setTimeout(() => this.saveToStorage(), 500);
+  }
+
+  flushSave() {
+    if (this._saveTimer) { clearTimeout(this._saveTimer); this._saveTimer = null; }
     this.saveToStorage();
-    for (const listener of this.listeners) {
-      try {
-        listener(this.state, meta);
-      } catch (err) {
-        console.error('Error in store listener:', err);
-      }
-    }
   }
 
-  // --- ACTIONS ---
-
-  setActiveSection(sectionId) {
-    if (this.state.activeSectionId !== sectionId) {
-      this.state.activeSectionId = sectionId;
-      this.notify({ type: 'SET_ACTIVE_SECTION', sectionId, force: true });
-    }
-  }
-
-  setPreviewTheme(theme) {
-    if (this.state.previewTheme !== theme) {
-      this.state.previewTheme = theme;
-      this.notify({ type: 'SET_THEME', theme });
-    }
+  saveToStorage() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        sections: this.state.sections,
+        activeSectionId: this.state.activeSectionId,
+        previewTheme: this.state.previewTheme,
+        viewMode: this.state.viewMode
+      }));
+    } catch (e) { console.warn('Could not save state:', e); }
   }
 
   setViewMode(viewMode) {
-    if (this.state.viewMode !== viewMode) {
-      this.state.viewMode = viewMode;
-      this.notify({ type: 'SET_VIEW_MODE', viewMode, force: true });
-    }
+    if (this.state.viewMode === viewMode) return;
+    this.state.viewMode = viewMode;
+    this.notify({ type: 'SET_VIEW_MODE' });
   }
 
-  toggleSection(sectionId, enabled) {
-    const section = this.state.sections.find(s => s.id === sectionId);
-    if (section) {
-      section.enabled = enabled !== undefined ? enabled : !section.enabled;
-      this.notify({ type: 'TOGGLE_SECTION', sectionId, enabled: section.enabled, force: true });
-    }
+  setPreviewTheme(theme) {
+    if (this.state.previewTheme === theme) return;
+    this.state.previewTheme = theme;
+    this.notify({ type: 'SET_THEME' });
   }
 
-  updateSectionData(sectionId, partialData) {
-    const section = this.state.sections.find(s => s.id === sectionId);
-    if (section) {
-      section.data = { ...section.data, ...partialData };
-      this.notify({ type: 'UPDATE_SECTION_DATA', sectionId, partialData });
-    }
+  setActiveSection(id) {
+    this.state.activeSectionId = id;
+    this.notify({ type: 'SET_ACTIVE_SECTION' });
   }
 
-  moveSection(sectionId, direction) {
-    const index = this.state.sections.findIndex(s => s.id === sectionId);
-    if (index === -1) return;
+  findSection(id) {
+    return this.state.sections.find(s => s.id === id);
+  }
 
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= this.state.sections.length) return;
+  updateSectionData(id, partialData) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.data = { ...section.data, ...partialData };
+    this.notify({ type: 'UPDATE_SECTION_DATA', sectionId: id });
+  }
 
-    const [item] = this.state.sections.splice(index, 1);
-    this.state.sections.splice(targetIndex, 0, item);
-    this.notify({ type: 'MOVE_SECTION', force: true });
+  renameSection(id, title) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.title = title;
+    this.notify({ type: 'RENAME_SECTION', sectionId: id });
+  }
+
+  toggleSection(id, enabled) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.enabled = enabled !== undefined ? enabled : !section.enabled;
+    this.notify({ type: 'TOGGLE_SECTION', sectionId: id });
+  }
+
+  moveSection(id, direction) {
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    const target = direction === 'up' ? idx - 1 : idx + 1;
+    if (target < 0 || target >= this.state.sections.length) return;
+    const [item] = this.state.sections.splice(idx, 1);
+    this.state.sections.splice(target, 0, item);
+    this.notify({ type: 'MOVE_SECTION' });
   }
 
   reorderSections(fromIndex, toIndex) {
-    if (fromIndex === toIndex) return;
-    if (fromIndex < 0 || fromIndex >= this.state.sections.length) return;
-    if (toIndex < 0 || toIndex >= this.state.sections.length) return;
-
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    if (fromIndex >= this.state.sections.length || toIndex >= this.state.sections.length) return;
     const [item] = this.state.sections.splice(fromIndex, 1);
     this.state.sections.splice(toIndex, 0, item);
-    this.notify({ type: 'REORDER_SECTIONS', force: true });
+    this.notify({ type: 'REORDER_SECTIONS' });
+  }
+
+  addSectionFromType(type, customTitle, insertIndex = null) {
+    const existing = type !== SECTION_TYPES.CUSTOM ? this.state.sections.find(s => s.type === type) : null;
+    if (existing) {
+      existing.enabled = true;
+      this.state.activeSectionId = existing.id;
+      this.notify({ type: 'ADD_SECTION', sectionId: existing.id });
+      return existing.id;
+    }
+    const section = createSection(type, customTitle);
+    if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= this.state.sections.length) {
+      this.state.sections.splice(insertIndex, 0, section);
+    } else {
+      this.state.sections.push(section);
+    }
+    this.state.activeSectionId = section.id;
+    this.notify({ type: 'ADD_SECTION', sectionId: section.id });
+    return section.id;
+  }
+
+  duplicateSection(id) {
+    const section = this.findSection(id);
+    if (!section) return null;
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    const clone = JSON.parse(JSON.stringify(section));
+    clone.id = createSection(section.type).id;
+    clone.title = `${section.title} (Copy)`;
+    this.state.sections.splice(idx + 1, 0, clone);
+    this.notify({ type: 'DUPLICATE_SECTION' });
+    return clone.id;
+  }
+
+  removeSection(id) {
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    const [removed] = this.state.sections.splice(idx, 1);
+    this._undoStack.push({ section: removed, index: idx });
+    if (this._undoStack.length > 10) this._undoStack.shift();
+    this.notify({ type: 'REMOVE_SECTION' });
+  }
+
+  undoRemoveSection() {
+    const last = this._undoStack.pop();
+    if (!last) return;
+    const target = Math.min(last.index, this.state.sections.length);
+    this.state.sections.splice(target, 0, last.section);
+    this.notify({ type: 'UNDO_REMOVE' });
   }
 
   addCustomSection(title = 'Custom Section') {
     return this.addSectionFromType(SECTION_TYPES.CUSTOM, title);
   }
 
-  addSectionFromType(type, customTitle, insertIndex = null) {
-    // Check if single-instance section already exists but is disabled
-    const existing = this.state.sections.find(s => s.type === type && type !== SECTION_TYPES.CUSTOM);
-    if (existing) {
-      existing.enabled = true;
-      if (customTitle) {
-        existing.title = customTitle;
-        if (existing.data && existing.data.heading) existing.data.heading = customTitle;
-      }
-      if (typeof insertIndex === 'number' && insertIndex >= 0) {
-        const curIdx = this.state.sections.findIndex(s => s.id === existing.id);
-        if (curIdx !== -1) {
-          const [removed] = this.state.sections.splice(curIdx, 1);
-          const target = Math.min(insertIndex, this.state.sections.length);
-          this.state.sections.splice(target, 0, removed);
-        }
-      }
-      this.state.activeSectionId = existing.id;
-      this.notify({ type: 'ADD_SECTION', sectionId: existing.id, force: true });
-      return existing.id;
-    }
-
-    const newSection = createSection(type, customTitle);
-    if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= this.state.sections.length) {
-      this.state.sections.splice(insertIndex, 0, newSection);
-    } else {
-      this.state.sections.push(newSection);
-    }
-    this.state.activeSectionId = newSection.id;
-    this.notify({ type: 'ADD_SECTION', sectionId: newSection.id, force: true });
-    return newSection.id;
-  }
-
-  duplicateSection(sectionId) {
-    const index = this.state.sections.findIndex(s => s.id === sectionId);
-    if (index === -1) return null;
-
-    const orig = this.state.sections[index];
-    const cloned = JSON.parse(JSON.stringify(orig));
-    cloned.id = `sec-${cloned.type}-${Date.now().toString(36)}`;
-    cloned.title = `${orig.title} (Copy)`;
-    if (cloned.data && cloned.data.heading) {
-      cloned.data.heading = `${cloned.data.heading} (Copy)`;
-    }
-    cloned.enabled = true;
-
-    this.state.sections.splice(index + 1, 0, cloned);
-    this.state.activeSectionId = cloned.id;
-    this.notify({ type: 'DUPLICATE_SECTION', sectionId: cloned.id, force: true });
-    return cloned.id;
-  }
-
-  renameSection(sectionId, newTitle) {
-    const sec = this.state.sections.find(s => s.id === sectionId);
-    if (sec && newTitle && newTitle.trim()) {
-      sec.title = newTitle.trim();
-      if (sec.data && typeof sec.data.heading === 'string') {
-        sec.data.heading = newTitle.trim();
-      }
-      this.notify({ type: 'RENAME_SECTION', sectionId, newTitle: sec.title });
-    }
-  }
-
-  removeSection(sectionId) {
-    const idx = this.state.sections.findIndex(s => s.id === sectionId);
-    if (idx !== -1) {
-      const [removed] = this.state.sections.splice(idx, 1);
-      // Keep small undo stack (max 10) for toast-undo, no confirm() friction
-      this._undoStack.push({ section: removed, index: idx });
-      if (this._undoStack.length > 10) this._undoStack.shift();
-      if (this.state.activeSectionId === sectionId) {
-        this.state.activeSectionId = this.state.sections[0]?.id || null;
-      }
-      this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
-      return removed;
-    }
-    return null;
-  }
-
-  undoRemoveSection() {
-    const entry = this._undoStack.pop();
-    if (!entry) return null;
-    const target = Math.min(entry.index, this.state.sections.length);
-    this.state.sections.splice(target, 0, entry.section);
-    this.state.activeSectionId = entry.section.id;
-    this.notify({ type: 'UNDO_REMOVE', sectionId: entry.section.id, force: true });
-    return entry.section.id;
-  }
-
   loadTemplate(templateId) {
     const tpl = TEMPLATES.find(t => t.id === templateId);
-    if (tpl) {
-      this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
-      this.state.activeSectionId = this.state.sections[0]?.id || null;
-      this.notify({ type: 'LOAD_TEMPLATE', templateId, force: true });
-    }
+    if (!tpl) return;
+    this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
+    this.state.activeSectionId = this.state.sections[0]?.id;
+    this.notify({ type: 'LOAD_TEMPLATE' });
   }
 
   resetToDefault() {
     this.state.sections = JSON.parse(JSON.stringify(INITIAL_SECTIONS));
-    this.state.activeSectionId = INITIAL_SECTIONS[0].id;
-    this.notify({ type: 'RESET_DEFAULT', force: true });
+    this.state.activeSectionId = this.state.sections[0]?.id;
+    this.notify({ type: 'RESET' });
   }
 
-  // Update multiple sections (e.g. from wizard or deep scanner)
-  batchUpdate(updaterFn) {
-    updaterFn(this.state.sections);
-    this.notify({ type: 'BATCH_UPDATE', force: true });
-  }
-
-  // Apply complete deep repository analysis across all relevant sections
-  applyRepoAnalysis(analysis) {
-    if (!analysis) return;
-
-    this.batchUpdate(sections => {
-      // 1. Hero
-      const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
-      if (hero) {
-        hero.enabled = true;
-        hero.data.projectName = analysis.repo || hero.data.projectName;
-        hero.data.tagline = analysis.description || hero.data.tagline;
-        hero.data.repoOwner = analysis.owner || hero.data.repoOwner;
-        hero.data.repoName = analysis.repo || hero.data.repoName;
-      }
-
-      // 2. Badges
-      const badges = sections.find(s => s.type === SECTION_TYPES.BADGES);
-      if (badges) {
-        badges.enabled = true;
-        badges.data.showStars = true;
-        badges.data.showForks = true;
-        badges.data.showIssues = true;
-        badges.data.showLicense = !!analysis.license;
-        badges.data.showRelease = true;
-        badges.data.showLastCommit = true;
-
-        if (Array.isArray(analysis.workflowBadges) && analysis.workflowBadges.length > 0) {
-          badges.data.customBadges = analysis.workflowBadges.map(wb => ({
-            label: 'CI',
-            message: 'Passing',
-            color: 'brightgreen',
-            logo: 'githubactions'
-          }));
-        }
-      }
-
-      // 3. About
-      const about = sections.find(s => s.type === SECTION_TYPES.ABOUT);
-      if (about) {
-        about.enabled = true;
-        const desc = analysis.description ? `${analysis.description}\n\n` : '';
-        const topics = Array.isArray(analysis.topics) && analysis.topics.length > 0
-          ? `**Key topics**: ${analysis.topics.map(t => `\`${t}\``).join(', ')}.\n\n`
-          : '';
-        about.data.content = `${desc}${topics}Engineered for high performance, reliability, and clean developer workflows.`;
-      }
-
-      // 4. Tech Stack
-      const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-      if (tech) {
-        tech.enabled = true;
-        if (Array.isArray(analysis.matchedTechIds) && analysis.matchedTechIds.length > 0) {
-          tech.data.technologies = Array.from(new Set(analysis.matchedTechIds));
-        }
-      }
-
-      // 5. Features
-      const features = sections.find(s => s.type === SECTION_TYPES.FEATURES);
-      if (features) {
-        features.enabled = true;
-        if (Array.isArray(analysis.features) && analysis.features.length > 0) {
-          features.data.items = analysis.features;
-        }
-      }
-
-      // 6. Project Structure
-      const structure = sections.find(s => s.type === SECTION_TYPES.PROJECT_STRUCTURE);
-      if (structure) {
-        if (analysis.projectTree && analysis.projectTree.trim().length > 0) {
-          structure.enabled = true;
-          structure.data.tree = analysis.projectTree;
-        } else {
-          structure.enabled = false;
-        }
-      }
-
-      // 7. Installation
-      const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
-      if (install) {
-        install.enabled = true;
-        if (analysis.prerequisites) {
-          install.data.prerequisites = analysis.prerequisites;
-        }
-        if (Array.isArray(analysis.installSteps) && analysis.installSteps.length > 0) {
-          install.data.steps = analysis.installSteps;
-        }
-        if (analysis.packageManager) {
-          install.data.packageManager = analysis.packageManager;
-        }
-      }
-
-      // 8. Environment Variables
-      const env = sections.find(s => s.type === SECTION_TYPES.ENV_VARS);
-      if (env) {
-        if (Array.isArray(analysis.envVars) && analysis.envVars.length > 0) {
-          env.enabled = true;
-          env.data.variables = analysis.envVars;
-        } else {
-          env.enabled = false;
-        }
-      }
-
-      // 9. License
-      const license = sections.find(s => s.type === SECTION_TYPES.LICENSE);
-      if (license) {
-        license.enabled = true;
-        if (analysis.license && analysis.license !== 'NOASSERTION') {
-          license.data.type = analysis.license;
-        }
-        if (analysis.owner) {
-          license.data.holder = analysis.owner;
-        }
-      }
-
-      // 10. Author
-      const author = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
-      if (author) {
-        author.enabled = true;
-        if (analysis.owner) {
-          author.data.name = analysis.owner;
-          author.data.github = analysis.owner;
-        }
-      }
-
-      // 11. Hero OG banner prefill (only if no custom banner yet)
-      if (hero && analysis.ogImage && !hero.data.logoUrl) {
-        hero.data.logoUrl = analysis.ogImage;
-        hero.data.showLogo = false; // keep off by default, user enables with 1 click
-        hero.data.logoLinkUrl = analysis.homepage || '';
-      }
-
-      // 12. Badges: contributors + release enrichment
-      if (badges) {
-        if (analysis.topContributors?.length > 0) badges.data.showContributors = true;
-        if (analysis.latestRelease) badges.data.showRelease = true;
-      }
-
-      // 13. Stats visuals (opt-in, enable if repo has traction)
-      const stats = sections.find(s => s.type === SECTION_TYPES.STATS);
-      if (stats && (analysis.stars > 0 || (analysis.topContributors?.length || 0) > 0)) {
-        stats.enabled = false; // stay opt-in, but prefill user
-        stats.data.githubUser = analysis.owner || '';
-      }
-    });
-
-    if (this.state.sections[0]) {
-      this.state.activeSectionId = this.state.sections[0].id;
+  applyRepoAnalysis(info) {
+    const hero = this.state.sections.find(s => s.type === SECTION_TYPES.HERO);
+    if (hero) {
+      hero.data.repoOwner = info.owner;
+      hero.data.repoName = info.repo;
+      hero.data.projectName = hero.data.projectName === 'My Project' ? info.repo : hero.data.projectName;
+      if (info.description) hero.data.tagline = info.description;
     }
-    this.notify({ type: 'APPLY_REPO_ANALYSIS', force: true });
+    const about = this.state.sections.find(s => s.type === SECTION_TYPES.ABOUT);
+    if (about && info.description) about.data.content = info.description;
+
+    if (info.matchedTechIds?.length) {
+      const tech = this.state.sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+      if (tech) tech.data.technologies = Array.from(new Set([...(tech.data.technologies || []), ...info.matchedTechIds]));
+    }
+    if (info.installSteps?.length) {
+      const install = this.state.sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
+      if (install) install.data.steps = info.installSteps;
+    }
+    if (info.license) {
+      const lic = this.state.sections.find(s => s.type === SECTION_TYPES.LICENSE);
+      if (lic) lic.data.type = info.license;
+    }
+    this.notify({ type: 'APPLY_REPO_ANALYSIS' });
   }
 }
 

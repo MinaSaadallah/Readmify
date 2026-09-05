@@ -1,6 +1,9 @@
 /**
  * Readmify Build Script
- * Bundles ES modules into a single offline & file:// compatible script
+ * Bundles ES modules into a single offline & file:// compatible script.
+ * Naive concat-and-strip-imports bundler (no real module resolution), so
+ * MODULE_FILES order must respect dependency order — a file must appear
+ * after everything it imports.
  */
 const fs = require('fs');
 const path = require('path');
@@ -10,43 +13,35 @@ const JS_DIR = path.join(ROOT_DIR, 'js');
 const OUTPUT_BUNDLE = path.join(JS_DIR, 'readmify.bundle.js');
 
 const MODULE_FILES = [
+  'data/defaultSections.js',
   'data/techCatalog.js',
   'data/licenses.js',
-  'data/defaultSections.js',
   'data/templates.js',
   'services/githubApi.js',
   'services/npmApi.js',
   'utils/exportUtils.js',
   'utils/markdownGenerator.js',
-  'components/healthScore.js',
+  'utils/renderReadme.js',
   'store.js',
-  'components/photoUploader.js',
+  'components/sectionFormList.js',
   'components/sectionLibrary.js',
-  'components/techPicker.js',
-  'components/sectionEditor.js',
-  'components/interactiveCanvas.js',
   'components/wizard.js',
   'components/palette.js',
+  'components/healthScore.js',
   'app.js'
 ];
 
 function cleanModuleContent(content) {
-  // Remove import statements
   let cleaned = content.replace(/^\s*import\s+[\s\S]*?from\s+['"][^'"]+['"];?\s*$/gm, '');
-  
-  // Replace export default / export const / export function / export let / export class / export async function
   cleaned = cleaned.replace(/^\s*export\s+default\s+/gm, '');
   cleaned = cleaned.replace(/^\s*export\s+(const|let|var|function|class|async\s+function)\s+/gm, '$1 ');
-  
-  // Remove standalone export { ... }; statements
   cleaned = cleaned.replace(/^\s*export\s*\{[\s\S]*?\};?\s*$/gm, '');
-  
   return cleaned;
 }
 
 function build() {
   console.log('Building Readmify bundle...');
-  let bundleContent = `/** Readmify v4 Bundle - GitHub Pages + offline cache compatible */\n\n(function() {\n  'use strict';\n\n`;
+  let bundleContent = `/** Readmify v5 Bundle - offline & file:// compatible */\n\n(function() {\n  'use strict';\n\n`;
 
   for (const relPath of MODULE_FILES) {
     const fullPath = path.join(JS_DIR, relPath);
@@ -60,9 +55,10 @@ function build() {
     bundleContent += `\n/* ==================== MODULE: ${relPath} ==================== */\n` + cleaned + '\n';
   }
 
-  bundleContent += `\n// Robust DOM Ready execution\nif (document.readyState === 'loading') {\n  document.addEventListener('DOMContentLoaded', initApp);\n} else {\n  initApp();\n}\n\n})();\n`;
+  // Note: app.js already contains its own DOMContentLoaded bootstrap —
+  // do NOT append another one here, that caused a double-init bug before.
+  bundleContent += `\n})();\n`;
 
-  // Light safe minify: strip block comments + collapse 3+ blank lines (keeps URLs/strings intact)
   bundleContent = bundleContent.replace(/\/\*\*[\s\S]*?\*\//g, '');
   bundleContent = bundleContent.replace(/\n{3,}/g, '\n\n');
 

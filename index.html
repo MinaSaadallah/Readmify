@@ -1,332 +1,112 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Readmify — Interactive GitHub README Builder</title>
-  <meta name="description" content="Ultra-easy, interactive GitHub README builder with free GitHub API language auto-detection, SkillIcons, and photo presets." />
-  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
-
-  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-  <!-- Tailwind CSS via CDN (precompiled purge recommended for Pages speed) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            border: '#27272a',
-            input: '#27272a',
-            ring: '#71717a',
-            background: '#09090b',
-            foreground: '#fafafa',
-            card: {
-              DEFAULT: '#121215',
-              foreground: '#fafafa'
-            },
-            muted: {
-              DEFAULT: '#18181b',
-              foreground: '#a1a1aa'
-            },
-            accent: {
-              DEFAULT: '#27272a',
-              foreground: '#fafafa'
-            }
-          },
-          borderRadius: {
-            lg: '0.5rem',
-            md: '0.375rem',
-            sm: '0.25rem',
-          }
-        }
-      }
-    }
-  </script>
-
-  <!-- External Parsers (deferred so first paint isn't blocked) -->
-  <script defer src="https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.2.4/dist/purify.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
-
-  <!-- Custom Stylesheets -->
-  <link rel="stylesheet" href="./css/styles.css" />
-  <link rel="stylesheet" href="./css/github-preview.css" />
+  <title>Readmify — GitHub README Builder</title>
+  <link id="github-markdown-theme-link" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown-dark.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 </head>
-<body class="bg-background text-foreground flex flex-col h-screen overflow-hidden selection:bg-zinc-800 selection:text-zinc-100">
+<body>
 
-  <!-- TOP NAVBAR (shadcn Header) -->
-  <header class="h-14 border-b border-border bg-background/95 backdrop-blur px-4 py-2.5 flex items-center justify-between gap-3 select-none flex-shrink-0 z-30">
-    <!-- Brand Logo -->
-    <div class="flex items-center gap-3">
-      <div class="flex items-center gap-2">
-        <div class="w-7 h-7 rounded-md bg-zinc-100 flex items-center justify-center text-zinc-950 font-bold text-xs shadow-sm">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
-            <path d="M6 6h10"/>
-            <path d="M6 10h10"/>
-          </svg>
-        </div>
-        <span class="text-sm font-semibold tracking-tight text-foreground">Readmify</span>
-        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded border border-border bg-muted text-muted-foreground">v3.0</span>
-      </div>
+  <header>
+    <div class="brand">
+      <span>Readmify</span>
     </div>
 
-    <!-- GitHub Scanner Bar (Center) -->
-    <div class="flex items-center flex-1 max-w-lg mx-2">
-      <div class="relative w-full flex items-center">
-        <svg class="w-3.5 h-3.5 absolute left-2.5 text-muted-foreground pointer-events-none" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        <input 
-          type="text" 
-          id="nav-github-input" 
-          placeholder="Enter repo (e.g. facebook/react or GitHub link)..." 
-          class="h-8 w-full pl-8 pr-24 text-xs border border-border bg-card text-foreground placeholder:text-muted-foreground rounded-md focus:outline-none focus:ring-1 focus:ring-ring transition"
-        />
-        <button 
-          id="nav-github-detect-btn" 
-          class="absolute right-1 h-6 px-2.5 bg-primary text-primary-foreground hover:bg-zinc-200 text-[11px] font-medium rounded transition flex items-center gap-1 shadow-xs cursor-pointer"
-          title="Auto-detect repo details"
-        >
-          Scan Repo
-        </button>
-      </div>
+    <div class="view-mode-toggle">
+      <button class="view-mode-btn active" data-mode="editor">Editor</button>
+      <button class="view-mode-btn" data-mode="preview">Preview</button>
     </div>
 
-    <!-- Center Segmented Tabs (NO SPLIT VIEW - Clean & Minimal) -->
-    <div class="hidden md:flex items-center bg-muted p-0.5 rounded-lg border border-border">
-      <button class="view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm" data-mode="canvas" title="Direct Visual Editor">
-        Editor
-      </button>
-      <button class="view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="preview" title="GitHub README Preview">
-        Preview
-      </button>
-      <button class="view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground" data-mode="raw" title="Markdown Code">
-        Code
-      </button>
-    </div>
-
-    <!-- Action Buttons: 3 primaries + overflow (secondary kept for compat, hidden on small screens) -->
-    <div class="flex items-center gap-2">
-      <!-- Saved indicator -->
-      <div class="hidden lg:flex items-center gap-1.5 mr-1 text-[11px] text-muted-foreground select-none" title="Auto-save status">
-        <span id="save-state-dot" class="saved w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+    <div class="header-actions">
+      <div class="save-indicator">
+        <span class="save-dot saved" id="save-state-dot"></span>
         <span id="save-state-text">Saved</span>
       </div>
-      <!-- 1. Add Section (primary create) -->
-      <button id="nav-add-section-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-border transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="Add Section (or press Ctrl+K)">
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        <span class="hidden sm:inline font-semibold">Add Section</span>
-      </button>
 
-      <!-- 2. Command palette trigger -->
-      <button id="nav-palette-btn" class="h-8 px-2.5 text-xs font-medium rounded-md bg-muted text-foreground border border-border hover:bg-accent transition hidden md:inline-flex items-center gap-1.5 cursor-pointer" title="Quick actions (Ctrl+K)">
-        <span class="text-muted-foreground">⌘K</span>
-      </button>
+      <button class="btn-ghost" id="nav-photos-btn" title="Jump to photos">Photos</button>
+      <button class="btn-ghost" id="nav-badges-btn" title="Jump to badges">Badges</button>
+      <button class="btn-primary" id="nav-add-section-btn">Add Section</button>
+      <button class="icon-btn" id="nav-palette-btn" title="Command palette (Ctrl+K)">⌘K</button>
 
-      <!-- 3. Export split -->
-      <div class="relative flex items-center">
-        <button id="nav-download-btn" class="h-8 px-3 text-xs font-medium rounded-l-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1.5 shadow-sm cursor-pointer border-r border-zinc-700">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          <span class="hidden sm:inline">Export</span>
-        </button>
-        <button id="export-menu-btn" class="h-8 px-1.5 text-xs rounded-r-md bg-primary text-primary-foreground hover:bg-zinc-200 transition cursor-pointer" title="More export options">▾</button>
-        <div id="export-menu" class="hidden absolute right-0 top-9 w-44 bg-card border border-border rounded-lg p-1 z-50 text-xs">
-          <button id="export-menu-copy" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">Copy markdown</button>
-          <button id="export-menu-download" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">Download README.md</button>
-          <button id="export-menu-license" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">Download LICENSE</button>
+      <div class="menu-wrap">
+        <button class="btn-secondary" id="nav-download-btn">Export</button>
+      </div>
+      <div class="menu-wrap">
+        <button class="icon-btn" id="export-menu-btn" title="Export options">▾</button>
+        <div class="menu-dropdown hidden" id="export-menu">
+          <button id="export-menu-copy">Copy markdown</button>
+          <button id="export-menu-download">Download README.md</button>
         </div>
       </div>
-
-      <!-- Overflow for secondary -->
-      <div class="relative">
-        <button id="nav-overflow-btn" class="h-8 w-8 rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition flex items-center justify-center cursor-pointer" title="More actions">···</button>
-        <div id="nav-overflow-menu" class="hidden absolute right-0 top-9 w-52 bg-card border border-border rounded-lg p-1 z-50 text-xs space-y-0.5">
-          <button data-overflow="guide" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">📖 Quick Guide</button>
-          <button data-overflow="import" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">⬆ Import README</button>
-          <button data-overflow="theme" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">◐ Toggle theme</button>
-          <button data-overflow="copy" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent">⧉ Copy markdown</button>
-          <button data-overflow="reset" class="w-full text-left px-2.5 py-1.5 rounded hover:bg-accent text-rose-300">↺ Reset template</button>
+      <div class="menu-wrap">
+        <button class="icon-btn" id="nav-overflow-btn" title="More actions">⋯</button>
+        <div class="menu-dropdown hidden" id="nav-overflow-menu">
+          <button data-overflow="guide">Quick Start</button>
+          <button data-overflow="import">Import README</button>
+          <button data-overflow="theme">Toggle preview theme</button>
+          <button data-overflow="copy">Copy markdown</button>
+          <button data-overflow="reset" class="danger">Reset to default</button>
         </div>
-      </div>
-
-      <!-- Hidden compat buttons (kept so existing JS bindings still work, overflow delegates to them) -->
-      <div class="hidden" aria-hidden="true">
-        <button id="nav-wizard-btn" title="Quick Setup Guide">Guide</button>
-        <button id="theme-toggle-btn" title="Toggle Light/Dark Theme">Theme</button>
-        <button id="nav-import-btn" title="Import README.md">Import</button>
-        <button id="nav-copy-btn">Copy</button>
       </div>
     </div>
   </header>
 
-  <!-- MAIN WORKSPACE LAYOUT -->
-  <main class="flex-1 flex flex-col overflow-hidden relative">
-
-    <!-- 1. FULL-WIDTH INTERACTIVE CANVAS VIEW (Primary Default Mode - No Split View) -->
-    <div id="canvas-view-container" class="flex-1 flex flex-col h-full overflow-hidden bg-background">
-      <!-- Top Section Pill Bar & Canvas Quick Actions -->
-      <div class="border-b border-border bg-card/60 px-4 py-2 flex items-center justify-between gap-3 overflow-hidden flex-shrink-0 select-none">
-        <!-- Horizontal scrollable pills for instant section jumping -->
-        <div id="section-pill-bar" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 flex-1 min-w-0">
-          <!-- Dynamically populated chips -->
-        </div>
-
-        <div class="flex items-center gap-2 flex-shrink-0 border-l border-border pl-3">
-          <button id="pill-add-section-btn" class="h-7 px-2.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1 shadow-xs cursor-pointer" title="Explore Section Library">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-            <span class="hidden sm:inline">Add Section</span>
-          </button>
-          <button id="toggle-section-drawer-btn" class="h-7 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition cursor-pointer" title="Toggle Section Outline & Reorder Drawer">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-          </button>
-          <button id="reset-template-btn" class="h-7 px-2 text-xs text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded border border-border transition cursor-pointer" title="Reset to Defaults">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-          </button>
-        </div>
+  <main>
+    <section id="editor-pane">
+      <div class="pane-toolbar">
+        <strong style="font-size:12px;">Edit</strong>
+        <span class="field-hint" style="margin-left:auto;">Changes appear instantly on the right →</span>
       </div>
+      <div id="editor-pane-body"><!-- section cards rendered by sectionFormList.js --></div>
+    </section>
 
-      <!-- COLLAPSIBLE SECTION REORDER DRAWER (Toggled with ☰) -->
-      <div id="section-drawer-panel" class="hidden border-b border-border bg-card/95 px-4 py-3 max-h-60 overflow-y-auto flex-shrink-0 transition-all">
-        <div class="flex items-center justify-between pb-2 mb-2 border-b border-border text-[11px] text-muted-foreground">
-          <span class="font-semibold uppercase tracking-wider text-foreground">Section Outline &amp; Reordering</span>
-          <div class="flex items-center gap-2">
-            <button id="add-custom-sec-btn" class="text-[11px] font-medium text-foreground hover:bg-accent px-2 py-0.5 rounded border border-border transition cursor-pointer">
-              + Custom
-            </button>
-            <button id="close-section-drawer-btn" class="text-xs hover:text-foreground p-0.5 cursor-pointer">✕</button>
-          </div>
+    <section id="preview-pane">
+      <div class="pane-toolbar">
+        <div class="pane-tabs">
+          <button class="pane-tab active" id="preview-tab-btn">Preview</button>
+          <button class="pane-tab" id="raw-tab-btn">Code</button>
         </div>
-        <div id="section-list-items" class="space-y-1">
-          <!-- Dynamically populated list with up/down/toggle -->
-        </div>
+        <span class="health-badge" id="health-score-badge">
+          <span id="health-score-text">–</span>
+        </span>
       </div>
-
-      <!-- Centered Living Document Viewport (Full-width, max-w-4xl centered GitHub card) -->
-      <div id="canvas-scroll-viewport" class="flex-1 overflow-y-auto p-3 sm:p-8 bg-zinc-950/40 flex justify-center">
-        <div class="w-full max-w-4xl bg-card/90 border border-border rounded-xl shadow-2xl p-6 sm:p-12 min-h-full my-auto transition-all">
-          <div id="interactive-canvas-body">
-            <!-- Living interactive document rendered by interactiveCanvas.js -->
-          </div>
-        </div>
+      <ul id="health-score-tips"></ul>
+      <div id="preview-body-wrap" class="theme-dark">
+        <div id="preview-body" class="markdown-body"></div>
       </div>
-    </div>
-
-    <!-- 2. PURE GITHUB PREVIEW CONTAINER (Read-only, without edit controls) -->
-    <div id="pure-preview-container" class="flex-1 hidden flex-col h-full overflow-hidden bg-background">
-      <div class="px-4 py-2.5 bg-background border-b border-border flex items-center justify-between flex-shrink-0">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span class="text-xs font-semibold text-foreground">GitHub Preview</span>
-          <span id="health-score-badge" class="ml-2 px-2 py-0.5 text-[10px] font-medium rounded-full border border-border bg-muted">
-            <span id="health-score-text">Calculating...</span>
-          </span>
-        </div>
-
-        <div class="flex items-center gap-2 text-[11px] text-muted-foreground">
-          <span id="stats-word-count">0 words</span>
-          <span>•</span>
-          <span id="stats-char-count">0 chars</span>
-          <span>•</span>
-          <span id="stats-reading-time">~1 min</span>
-        </div>
-      </div>
-
-      <div id="health-score-tip" class="px-4 py-1.5 bg-muted/40 border-b border-border text-[11px] text-muted-foreground truncate">
-        Tip: Add a clear description and key features to engage readers.
-      </div>
-
-      <div class="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center">
-        <div class="w-full max-w-4xl bg-card/90 border border-border rounded-xl shadow-xl p-6 sm:p-12 min-h-full">
-          <div id="github-preview-body" class="markdown-body github-dark"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. RAW MARKDOWN CODE TAB (Full Screen Editor) -->
-    <div id="raw-markdown-container" class="flex-1 hidden flex-col h-full p-4 bg-background">
-      <div class="pb-2 flex items-center justify-between text-xs text-muted-foreground border-b border-border mb-3">
-        <span class="font-mono font-semibold text-foreground">README.md (Raw Markdown Code)</span>
-        <button id="raw-copy-btn" class="btn-primary text-xs px-3 py-1 cursor-pointer flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <span>Copy Code</span>
-        </button>
-      </div>
-      <textarea 
-        id="raw-markdown-textarea" 
-        class="w-full flex-1 bg-card border border-border rounded-md p-4 text-xs font-mono text-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none leading-relaxed" 
-        placeholder="# Markdown code will appear here..."
-      ></textarea>
-    </div>
-
-    <!-- SLIDE-OVER INSPECTOR SHEET (Slides in from right when settings is clicked) -->
-    <div id="slide-over-inspector" class="fixed inset-y-0 right-0 w-[440px] max-w-full bg-card border-l border-border shadow-2xl z-40 transform translate-x-full transition-transform duration-200 flex flex-col">
-      <div class="px-4 py-3 border-b border-border flex items-center justify-between bg-card flex-shrink-0 select-none">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <h3 class="text-xs font-semibold text-foreground">Section Settings &amp; Fine-Tuning</h3>
-        </div>
-        <button id="close-inspector-btn" class="text-muted-foreground hover:text-foreground text-xs p-1 cursor-pointer">✕</button>
-      </div>
-      <div id="inspector-form-container" class="flex-1 overflow-y-auto p-4 bg-background">
-        <!-- Rendered by renderSectionEditor in inspector mode -->
-      </div>
-    </div>
-
+      <textarea id="raw-view" class="hidden" readonly spellcheck="false"></textarea>
+    </section>
   </main>
 
-  <!-- PHOTO / BANNER HUB MODAL CONTAINER -->
-  <div id="photo-hub-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>
-
-  <!-- IMPORT README MODAL (shadcn Dialog) -->
-  <div id="import-readme-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden">
-    <div class="bg-card border border-border rounded-lg w-full max-w-xl p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-border">
-        <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
-          <svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-          <span>Import Existing README.md</span>
-        </h3>
-        <button id="close-import-modal-btn" class="text-muted-foreground hover:text-foreground text-xs p-1">✕</button>
+  <!-- Import README modal -->
+  <div id="import-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Import existing README</h3>
+        <button type="button" class="modal-close-btn" id="import-cancel-btn">✕</button>
       </div>
-      <p class="text-xs text-muted-foreground">Paste your raw Markdown text below or upload a .md file:</p>
-      <input type="file" id="import-file-input" accept=".md,.markdown,.txt" class="block w-full text-xs text-muted-foreground file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border file:border-border file:text-xs file:font-medium file:bg-muted file:text-foreground hover:file:bg-accent" />
-      <textarea id="import-markdown-textarea" rows="8" class="form-input font-mono text-xs" placeholder="# Paste your markdown here..."></textarea>
-      <div class="flex justify-end gap-2 pt-1">
-        <button id="apply-import-btn" class="btn-primary text-xs px-3 py-1.5">
-          Import Content
-        </button>
+      <p class="field-hint">Paste markdown below. It becomes a single editable Custom section.</p>
+      <textarea id="import-textarea" class="field-input field-mono" rows="10" placeholder="# My Project..."></textarea>
+      <div style="margin-top:10px; text-align:right;">
+        <button type="button" class="btn-primary" id="import-apply-btn">Import</button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST CONTAINER -->
-  <div id="readmify-toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-  <!-- GLOBAL DRAG OVERLAY -->
-  <div id="global-drop-overlay" class="hidden fixed inset-0 z-40 border-2 border-dashed border-zinc-300 bg-black/60 backdrop-blur-sm items-center justify-center pointer-events-none">
-    <div class="bg-card border border-border rounded-xl px-6 py-4 text-center shadow-2xl">
-      <div class="text-sm font-semibold">Drop image to add as banner</div>
-      <div class="text-[11px] text-muted-foreground mt-0.5">Release anywhere — it goes to the nearest Hero / Demo section</div>
+  <!-- Command palette -->
+  <div id="cmd-palette-backdrop" class="hidden">
+    <div id="cmd-palette">
+      <input type="text" id="cmd-palette-input" placeholder="Type a command or search sections..." />
+      <div id="cmd-palette-list"></div>
     </div>
   </div>
 
-  <!-- COMMAND PALETTE -->
-  <div id="cmd-palette-backdrop" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-24 p-4 bg-black/70">
-    <div id="cmd-palette" class="w-full max-w-lg bg-card border border-border rounded-xl shadow-2xl overflow-hidden">
-      <div class="px-4 py-2.5 border-b border-border flex items-center gap-2">
-        <span class="text-muted-foreground text-xs">⌘</span>
-        <input id="cmd-palette-input" type="text" placeholder="Type a command or search sections… (Esc to close)" class="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground" />
-      </div>
-      <div id="cmd-palette-list" class="max-h-80 overflow-y-auto p-1.5 text-xs"></div>
-      <div class="px-3 py-1.5 border-t border-border text-[10px] text-muted-foreground flex justify-between">
-        <span>↑↓ navigate · Enter run · drag cards onto canvas supported</span>
-        <span>Ctrl+K anytime</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Universal Bundle Script (GitHub Pages + offline cache compatible) -->
-  <script defer src="./js/readmify.bundle.js"></script>
+  <script defer src="js/readmify.bundle.js"></script>
 </body>
 </html>

@@ -1,116 +1,107 @@
 /**
- * Readmify - Command palette (Ctrl+K), offline, no deps.
- * Indexes section catalog + core actions. Supports drag from results.
+ * ⌘K command palette — quick actions + jump-to-add-section.
  */
 import { store } from '../store.js';
-import { SECTION_CATALOG } from './sectionLibrary.js';
-import { copyToClipboard, downloadReadmeFile } from '../utils/exportUtils.js';
-import { openSectionLibrary } from './sectionLibrary.js';
+import { SECTION_LABELS } from './sectionFormList.js';
 import { openWizard } from './wizard.js';
+import { copyToClipboard, downloadReadmeFile, showToast } from '../utils/exportUtils.js';
 
-let paletteOpen = false;
+let open = false;
 let activeIdx = 0;
 let currentItems = [];
 
 function coreActions() {
   return [
-    { id: 'add-section', label: 'Add section…', hint: 'Library', run: () => openSectionLibrary() },
-    { id: 'scan-repo', label: 'Scan GitHub repo…', hint: 'Deep scan', run: () => openWizard('', false) },
-    { id: 'preview', label: 'Go to Preview', hint: 'View', run: () => store.setViewMode('preview') },
-    { id: 'editor', label: 'Go to Editor', hint: 'View', run: () => store.setViewMode('canvas') },
-    { id: 'code', label: 'Go to Code', hint: 'View', run: () => store.setViewMode('raw') },
-    { id: 'copy', label: 'Copy markdown', hint: 'Export', run: () => copyToClipboard(window.__readmifyMarkdown || '', 'Markdown copied!') },
-    { id: 'download', label: 'Download README.md', hint: 'Export', run: () => downloadReadmeFile(window.__readmifyMarkdown || '', 'README.md') },
-    { id: 'import', label: 'Import README…', hint: 'File', run: () => document.getElementById('nav-import-btn')?.click() },
-    { id: 'guide', label: 'Open Quick Guide', hint: 'Help', run: () => document.getElementById('nav-wizard-btn')?.click() },
-    { id: 'theme', label: 'Toggle theme', hint: 'View', run: () => document.getElementById('theme-toggle-btn')?.click() },
+    { label: 'Go to Editor', run: () => store.setViewMode('editor') },
+    { label: 'Go to Preview', run: () => store.setViewMode('preview') },
+    { label: 'Copy markdown', run: () => copyToClipboard(window.__readmifyMarkdown || '', 'Markdown copied!') },
+    { label: 'Download README.md', run: () => downloadReadmeFile(window.__readmifyMarkdown || '', 'README.md') },
+    { label: 'Quick Start (scan repo / templates)', run: () => openWizard() },
+    {
+      label: 'Toggle theme', run: () => {
+        const next = store.getState().previewTheme === 'dark' ? 'light' : 'dark';
+        store.setPreviewTheme(next);
+        showToast(`Switched to ${next} preview theme`, 'info');
+      }
+    },
+    {
+      label: 'Reset to default template', run: () => {
+        if (confirm('Reset your README to the default template? This clears your current sections.')) {
+          store.resetToDefault();
+        }
+      }
+    }
   ];
 }
 
-export function openPalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
-  const input = document.getElementById('cmd-palette-input');
-  if (!bd || !input) return;
-  paletteOpen = true;
-  activeIdx = 0;
-  bd.classList.remove('hidden');
-  input.value = '';
-  renderPalette('');
-  setTimeout(() => input.focus(), 30);
-}
-
-export function closePalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
-  if (bd) bd.classList.add('hidden');
-  paletteOpen = false;
-}
-
-export function isPaletteOpen() { return paletteOpen; }
-
 function allItems(query) {
   const q = (query || '').toLowerCase().trim();
-  const actions = coreActions().map(a => ({ kind: 'action', title: a.label, sub: a.hint, run: a.run, id: a.id }));
-  const secs = (SECTION_CATALOG || []).map(c => ({
-    kind: 'section', title: `Add: ${c.title}`, sub: c.desc || c.category,
-    type: c.type, id: `sec-${c.type}`
-  }));
-  const all = [...actions, ...secs];
-  if (!q) return all.slice(0, 14);
-  return all.filter(i => `${i.title} ${i.sub || ''}`.toLowerCase().includes(q)).slice(0, 14);
+  const actions = coreActions().map(a => ({ kind: 'action', title: a.label, run: a.run }));
+  const sections = Object.entries(SECTION_LABELS).map(([type, label]) => ({ kind: 'section', title: `Add: ${label}`, type }));
+  const all = [...actions, ...sections];
+  if (!q) return all.slice(0, 12);
+  return all.filter(i => i.title.toLowerCase().includes(q)).slice(0, 12);
 }
 
-function renderPalette(query) {
+function render(query) {
   const list = document.getElementById('cmd-palette-list');
   if (!list) return;
   currentItems = allItems(query);
-  list.innerHTML = currentItems.map((it, idx) => `
-    <div class="cmd-item ${idx === activeIdx ? 'active' : ''} flex items-center justify-between px-2.5 py-2 rounded-md cursor-pointer"
-      data-idx="${idx}" ${it.kind === 'section' ? `draggable="true" data-section-type="${it.type}"` : ''}>
-      <span class="font-medium ${idx === activeIdx ? 'text-foreground' : 'text-zinc-200'}">${it.title}</span>
-      <span class="text-[10px] text-muted-foreground">${it.sub || ''}</span>
-    </div>`).join('') || `<div class="px-3 py-6 text-center text-muted-foreground">No matches</div>`;
+  list.innerHTML = currentItems.map((item, idx) => `
+    <div class="cmd-item ${idx === activeIdx ? 'active' : ''}" data-idx="${idx}">${item.title}</div>
+  `).join('') || `<div class="cmd-item-empty">No matches</div>`;
 
   list.querySelectorAll('.cmd-item').forEach(el => {
     el.addEventListener('click', () => runItem(parseInt(el.dataset.idx, 10)));
-    el.addEventListener('dragstart', (e) => {
-      const it = currentItems[parseInt(el.dataset.idx, 10)];
-      if (it?.kind === 'section') {
-        e.dataTransfer.setData('text/readmify-section-type', it.type);
-        e.dataTransfer.effectAllowed = 'copy';
-      }
-    });
   });
 }
 
 function runItem(idx) {
-  const it = currentItems[idx];
-  if (!it) return;
+  const item = currentItems[idx];
+  if (!item) return;
   closePalette();
-  if (it.kind === 'action' && typeof it.run === 'function') it.run();
-  else if (it.kind === 'section') store.addSectionFromType(it.type);
+  if (item.kind === 'action') item.run();
+  else if (item.kind === 'section') store.addSectionFromType(item.type);
 }
 
+export function openPalette() {
+  const backdrop = document.getElementById('cmd-palette-backdrop');
+  const input = document.getElementById('cmd-palette-input');
+  if (!backdrop || !input) return;
+  open = true;
+  activeIdx = 0;
+  backdrop.classList.remove('hidden');
+  input.value = '';
+  render('');
+  setTimeout(() => input.focus(), 20);
+}
+
+export function closePalette() {
+  document.getElementById('cmd-palette-backdrop')?.classList.add('hidden');
+  open = false;
+}
+
+export function isPaletteOpen() { return open; }
+
 export function initPalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
+  const backdrop = document.getElementById('cmd-palette-backdrop');
   const input = document.getElementById('cmd-palette-input');
   const btn = document.getElementById('nav-palette-btn');
-  if (!bd || !input) return;
-  if (bd.dataset.bound) return;
-  bd.dataset.bound = 'true';
+  if (!backdrop || !input) return;
 
   btn?.addEventListener('click', openPalette);
-  bd.addEventListener('click', (e) => { if (e.target === bd) closePalette(); });
-  input.addEventListener('input', () => { activeIdx = 0; renderPalette(input.value); });
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closePalette(); });
+  input.addEventListener('input', () => { activeIdx = 0; render(input.value); });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, currentItems.length - 1); renderPalette(input.value); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); renderPalette(input.value); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, currentItems.length - 1); render(input.value); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); render(input.value); }
     else if (e.key === 'Enter') { e.preventDefault(); runItem(activeIdx); }
     else if (e.key === 'Escape') closePalette();
   });
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
-      if (isPaletteOpen()) closePalette(); else openPalette();
+      isPaletteOpen() ? closePalette() : openPalette();
     }
     if (e.key === 'Escape' && isPaletteOpen()) closePalette();
   });

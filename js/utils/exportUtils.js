@@ -1,29 +1,27 @@
 /**
- * Readmify - Export & Notification Utilities
+ * Small, framework-free DOM utilities: clipboard, file download, toasts, confetti.
  */
 
-export async function copyToClipboard(text, successMessage = 'README copied to clipboard!') {
+export async function copyToClipboard(text, successMessage = 'Copied to clipboard!') {
   try {
-    if (navigator.clipboard && window.isSecureContext) {
+    if (window.isSecureContext && navigator.clipboard) {
       await navigator.clipboard.writeText(text);
     } else {
-      // Fallback for older browsers or insecure origins
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
       document.execCommand('copy');
-      textArea.remove();
+      document.body.removeChild(ta);
     }
     showToast(successMessage, 'success');
     fireConfetti();
     return true;
-  } catch (err) {
-    console.error('Failed to copy text: ', err);
-    showToast('Failed to copy to clipboard', 'error');
+  } catch (e) {
+    console.error('Copy failed:', e);
+    showToast('Could not copy to clipboard', 'error');
     return false;
   }
 }
@@ -32,58 +30,58 @@ export function downloadReadmeFile(content, filename = 'README.md') {
   try {
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('README.md downloaded successfully!', 'success');
+    showToast(`${filename} downloaded!`, 'success');
     fireConfetti();
-  } catch (err) {
-    console.error('Download failed: ', err);
-    showToast('Download failed. Please try copying markdown instead.', 'error');
+  } catch (e) {
+    console.error('Download failed:', e);
+    showToast('Could not download file', 'error');
   }
 }
 
+const TOAST_ICONS = { success: '✓', error: '✕', info: 'i' };
+const TOAST_COLORS = { success: '#10B981', error: '#EF4444', info: '#71717A' };
+
 export function showToast(message, type = 'info') {
-  let toastContainer = document.getElementById('readmify-toast-container');
-  if (!toastContainer) {
-    toastContainer = document.createElement('div');
-    toastContainer.id = 'readmify-toast-container';
-    toastContainer.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none';
-    document.body.appendChild(toastContainer);
+  let container = document.getElementById('readmify-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'readmify-toast-container';
+    container.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;';
+    document.body.appendChild(container);
   }
 
   const toast = document.createElement('div');
-  const icon = type === 'success' ? '?' : type === 'error' ? '?' : '??';
-  const borderCol = type === 'success' ? 'border-emerald-500/50 text-emerald-300' : type === 'error' ? 'border-rose-500/50 text-rose-300' : 'border-indigo-500/50 text-indigo-300';
+  const color = TOAST_COLORS[type] || TOAST_COLORS.info;
+  toast.style.cssText = `background:#18181b;color:#fafafa;border-left:3px solid ${color};padding:10px 14px;border-radius:6px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;max-width:320px;`;
+  toast.textContent = `${TOAST_ICONS[type] || ''} ${message}`.trim();
+  container.appendChild(toast);
 
-  toast.className = `flex items-center gap-3 px-4 py-3 bg-slate-900/95 border ${borderCol} rounded-xl shadow-2xl backdrop-blur-md text-sm font-medium transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto`;
-  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-
-  toastContainer.appendChild(toast);
-
-  // Trigger animation
   requestAnimationFrame(() => {
-    toast.classList.remove('translate-y-4', 'opacity-0');
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
   });
 
   setTimeout(() => {
-    toast.classList.add('translate-y-4', 'opacity-0');
-    setTimeout(() => toast.remove(), 300);
-  }, 3500);
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    setTimeout(() => toast.remove(), 250);
+  }, 3200);
 }
 
 export function fireConfetti() {
   if (typeof window.confetti === 'function') {
     window.confetti({
-      particleCount: 70,
-      spread: 60,
+      particleCount: 60,
+      spread: 55,
       origin: { y: 0.8 },
-      colors: ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B']
+      colors: ['#fafafa', '#71717a', '#3b82f6', '#10b981', '#f59e0b']
     });
   }
 }

@@ -3,2576 +3,728 @@
 (function() {
   'use strict';
 
-/* ==================== MODULE: data/techCatalog.js ==================== */
-const TECH_CATEGORIES = [
-  { id: 'all', name: 'All Technologies' },
-  { id: 'languages', name: 'Languages' },
-  { id: 'frontend', name: 'Frontend & Mobile' },
-  { id: 'backend', name: 'Backend & APIs' },
-  { id: 'database', name: 'Databases & Storage' },
-  { id: 'devops', name: 'Cloud & DevOps' },
-  { id: 'tools', name: 'Tools & Testing' },
-];const TECH_CATALOG = [
-  // --- LANGUAGES ---
-  { id: 'typescript', name: 'TypeScript', category: 'languages', color: '3178C6', logo: 'typescript', logoColor: 'white', skillSlug: 'ts' },
-  { id: 'javascript', name: 'JavaScript', category: 'languages', color: 'F7DF1E', logo: 'javascript', logoColor: 'black', skillSlug: 'js' },
-  { id: 'python', name: 'Python', category: 'languages', color: '3776AB', logo: 'python', logoColor: 'white', skillSlug: 'py' },
-  { id: 'rust', name: 'Rust', category: 'languages', color: '000000', logo: 'rust', logoColor: 'white', skillSlug: 'rust' },
-  { id: 'go', name: 'Go', category: 'languages', color: '00ADD8', logo: 'go', logoColor: 'white', skillSlug: 'go' },
-  { id: 'java', name: 'Java', category: 'languages', color: 'ED8B00', logo: 'openjdk', logoColor: 'white', skillSlug: 'java' },
-  { id: 'csharp', name: 'C#', category: 'languages', color: '239120', logo: 'csharp', logoColor: 'white', skillSlug: 'cs' },
-  { id: 'cpp', name: 'C++', category: 'languages', color: '00599C', logo: 'cplusplus', logoColor: 'white', skillSlug: 'cpp' },
-  { id: 'c', name: 'C', category: 'languages', color: 'A8B9CC', logo: 'c', logoColor: 'black', skillSlug: 'c' },
-  { id: 'php', name: 'PHP', category: 'languages', color: '777BB4', logo: 'php', logoColor: 'white', skillSlug: 'php' },
-  { id: 'swift', name: 'Swift', category: 'languages', color: 'F05138', logo: 'swift', logoColor: 'white', skillSlug: 'swift' },
-  { id: 'kotlin', name: 'Kotlin', category: 'languages', color: '7F52FF', logo: 'kotlin', logoColor: 'white', skillSlug: 'kotlin' },
-  { id: 'dart', name: 'Dart', category: 'languages', color: '0175C2', logo: 'dart', logoColor: 'white', skillSlug: 'dart' },
-  { id: 'ruby', name: 'Ruby', category: 'languages', color: 'CC342D', logo: 'ruby', logoColor: 'white', skillSlug: 'ruby' },
-  { id: 'html5', name: 'HTML5', category: 'languages', color: 'E34F26', logo: 'html5', logoColor: 'white', skillSlug: 'html' },
-  { id: 'css3', name: 'CSS3', category: 'languages', color: '1572B6', logo: 'css3', logoColor: 'white', skillSlug: 'css' },
-  { id: 'r', name: 'R', category: 'languages', color: '276DC3', logo: 'r', logoColor: 'white', skillSlug: 'r' },
-  { id: 'scala', name: 'Scala', category: 'languages', color: 'DC322F', logo: 'scala', logoColor: 'white', skillSlug: 'scala' },
-  { id: 'elixir', name: 'Elixir', category: 'languages', color: '4B275F', logo: 'elixir', logoColor: 'white', skillSlug: 'elixir' },
-  { id: 'lua', name: 'Lua', category: 'languages', color: '2C2D72', logo: 'lua', logoColor: 'white', skillSlug: 'lua' },
-  { id: 'shell', name: 'Bash / Shell', category: 'languages', color: '4EAA25', logo: 'gnubash', logoColor: 'white', skillSlug: 'bash' },
-  { id: 'solidity', name: 'Solidity', category: 'languages', color: '363636', logo: 'solidity', logoColor: 'white', skillSlug: 'solidity' },
-
-  // --- FRONTEND & MOBILE ---
-  { id: 'react', name: 'React', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB', skillSlug: 'react' },
-  { id: 'nextjs', name: 'Next.js', category: 'frontend', color: '000000', logo: 'nextdotjs', logoColor: 'white', skillSlug: 'nextjs' },
-  { id: 'vue', name: 'Vue.js', category: 'frontend', color: '4FC08D', logo: 'vuedotjs', logoColor: 'white', skillSlug: 'vue' },
-  { id: 'nuxtjs', name: 'Nuxt.js', category: 'frontend', color: '00DC82', logo: 'nuxtdotjs', logoColor: 'white', skillSlug: 'nuxtjs' },
-  { id: 'svelte', name: 'Svelte', category: 'frontend', color: 'FF3E00', logo: 'svelte', logoColor: 'white', skillSlug: 'svelte' },
-  { id: 'angular', name: 'Angular', category: 'frontend', color: 'DD0031', logo: 'angular', logoColor: 'white', skillSlug: 'angular' },
-  { id: 'tailwind', name: 'Tailwind CSS', category: 'frontend', color: '38B2AC', logo: 'tailwind-css', logoColor: 'white', skillSlug: 'tailwind' },
-  { id: 'vite', name: 'Vite', category: 'frontend', color: '646CFF', logo: 'vite', logoColor: 'FFD62E', skillSlug: 'vite' },
-  { id: 'astro', name: 'Astro', category: 'frontend', color: 'BC52EE', logo: 'astro', logoColor: 'white', skillSlug: 'astro' },
-  { id: 'redux', name: 'Redux', category: 'frontend', color: '593D88', logo: 'redux', logoColor: 'white', skillSlug: 'redux' },
-  { id: 'flutter', name: 'Flutter', category: 'frontend', color: '02569B', logo: 'flutter', logoColor: 'white', skillSlug: 'flutter' },
-  { id: 'reactnative', name: 'React Native', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB', skillSlug: 'react' },
-  { id: 'bootstrap', name: 'Bootstrap', category: 'frontend', color: '563D7C', logo: 'bootstrap', logoColor: 'white', skillSlug: 'bootstrap' },
-  { id: 'sass', name: 'Sass', category: 'frontend', color: 'CC6699', logo: 'sass', logoColor: 'white', skillSlug: 'sass' },
-  { id: 'threejs', name: 'Three.js', category: 'frontend', color: '000000', logo: 'threedotjs', logoColor: 'white', skillSlug: 'threejs' },
-  { id: 'electron', name: 'Electron', category: 'frontend', color: '47848F', logo: 'electron', logoColor: 'white', skillSlug: 'electron' },
-
-  // --- BACKEND & APIS ---
-  { id: 'nodejs', name: 'Node.js', category: 'backend', color: '43853D', logo: 'nodedotjs', logoColor: 'white', skillSlug: 'nodejs' },
-  { id: 'express', name: 'Express.js', category: 'backend', color: '404D59', logo: 'express', logoColor: 'white', skillSlug: 'express' },
-  { id: 'fastify', name: 'Fastify', category: 'backend', color: '000000', logo: 'fastify', logoColor: 'white', skillSlug: 'fastify' },
-  { id: 'nestjs', name: 'NestJS', category: 'backend', color: 'E0234E', logo: 'nestjs', logoColor: 'white', skillSlug: 'nestjs' },
-  { id: 'django', name: 'Django', category: 'backend', color: '092E20', logo: 'django', logoColor: 'white', skillSlug: 'django' },
-  { id: 'fastapi', name: 'FastAPI', category: 'backend', color: '009688', logo: 'fastapi', logoColor: 'white', skillSlug: 'fastapi' },
-  { id: 'flask', name: 'Flask', category: 'backend', color: '000000', logo: 'flask', logoColor: 'white', skillSlug: 'flask' },
-  { id: 'springboot', name: 'Spring Boot', category: 'backend', color: '6DB33F', logo: 'springboot', logoColor: 'white', skillSlug: 'spring' },
-  { id: 'rails', name: 'Ruby on Rails', category: 'backend', color: 'CC0000', logo: 'rubyonrails', logoColor: 'white', skillSlug: 'rails' },
-  { id: 'laravel', name: 'Laravel', category: 'backend', color: 'FF2D20', logo: 'laravel', logoColor: 'white', skillSlug: 'laravel' },
-  { id: 'dotnet', name: '.NET', category: 'backend', color: '512BD4', logo: 'dotnet', logoColor: 'white', skillSlug: 'dotnet' },
-  { id: 'graphql', name: 'GraphQL', category: 'backend', color: 'E10098', logo: 'graphql', logoColor: 'white', skillSlug: 'graphql' },
-
-  // --- DATABASES & STORAGE ---
-  { id: 'postgres', name: 'PostgreSQL', category: 'database', color: '316192', logo: 'postgresql', logoColor: 'white', skillSlug: 'postgres' },
-  { id: 'mongodb', name: 'MongoDB', category: 'database', color: '4EA94B', logo: 'mongodb', logoColor: 'white', skillSlug: 'mongodb' },
-  { id: 'redis', name: 'Redis', category: 'database', color: 'DC382D', logo: 'redis', logoColor: 'white', skillSlug: 'redis' },
-  { id: 'mysql', name: 'MySQL', category: 'database', color: '005C84', logo: 'mysql', logoColor: 'white', skillSlug: 'mysql' },
-  { id: 'sqlite', name: 'SQLite', category: 'database', color: '07405E', logo: 'sqlite', logoColor: 'white', skillSlug: 'sqlite' },
-  { id: 'supabase', name: 'Supabase', category: 'database', color: '3ECF8E', logo: 'supabase', logoColor: 'black', skillSlug: 'supabase' },
-  { id: 'firebase', name: 'Firebase', category: 'database', color: 'FFCA28', logo: 'firebase', logoColor: 'black', skillSlug: 'firebase' },
-  { id: 'prisma', name: 'Prisma', category: 'database', color: '2D3748', logo: 'prisma', logoColor: 'white', skillSlug: 'prisma' },
-  { id: 'drizzle', name: 'Drizzle ORM', category: 'database', color: 'C5F74F', logo: 'drizzle', logoColor: 'black', skillSlug: null },
-  { id: 'sqlalchemy', name: 'SQLAlchemy', category: 'database', color: 'D71F00', logo: 'sqlalchemy', logoColor: 'white', skillSlug: null },
-
-  // --- CLOUD & DEVOPS ---
-  { id: 'docker', name: 'Docker', category: 'devops', color: '2496ED', logo: 'docker', logoColor: 'white', skillSlug: 'docker' },
-  { id: 'kubernetes', name: 'Kubernetes', category: 'devops', color: '326CE5', logo: 'kubernetes', logoColor: 'white', skillSlug: 'kubernetes' },
-  { id: 'aws', name: 'AWS', category: 'devops', color: '232F3E', logo: 'amazonaws', logoColor: 'FF9900', skillSlug: 'aws' },
-  { id: 'gcp', name: 'Google Cloud', category: 'devops', color: '4285F4', logo: 'googlecloud', logoColor: 'white', skillSlug: 'gcp' },
-  { id: 'azure', name: 'Azure', category: 'devops', color: '0078D4', logo: 'microsoftazure', logoColor: 'white', skillSlug: 'azure' },
-  { id: 'vercel', name: 'Vercel', category: 'devops', color: '000000', logo: 'vercel', logoColor: 'white', skillSlug: 'vercel' },
-  { id: 'netlify', name: 'Netlify', category: 'devops', color: '00C7B7', logo: 'netlify', logoColor: 'white', skillSlug: 'netlify' },
-  { id: 'cloudflare', name: 'Cloudflare', category: 'devops', color: 'F38020', logo: 'cloudflare', logoColor: 'white', skillSlug: 'cloudflare' },
-  { id: 'githubactions', name: 'GitHub Actions', category: 'devops', color: '2088FF', logo: 'githubactions', logoColor: 'white', skillSlug: 'githubactions' },
-  { id: 'terraform', name: 'Terraform', category: 'devops', color: '7B42BC', logo: 'terraform', logoColor: 'white', skillSlug: 'terraform' },
-  { id: 'nginx', name: 'Nginx', category: 'devops', color: '009639', logo: 'nginx', logoColor: 'white', skillSlug: 'nginx' },
-  { id: 'linux', name: 'Linux', category: 'devops', color: 'FCC624', logo: 'linux', logoColor: 'black', skillSlug: 'linux' },
-
-  // --- TOOLS & TESTING ---
-  { id: 'git', name: 'Git', category: 'tools', color: 'F05032', logo: 'git', logoColor: 'white', skillSlug: 'git' },
-  { id: 'github', name: 'GitHub', category: 'tools', color: '181717', logo: 'github', logoColor: 'white', skillSlug: 'github' },
-  { id: 'figma', name: 'Figma', category: 'tools', color: 'F24E1E', logo: 'figma', logoColor: 'white', skillSlug: 'figma' },
-  { id: 'postman', name: 'Postman', category: 'tools', color: 'FF6C37', logo: 'postman', logoColor: 'white', skillSlug: 'postman' },
-  { id: 'jest', name: 'Jest', category: 'tools', color: 'C21325', logo: 'jest', logoColor: 'white', skillSlug: 'jest' },
-  { id: 'vitest', name: 'Vitest', category: 'tools', color: '6E9F18', logo: 'vitest', logoColor: 'white', skillSlug: 'vitest' },
-  { id: 'cypress', name: 'Cypress', category: 'tools', color: '69D3A7', logo: 'cypress', logoColor: 'black', skillSlug: 'cypress' },
-  { id: 'playwright', name: 'Playwright', category: 'tools', color: '2EAD33', logo: 'playwright', logoColor: 'white', skillSlug: 'playwright' },
-  { id: 'eslint', name: 'ESLint', category: 'tools', color: '4B32C3', logo: 'eslint', logoColor: 'white', skillSlug: null },
-  { id: 'prettier', name: 'Prettier', category: 'tools', color: 'F7B93E', logo: 'prettier', logoColor: 'black', skillSlug: null },
-  { id: 'pnpm', name: 'pnpm', category: 'tools', color: 'F69220', logo: 'pnpm', logoColor: 'white', skillSlug: 'pnpm' },
-  { id: 'bun', name: 'Bun', category: 'tools', color: '000000', logo: 'bun', logoColor: 'white', skillSlug: 'bun' },
-  { id: 'yarn', name: 'Yarn', category: 'tools', color: '2C8EBB', logo: 'yarn', logoColor: 'white', skillSlug: 'yarn' },
-  { id: 'npm', name: 'npm', category: 'tools', color: 'CB3837', logo: 'npm', logoColor: 'white', skillSlug: 'npm' },
-  { id: 'pytorch', name: 'PyTorch', category: 'tools', color: 'EE4C2C', logo: 'pytorch', logoColor: 'white', skillSlug: 'pytorch' },
-  { id: 'tensorflow', name: 'TensorFlow', category: 'tools', color: 'FF6F00', logo: 'tensorflow', logoColor: 'white', skillSlug: 'tensorflow' }
-];function getBadgeUrl(item, style = 'for-the-badge') {
-  const encodedName = encodeURIComponent(item.name.replace(/-/g, '--'));
-  return `https://img.shields.io/badge/${encodedName}-${item.color}?style=${style}&logo=${item.logo}&logoColor=${item.logoColor}`;
-}function getSkillIconsUrl(techIds, theme = 'dark', perline = 10) {
-  const slugs = techIds
-    .map(id => TECH_CATALOG.find(t => t.id === id)?.skillSlug)
-    .filter(Boolean);
-  
-  if (slugs.length === 0) return null;
-  return `https://skillicons.dev/icons?i=${slugs.join(',')}&theme=${theme}&perline=${perline || 10}`;
-}const TECH_DOC_MAP = {
-  typescript: 'https://www.typescriptlang.org',
-  javascript: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
-  python: 'https://www.python.org',
-  rust: 'https://www.rust-lang.org',
-  go: 'https://go.dev',
-  java: 'https://www.java.com',
-  csharp: 'https://dotnet.microsoft.com/en-us/languages/csharp',
-  cpp: 'https://isocpp.org',
-  c: 'https://en.cppreference.com/w/c',
-  php: 'https://www.php.net',
-  swift: 'https://www.swift.org',
-  kotlin: 'https://kotlinlang.org',
-  dart: 'https://dart.dev',
-  ruby: 'https://www.ruby-lang.org',
-  html5: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
-  css3: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
-  react: 'https://react.dev',
-  nextjs: 'https://nextjs.org',
-  vue: 'https://vuejs.org',
-  nuxtjs: 'https://nuxt.com',
-  svelte: 'https://svelte.dev',
-  angular: 'https://angular.dev',
-  tailwind: 'https://tailwindcss.com',
-  vite: 'https://vite.dev',
-  astro: 'https://astro.build',
-  redux: 'https://redux.js.org',
-  flutter: 'https://flutter.dev',
-  reactnative: 'https://reactnative.dev',
-  bootstrap: 'https://getbootstrap.com',
-  sass: 'https://sass-lang.com',
-  threejs: 'https://threejs.org',
-  electron: 'https://www.electronjs.org',
-  nodejs: 'https://nodejs.org',
-  express: 'https://expressjs.com',
-  fastapi: 'https://fastapi.tiangolo.com',
-  nestjs: 'https://nestjs.com',
-  django: 'https://www.djangoproject.com',
-  flask: 'https://flask.palletsprojects.com',
-  spring: 'https://spring.io',
-  graphql: 'https://graphql.org',
-  trpc: 'https://trpc.io',
-  hono: 'https://hono.dev',
-  bun: 'https://bun.sh',
-  deno: 'https://deno.com',
-  postgres: 'https://www.postgresql.org',
-  mongodb: 'https://www.mongodb.com',
-  redis: 'https://redis.io',
-  mysql: 'https://www.mysql.com',
-  sqlite: 'https://www.sqlite.org',
-  prisma: 'https://www.prisma.io',
-  drizzle: 'https://orm.drizzle.team',
-  supabase: 'https://supabase.com',
-  firebase: 'https://firebase.google.com',
-  docker: 'https://www.docker.com',
-  kubernetes: 'https://kubernetes.io',
-  aws: 'https://aws.amazon.com',
-  gcp: 'https://cloud.google.com',
-  azure: 'https://azure.microsoft.com',
-  vercel: 'https://vercel.com',
-  netlify: 'https://www.netlify.com',
-  cloudflare: 'https://www.cloudflare.com',
-  githubactions: 'https://github.com/features/actions',
-  git: 'https://git-scm.com',
-  github: 'https://github.com',
-  figma: 'https://www.figma.com',
-  postman: 'https://www.postman.com',
-  jest: 'https://jestjs.io',
-  vitest: 'https://vitest.dev',
-  cypress: 'https://www.cypress.io',
-  playwright: 'https://playwright.dev',
-  pnpm: 'https://pnpm.io',
-  yarn: 'https://yarnpkg.com',
-  npm: 'https://www.npmjs.com'
-};function getTechDocUrl(itemOrId) {
-  const id = typeof itemOrId === 'string' ? itemOrId : itemOrId?.id;
-  if (!id) return 'https://github.com';
-  return TECH_DOC_MAP[id] || `https://github.com/topics/${encodeURIComponent(id)}`;
-}
-
-/* ==================== MODULE: data/licenses.js ==================== */
-
-const LICENSE_CATALOG = [
-  {
-    id: 'MIT',
-    name: 'MIT License',
-    spdxId: 'MIT',
-    shortDesc: 'A short and simple permissive license with conditions only requiring preservation of copyright and license notices.',
-    badgeColor: 'yellow',
-    badgeUrl: 'https://img.shields.io/badge/License-MIT-yellow.svg',
-    url: 'https://opensource.org/licenses/MIT',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['License and copyright notice'],
-    generateText: (year, holder, projectName) => `MIT License
-
-Copyright (c) ${year || new Date().getFullYear()} ${holder || 'The Authors'}
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.`
-  },
-  {
-    id: 'Apache-2.0',
-    name: 'Apache License 2.0',
-    spdxId: 'Apache-2.0',
-    shortDesc: 'A permissive license whose main conditions require preservation of copyright and license notices, and explicit grant of patent rights.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-Apache_2.0-blue.svg',
-    url: 'https://opensource.org/licenses/Apache-2.0',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Patent grant', 'Private use'],
-    limitations: ['Trademark use', 'Liability', 'Warranty'],
-    conditions: ['License and copyright notice', 'State changes'],
-    generateText: (year, holder, projectName) => `                                 Apache License
-                           Version 2.0, January 2004
-                        http://www.apache.org/licenses/
-
-   Copyright ${year || new Date().getFullYear()} ${holder || 'The Authors'}
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.`
-  },
-  {
-    id: 'GPL-3.0',
-    name: 'GNU General Public License v3.0',
-    spdxId: 'GPL-3.0',
-    shortDesc: 'Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-GPLv3-blue.svg',
-    url: 'https://www.gnu.org/licenses/gpl-3.0',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Patent grant', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['Disclose source', 'License and copyright notice', 'Same license', 'State changes'],
-    generateText: (year, holder, projectName) => `${projectName || 'This program'} - A free and open-source project
-Copyright (C) ${year || new Date().getFullYear()} ${holder || 'The Authors'}
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.`
-  },
-  {
-    id: 'AGPL-3.0',
-    name: 'GNU Affero General Public License v3.0',
-    spdxId: 'AGPL-3.0',
-    shortDesc: 'Strongest copyleft license. Network users interacting with the software remotely via web/API are entitled to receive the full source code.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-AGPL_v3-blue.svg',
-    url: 'https://www.gnu.org/licenses/agpl-3.0',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Patent grant', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['Disclose source', 'Network use is distribution', 'License and copyright notice', 'Same license', 'State changes'],
-    generateText: (year, holder, projectName) => `${projectName || 'This program'} - An open-source application
-Copyright (C) ${year || new Date().getFullYear()} ${holder || 'The Authors'}
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.`
-  },
-  {
-    id: 'BSD-3-Clause',
-    name: 'BSD 3-Clause License',
-    spdxId: 'BSD-3-Clause',
-    shortDesc: 'A permissive license similar to BSD 2-Clause, with a clause forbidding others from using copyright holders names for promotional endorsement without permission.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-BSD_3--Clause-blue.svg',
-    url: 'https://opensource.org/licenses/BSD-3-Clause',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['License and copyright notice'],
-    generateText: (year, holder, projectName) => `BSD 3-Clause License
-
-Copyright (c) ${year || new Date().getFullYear()}, ${holder || 'The Authors'}
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its
-   contributors may be used to endorse or promote products derived from
-   this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.`
-  },
-  {
-    id: 'BSD-2-Clause',
-    name: 'BSD 2-Clause License',
-    spdxId: 'BSD-2-Clause',
-    shortDesc: 'A permissive license that comes in two clauses. Extremely lightweight and simple.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-BSD_2--Clause-orange.svg',
-    url: 'https://opensource.org/licenses/BSD-2-Clause',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['License and copyright notice'],
-    generateText: (year, holder, projectName) => `BSD 2-Clause License
-
-Copyright (c) ${year || new Date().getFullYear()}, ${holder || 'The Authors'}
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.`
-  },
-  {
-    id: 'MPL-2.0',
-    name: 'Mozilla Public License 2.0',
-    spdxId: 'MPL-2.0',
-    shortDesc: 'A weak copyleft license that is file-level rather than project-level, allowing proprietary extensions as long as modified MPL files remain open source.',
-    badgeColor: 'brightgreen',
-    badgeUrl: 'https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg',
-    url: 'https://opensource.org/licenses/MPL-2.0',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Patent grant', 'Private use'],
-    limitations: ['Trademark use', 'Liability', 'Warranty'],
-    conditions: ['Disclose source (file-level)', 'License and copyright notice', 'Same license (file-level)'],
-    generateText: (year, holder, projectName) => `This Source Code Form is subject to the terms of the Mozilla Public
-License, v. 2.0. If a copy of the MPL was not distributed with this
-file, You can obtain one at https://mozilla.org/MPL/2.0/.
-
-Copyright (c) ${year || new Date().getFullYear()} ${holder || 'The Authors'}`
-  },
-  {
-    id: 'ISC',
-    name: 'ISC License',
-    spdxId: 'ISC',
-    shortDesc: 'A permissive license functionally equivalent to the 2-Clause BSD and MIT licenses, with language that was considered simpler.',
-    badgeColor: 'blue',
-    badgeUrl: 'https://img.shields.io/badge/License-ISC-blue.svg',
-    url: 'https://opensource.org/licenses/ISC',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: ['License and copyright notice'],
-    generateText: (year, holder, projectName) => `ISC License
-
-Copyright (c) ${year || new Date().getFullYear()} ${holder || 'The Authors'}
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.`
-  },
-  {
-    id: 'Unlicense',
-    name: 'The Unlicense',
-    spdxId: 'Unlicense',
-    shortDesc: 'A license with no conditions whatsoever which dedicates works to the public domain. Equivalent to CC0.',
-    badgeColor: 'lightgrey',
-    badgeUrl: 'https://img.shields.io/badge/license-Unlicense-blue.svg',
-    url: 'https://unlicense.org/',
-    permissions: ['Commercial use', 'Modification', 'Distribution', 'Private use'],
-    limitations: ['Liability', 'Warranty'],
-    conditions: [],
-    generateText: () => `This is free and unencumbered software released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <https://unlicense.org>`
-  }
-];
-function getLicenseById(id) {
-  if (!id) return LICENSE_CATALOG[0];
-  const norm = id.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return LICENSE_CATALOG.find(l => {
-    const lNorm = l.id.toLowerCase().replace(/[^a-z0-9]/g, '');
-    const spdxNorm = l.spdxId.toLowerCase().replace(/[^a-z0-9]/g, '');
-    return lNorm === norm || spdxNorm === norm;
-  }) || LICENSE_CATALOG[0];
-}
-
 /* ==================== MODULE: data/defaultSections.js ==================== */
 
 const SECTION_TYPES = {
   HERO: 'hero',
   BADGES: 'badges',
   ABOUT: 'about',
-  TECH_STACK: 'techStack',
+  TOC: 'toc',
+  TECH_STACK: 'tech_stack',
   FEATURES: 'features',
   DEMO: 'demo',
   INSTALLATION: 'installation',
-  PROJECT_STRUCTURE: 'projectStructure',
-  ENV_VARS: 'envVars',
   USAGE: 'usage',
-  API_REFERENCE: 'apiReference',
-  BENCHMARKS: 'benchmarks',
+  ENV_VARS: 'env_vars',
+  API_REFERENCE: 'api_reference',
+  MERMAID: 'mermaid',
   FAQ: 'faq',
   ROADMAP: 'roadmap',
   CONTRIBUTING: 'contributing',
-  SPONSORS: 'sponsors',
-  CHANGELOG: 'changelog',
   LICENSE: 'license',
   AUTHOR: 'author',
   STATS: 'stats',
   CUSTOM: 'custom'
 };
-const INITIAL_SECTIONS = [
-  {
-    id: 'sec-hero',
-    type: SECTION_TYPES.HERO,
-    title: 'Header & Title',
-    enabled: true,
-    data: {
-      projectName: 'My Project',
-      tagline: 'A modern, high-performance open-source project built with passion.',
-      align: 'center',
-      logoUrl: '',
-      showLogo: false,
-      repoOwner: 'username',
-      repoName: 'my-project'
-    }
-  },
-  {
-    id: 'sec-badges',
-    type: SECTION_TYPES.BADGES,
-    title: 'Repo Badges & Stats',
-    enabled: true,
-    data: {
-      align: 'center',
-      format: 'html',
-      style: 'for-the-badge',
-      repoOwner: '',
-      repoName: '',
-      showStars: true,
-      showForks: true,
-      showIssues: true,
-      showPRs: true,
-      showLicense: true,
-      showRelease: true,
-      showLastCommit: false,
-      showCodeSize: false,
-      showContributors: false,
-      showActionsCI: false,
-      showTopLang: false,
-      showWatchers: false,
-      ciWorkflowFile: 'ci.yml',
-      customBadges: [
-        { label: 'PRs', message: 'Welcome', color: 'brightgreen', logo: 'github' }
-      ]
-    }
-  },
-  {
-    id: 'sec-about',
-    type: SECTION_TYPES.ABOUT,
-    title: 'About the Project',
-    enabled: true,
-    data: {
-      heading: 'About The Project',
-      content: 'A brief, compelling overview of why this project exists, the real-world problem it solves, and how it helps developers or users achieve their goals with maximum ease.'
-    }
-  },
-  {
-    id: 'sec-tech',
-    type: SECTION_TYPES.TECH_STACK,
-    title: 'Built With (Tech Stack)',
-    enabled: true,
-    data: {
-      heading: 'Built With',
-      layout: 'categorized',
-      style: 'for-the-badge',
-      iconSize: 'medium',
-      align: 'center',
-      spacing: 'normal',
-      skilliconsTheme: 'dark',
-      skilliconsPerline: 10,
-      showDocLinks: true,
-      showLabels: true,
-      tileSize: 'medium',
-      tileStyle: 'badges',
-      technologies: ['javascript', 'html5', 'css3', 'git', 'github']
-    }
-  },
-  {
-    id: 'sec-features',
-    type: SECTION_TYPES.FEATURES,
-    title: 'Key Features',
-    enabled: true,
-    data: {
-      heading: 'Key Features',
-      items: [
-        { icon: '', title: 'Lightning Fast Performance', desc: 'Engineered for speed, minimal resource overhead, and instant responsiveness.' },
-        { icon: '', title: 'Modern Intuitive Interface', desc: 'Clean, accessible, and responsive user experience designed for productivity.' },
-        { icon: '', title: 'Secure & Reliable', desc: 'Robust architecture with rigorous error handling and privacy-conscious design.' },
-        { icon: '', title: 'Modular & Extensible', desc: 'Easily customizable components with well-documented APIs and configuration.' }
-      ]
-    }
-  },
-  {
-    id: 'sec-demo',
-    type: SECTION_TYPES.DEMO,
-    title: 'Demo / Preview',
-    enabled: false,
-    data: {
-      heading: 'Preview & Demo',
-      imageUrl: '',
-      caption: 'Application preview',
-      liveUrl: ''
-    }
-  },
-  {
-    id: 'sec-install',
-    type: SECTION_TYPES.INSTALLATION,
-    title: 'Getting Started & Installation',
-    enabled: true,
-    data: {
-      heading: 'Getting Started',
-      prerequisites: 'Node.js 18+ and Git installed on your system.',
-      packageManager: 'npm',
-      steps: [
-        { title: 'Clone the repository', cmd: 'git clone https://github.com/username/my-project.git\ncd my-project' },
-        { title: 'Install dependencies', cmd: 'npm install' },
-        { title: 'Start development server', cmd: 'npm run dev' }
-      ]
-    }
-  },
-  {
-    id: 'sec-structure',
-    type: SECTION_TYPES.PROJECT_STRUCTURE,
-    title: 'Project Structure',
-    enabled: false,
-    data: {
-      heading: 'Project Structure',
-      tree: '.\n├── src/\n│   ├── components/\n│   ├── utils/\n│   └── index.ts\n├── public/\n├── package.json\n└── README.md'
-    }
-  },
-  {
-    id: 'sec-env',
-    type: SECTION_TYPES.ENV_VARS,
-    title: 'Environment Variables',
-    enabled: false,
-    data: {
-      heading: 'Environment Variables',
-      variables: [
-        { key: 'PORT', desc: 'Port number for the server', default: '3000', required: false },
-        { key: 'API_KEY', desc: 'Secret API key', default: '', required: true }
-      ]
-    }
-  },
-  {
-    id: 'sec-usage',
-    type: SECTION_TYPES.USAGE,
-    title: 'Usage & Examples',
-    enabled: false,
-    data: {
-      heading: 'Usage',
-      codeLang: 'bash',
-      code: '# Quick start command\n./start.sh --help',
-      note: 'Refer to documentation for extended flag usage and configuration options.'
-    }
-  },
-  {
-    id: 'sec-roadmap',
-    type: SECTION_TYPES.ROADMAP,
-    title: 'Roadmap',
-    enabled: true,
-    data: {
-      heading: 'Roadmap',
-      tasks: [
-        { text: 'Initial core prototype and UI layout', completed: true },
-        { text: 'Visual tech stack badge library', completed: true },
-        { text: 'Live GitHub dark/light mode renderer', completed: true },
-        { text: 'Export directly to GitHub repo via API', completed: false }
-      ]
-    }
-  },
-  {
-    id: 'sec-contributing',
-    type: SECTION_TYPES.CONTRIBUTING,
-    title: 'Contributing',
-    enabled: true,
-    data: {
-      heading: 'Contributing',
-      guidelines: 'Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**!',
-      steps: [
-        'Fork the Project',
-        'Create your Feature Branch (`git checkout -b feature/AmazingFeature`)',
-        'Commit your Changes (`git commit -m "Add some AmazingFeature"`)',
-        'Push to the Branch (`git push origin feature/AmazingFeature`)',
-        'Open a Pull Request'
-      ]
-    }
-  },
-  {
-    id: 'sec-license',
-    type: SECTION_TYPES.LICENSE,
-    title: 'License',
-    enabled: true,
-    data: {
-      heading: 'License',
-      type: 'MIT',
-      presentation: 'badge-minimal',
-      year: new Date().getFullYear().toString(),
-      holder: 'Your Name',
-      projectName: 'My Project'
-    }
-  },
-  {
-    id: 'sec-author',
-    type: SECTION_TYPES.AUTHOR,
-    title: 'Author & Contact',
-    enabled: true,
-    data: {
-      heading: 'Author & Contact',
-      name: 'Your Name',
-      github: 'yourusername',
-      twitter: '',
-      linkedin: '',
-      email: '',
-      buyMeACoffee: ''
-    }
-  }
-];
+
+let uidCounter = 0;
+function uid(prefix = 'sec') {
+  uidCounter += 1;
+  return `${prefix}-${Date.now().toString(36)}-${uidCounter}`;
+}
+
+const DEFAULT_DATA = {
+  [SECTION_TYPES.HERO]: () => ({
+    projectName: 'My Project',
+    tagline: 'A modern, high-performance open-source project.',
+    align: 'center',
+    logoUrl: '',
+    showLogo: false,
+    logoWidth: '100%',
+    repoOwner: 'username',
+    repoName: 'my-project'
+  }),
+  [SECTION_TYPES.BADGES]: () => ({
+    style: 'for-the-badge',
+    align: 'center',
+    showStars: true,
+    showForks: true,
+    showIssues: true,
+    showLicense: true,
+    showLastCommit: false,
+    showRelease: false,
+    showContributors: false,
+    showActionsCI: false,
+    npmPackageName: '',
+    showNpmVersion: false,
+    showNpmDownloads: false,
+    customBadges: []
+  }),
+  [SECTION_TYPES.ABOUT]: () => ({
+    heading: 'About The Project',
+    content: 'A brief, compelling overview of why this project exists, the problem it solves, and who it helps.'
+  }),
+  [SECTION_TYPES.TOC]: () => ({
+    heading: 'Table of Contents'
+  }),
+  [SECTION_TYPES.TECH_STACK]: () => ({
+    heading: 'Built With',
+    layout: 'badges',
+    style: 'for-the-badge',
+    align: 'center',
+    technologies: ['javascript', 'html5', 'css3', 'git']
+  }),
+  [SECTION_TYPES.FEATURES]: () => ({
+    heading: 'Key Features',
+    items: [
+      { title: 'Fast', desc: 'Engineered for speed and minimal overhead.' },
+      { title: 'Simple', desc: 'A clean, intuitive experience.' },
+      { title: 'Reliable', desc: 'Solid error handling and sane defaults.' }
+    ]
+  }),
+  [SECTION_TYPES.DEMO]: () => ({
+    heading: 'Preview',
+    imageUrl: '',
+    caption: 'Project preview',
+    width: '100%',
+    align: 'center',
+    liveUrl: ''
+  }),
+  [SECTION_TYPES.INSTALLATION]: () => ({
+    heading: 'Getting Started',
+    prerequisites: 'Node.js 18+ and Git installed on your system.',
+    steps: [
+      { title: 'Clone the repository', cmd: 'git clone https://github.com/username/my-project.git\ncd my-project' },
+      { title: 'Install dependencies', cmd: 'npm install' },
+      { title: 'Start the dev server', cmd: 'npm run dev' }
+    ]
+  }),
+  [SECTION_TYPES.USAGE]: () => ({
+    heading: 'Usage',
+    codeLang: 'bash',
+    code: 'npm run start',
+    note: ''
+  }),
+  [SECTION_TYPES.ENV_VARS]: () => ({
+    heading: 'Environment Variables',
+    variables: [
+      { key: 'API_KEY', desc: 'Your API key', default: '', required: true }
+    ]
+  }),
+  [SECTION_TYPES.API_REFERENCE]: () => ({
+    heading: 'API Reference',
+    endpoints: [
+      { method: 'GET', path: '/api/items', desc: 'List all items', auth: 'None' }
+    ]
+  }),
+  [SECTION_TYPES.MERMAID]: () => ({
+    heading: 'Architecture',
+    diagram: 'graph TD\n  A[Client] --> B[API]\n  B --> C[(Database)]'
+  }),
+  [SECTION_TYPES.FAQ]: () => ({
+    heading: 'FAQ',
+    questions: [
+      { q: 'How do I get started?', a: 'See the Getting Started section above.' }
+    ]
+  }),
+  [SECTION_TYPES.ROADMAP]: () => ({
+    heading: 'Roadmap',
+    tasks: [
+      { text: 'Initial release', completed: true },
+      { text: 'Add more features', completed: false }
+    ]
+  }),
+  [SECTION_TYPES.CONTRIBUTING]: () => ({
+    heading: 'Contributing',
+    guidelines: 'Contributions are welcome! Please open an issue or pull request.'
+  }),
+  [SECTION_TYPES.LICENSE]: () => ({
+    heading: 'License',
+    type: 'MIT',
+    holder: 'Your Name',
+    year: String(new Date().getFullYear())
+  }),
+  [SECTION_TYPES.AUTHOR]: () => ({
+    heading: 'Author',
+    name: 'Your Name',
+    github: '',
+    twitter: '',
+    linkedin: '',
+    email: ''
+  }),
+  [SECTION_TYPES.STATS]: () => ({
+    heading: 'Stats',
+    githubUser: '',
+    showTopLangs: true,
+    showStreak: false,
+    showStarHistory: false,
+    theme: 'dark'
+  }),
+  [SECTION_TYPES.CUSTOM]: () => ({
+    heading: 'Custom Section',
+    markdown: ''
+  })
+};
+
+const DEFAULT_TITLES = {
+  [SECTION_TYPES.HERO]: 'Header & Title',
+  [SECTION_TYPES.BADGES]: 'Badges',
+  [SECTION_TYPES.ABOUT]: 'About',
+  [SECTION_TYPES.TOC]: 'Table of Contents',
+  [SECTION_TYPES.TECH_STACK]: 'Built With',
+  [SECTION_TYPES.FEATURES]: 'Features',
+  [SECTION_TYPES.DEMO]: 'Demo / Preview',
+  [SECTION_TYPES.INSTALLATION]: 'Installation',
+  [SECTION_TYPES.USAGE]: 'Usage',
+  [SECTION_TYPES.ENV_VARS]: 'Environment Variables',
+  [SECTION_TYPES.API_REFERENCE]: 'API Reference',
+  [SECTION_TYPES.MERMAID]: 'Diagram',
+  [SECTION_TYPES.FAQ]: 'FAQ',
+  [SECTION_TYPES.ROADMAP]: 'Roadmap',
+  [SECTION_TYPES.CONTRIBUTING]: 'Contributing',
+  [SECTION_TYPES.LICENSE]: 'License',
+  [SECTION_TYPES.AUTHOR]: 'Author',
+  [SECTION_TYPES.STATS]: 'Stats',
+  [SECTION_TYPES.CUSTOM]: 'Custom Section'
+};
 function createSection(type, customTitle) {
-  const uid = `sec-${type}-${Date.now().toString(36)}`;
-  switch (type) {
-    case SECTION_TYPES.HERO:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'My Project',
-          tagline: 'A modern, high-performance open-source project.',
-          align: 'center',
-          logoUrl: '',
-          showLogo: false,
-          logoWidth: '100%',
-          logoAlign: 'center',
-          logoRadius: '8px',
-          repoOwner: 'username',
-          repoName: 'my-project',
-          animateTagline: false,
-          showCapsuleBanner: false,
-          capsuleType: 'wave',
-          capsuleColor: 'auto'
-        }
-      };
+  const factory = DEFAULT_DATA[type];
+  return {
+    id: uid(),
+    type,
+    title: customTitle || DEFAULT_TITLES[type] || 'Section',
+    enabled: true,
+    data: factory ? factory() : {}
+  };
+}
+const INITIAL_SECTIONS = [
+  createSection(SECTION_TYPES.HERO),
+  createSection(SECTION_TYPES.BADGES),
+  createSection(SECTION_TYPES.TOC),
+  createSection(SECTION_TYPES.ABOUT),
+  createSection(SECTION_TYPES.TECH_STACK),
+  createSection(SECTION_TYPES.FEATURES),
+  createSection(SECTION_TYPES.INSTALLATION),
+  createSection(SECTION_TYPES.CONTRIBUTING),
+  createSection(SECTION_TYPES.LICENSE)
+];
 
-    case SECTION_TYPES.BADGES:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Repo Badges & Stats',
-        enabled: true,
-        data: {
-          align: 'center',
-          format: 'html',
-          style: 'for-the-badge',
-          repoOwner: '',
-          repoName: '',
-          showStars: true,
-          showForks: true,
-          showIssues: true,
-          showPRs: true,
-          showLicense: true,
-          showRelease: true,
-          showLastCommit: false,
-          showCodeSize: false,
-          showContributors: false,
-          showActionsCI: false,
-          showTopLang: false,
-          showWatchers: false,
-          ciWorkflowFile: 'ci.yml',
-          customBadges: []
-        }
-      };
+/* ==================== MODULE: data/techCatalog.js ==================== */
 
-    case SECTION_TYPES.ABOUT:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'About The Project',
-        enabled: true,
-        data: {
-          heading: customTitle || 'About The Project',
-          content: 'A brief, compelling overview of why this project exists, the real-world problem it solves, and how it helps developers or users.'
-        }
-      };
+const TECH_CATEGORIES = [
+  { id: 'all', name: 'All' },
+  { id: 'languages', name: 'Languages' },
+  { id: 'frontend', name: 'Frontend' },
+  { id: 'backend', name: 'Backend' },
+  { id: 'database', name: 'Databases' },
+  { id: 'devops', name: 'Cloud & DevOps' },
+  { id: 'tools', name: 'Tools' }
+];
 
-    case SECTION_TYPES.TECH_STACK:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Built With (Tech Stack)',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Built With',
-          layout: 'categorized',
-          style: 'for-the-badge',
-          iconSize: 'medium',
-          align: 'center',
-          spacing: 'normal',
-          skilliconsTheme: 'dark',
-          skilliconsPerline: 10,
-          showDocLinks: true,
-          showLabels: true,
-          tileSize: 'medium',
-          tileStyle: 'badges',
-          technologies: ['javascript', 'typescript', 'html5', 'css3', 'git']
-        }
-      };
+// color = simple-icons brand hex (no '#'); logoColor = text color shields should draw the logo in.
+const TECH_CATALOG = [
+  // Languages
+  { id: 'javascript', name: 'JavaScript', category: 'languages', color: 'F7DF1E', logo: 'javascript', logoColor: 'black' },
+  { id: 'typescript', name: 'TypeScript', category: 'languages', color: '3178C6', logo: 'typescript', logoColor: 'white' },
+  { id: 'python', name: 'Python', category: 'languages', color: '3776AB', logo: 'python', logoColor: 'white' },
+  { id: 'java', name: 'Java', category: 'languages', color: '007396', logo: 'openjdk', logoColor: 'white' },
+  { id: 'csharp', name: 'C#', category: 'languages', color: '239120', logo: 'csharp', logoColor: 'white' },
+  { id: 'go', name: 'Go', category: 'languages', color: '00ADD8', logo: 'go', logoColor: 'white' },
+  { id: 'rust', name: 'Rust', category: 'languages', color: '000000', logo: 'rust', logoColor: 'white' },
+  { id: 'php', name: 'PHP', category: 'languages', color: '777BB4', logo: 'php', logoColor: 'white' },
+  { id: 'ruby', name: 'Ruby', category: 'languages', color: 'CC342D', logo: 'ruby', logoColor: 'white' },
+  { id: 'kotlin', name: 'Kotlin', category: 'languages', color: '7F52FF', logo: 'kotlin', logoColor: 'white' },
+  { id: 'swift', name: 'Swift', category: 'languages', color: 'FA7343', logo: 'swift', logoColor: 'white' },
+  { id: 'cplusplus', name: 'C++', category: 'languages', color: '00599C', logo: 'cplusplus', logoColor: 'white' },
+  { id: 'html5', name: 'HTML5', category: 'languages', color: 'E34F26', logo: 'html5', logoColor: 'white' },
+  { id: 'css3', name: 'CSS3', category: 'languages', color: '1572B6', logo: 'css3', logoColor: 'white' },
+  { id: 'dart', name: 'Dart', category: 'languages', color: '0175C2', logo: 'dart', logoColor: 'white' },
 
-    case SECTION_TYPES.FEATURES:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Key Features',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Key Features',
-          items: [
-            { icon: '⚡', title: 'High Performance', desc: 'Engineered for speed, efficiency, and minimal resource usage.' },
-            { icon: '🎨', title: 'Intuitive Experience', desc: 'Modern user experience designed for maximum developer ergonomics.' },
-            { icon: '🛡️', title: 'Robust & Secure', desc: 'Built with strict type safety, thorough error handling, and reliability.' }
-          ]
-        }
-      };
+  // Frontend
+  { id: 'react', name: 'React', category: 'frontend', color: '61DAFB', logo: 'react', logoColor: 'black' },
+  { id: 'vuejs', name: 'Vue.js', category: 'frontend', color: '4FC08D', logo: 'vuedotjs', logoColor: 'white' },
+  { id: 'angular', name: 'Angular', category: 'frontend', color: 'DD0031', logo: 'angular', logoColor: 'white' },
+  { id: 'svelte', name: 'Svelte', category: 'frontend', color: 'FF3E00', logo: 'svelte', logoColor: 'white' },
+  { id: 'nextjs', name: 'Next.js', category: 'frontend', color: '000000', logo: 'nextdotjs', logoColor: 'white' },
+  { id: 'nuxtjs', name: 'Nuxt', category: 'frontend', color: '00DC82', logo: 'nuxtdotjs', logoColor: 'black' },
+  { id: 'tailwindcss', name: 'Tailwind CSS', category: 'frontend', color: '06B6D4', logo: 'tailwindcss', logoColor: 'white' },
+  { id: 'bootstrap', name: 'Bootstrap', category: 'frontend', color: '7952B3', logo: 'bootstrap', logoColor: 'white' },
+  { id: 'sass', name: 'Sass', category: 'frontend', color: 'CC6699', logo: 'sass', logoColor: 'white' },
+  { id: 'redux', name: 'Redux', category: 'frontend', color: '764ABC', logo: 'redux', logoColor: 'white' },
 
-    case SECTION_TYPES.DEMO:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Preview & Demo',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Preview & Demo',
-          imageUrl: '',
-          caption: 'Application Walkthrough Preview',
-          liveUrl: '',
-          width: '100%',
-          align: 'center',
-          radius: '8px'
-        }
-      };
+  // Backend
+  { id: 'nodejs', name: 'Node.js', category: 'backend', color: '339933', logo: 'nodedotjs', logoColor: 'white' },
+  { id: 'express', name: 'Express', category: 'backend', color: '000000', logo: 'express', logoColor: 'white' },
+  { id: 'nestjs', name: 'NestJS', category: 'backend', color: 'E0234E', logo: 'nestjs', logoColor: 'white' },
+  { id: 'django', name: 'Django', category: 'backend', color: '092E20', logo: 'django', logoColor: 'white' },
+  { id: 'flask', name: 'Flask', category: 'backend', color: '000000', logo: 'flask', logoColor: 'white' },
+  { id: 'fastapi', name: 'FastAPI', category: 'backend', color: '009688', logo: 'fastapi', logoColor: 'white' },
+  { id: 'spring', name: 'Spring Boot', category: 'backend', color: '6DB33F', logo: 'springboot', logoColor: 'white' },
+  { id: 'laravel', name: 'Laravel', category: 'backend', color: 'FF2D20', logo: 'laravel', logoColor: 'white' },
+  { id: 'graphql', name: 'GraphQL', category: 'backend', color: 'E10098', logo: 'graphql', logoColor: 'white' },
 
-    case SECTION_TYPES.INSTALLATION:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Getting Started',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Getting Started',
-          prerequisites: 'Node.js 18+ and Git installed locally.',
-          packageManager: 'npm',
-          steps: [
-            { title: 'Clone the repository', cmd: 'git clone https://github.com/username/my-project.git\ncd my-project' },
-            { title: 'Install dependencies', cmd: 'npm install' },
-            { title: 'Start development server', cmd: 'npm run dev' }
-          ]
-        }
-      };
+  // Databases
+  { id: 'mongodb', name: 'MongoDB', category: 'database', color: '47A248', logo: 'mongodb', logoColor: 'white' },
+  { id: 'postgresql', name: 'PostgreSQL', category: 'database', color: '4169E1', logo: 'postgresql', logoColor: 'white' },
+  { id: 'mysql', name: 'MySQL', category: 'database', color: '4479A1', logo: 'mysql', logoColor: 'white' },
+  { id: 'redis', name: 'Redis', category: 'database', color: 'DC382D', logo: 'redis', logoColor: 'white' },
+  { id: 'sqlite', name: 'SQLite', category: 'database', color: '003B57', logo: 'sqlite', logoColor: 'white' },
+  { id: 'firebase', name: 'Firebase', category: 'database', color: 'FFCA28', logo: 'firebase', logoColor: 'black' },
+  { id: 'supabase', name: 'Supabase', category: 'database', color: '3FCF8E', logo: 'supabase', logoColor: 'black' },
 
-    case SECTION_TYPES.PROJECT_STRUCTURE:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Project Structure',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Project Structure',
-          tree: '.\n├── src/\n│   ├── components/\n│   ├── utils/\n│   └── index.ts\n├── public/\n├── package.json\n└── README.md'
-        }
-      };
+  // Cloud & DevOps
+  { id: 'docker', name: 'Docker', category: 'devops', color: '2496ED', logo: 'docker', logoColor: 'white' },
+  { id: 'kubernetes', name: 'Kubernetes', category: 'devops', color: '326CE5', logo: 'kubernetes', logoColor: 'white' },
+  { id: 'aws', name: 'AWS', category: 'devops', color: '232F3E', logo: 'amazonaws', logoColor: 'white' },
+  { id: 'githubactions', name: 'GitHub Actions', category: 'devops', color: '2088FF', logo: 'githubactions', logoColor: 'white' },
+  { id: 'vercel', name: 'Vercel', category: 'devops', color: '000000', logo: 'vercel', logoColor: 'white' },
+  { id: 'netlify', name: 'Netlify', category: 'devops', color: '00C7B7', logo: 'netlify', logoColor: 'white' },
+  { id: 'nginx', name: 'Nginx', category: 'devops', color: '009639', logo: 'nginx', logoColor: 'white' },
+  { id: 'terraform', name: 'Terraform', category: 'devops', color: '7B42BC', logo: 'terraform', logoColor: 'white' },
 
-    case SECTION_TYPES.ENV_VARS:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Environment Variables',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Environment Variables',
-          variables: [
-            { key: 'PORT', desc: 'Port number for the server', default: '3000', required: false },
-            { key: 'API_KEY', desc: 'Secret API token', default: '', required: true }
-          ]
-        }
-      };
+  // Tools
+  { id: 'git', name: 'Git', category: 'tools', color: 'F05032', logo: 'git', logoColor: 'white' },
+  { id: 'github', name: 'GitHub', category: 'tools', color: '181717', logo: 'github', logoColor: 'white' },
+  { id: 'vscode', name: 'VS Code', category: 'tools', color: '007ACC', logo: 'visualstudiocode', logoColor: 'white' },
+  { id: 'figma', name: 'Figma', category: 'tools', color: 'F24E1E', logo: 'figma', logoColor: 'white' },
+  { id: 'jest', name: 'Jest', category: 'tools', color: 'C21325', logo: 'jest', logoColor: 'white' },
+  { id: 'eslint', name: 'ESLint', category: 'tools', color: '4B32C3', logo: 'eslint', logoColor: 'white' },
+  { id: 'webpack', name: 'Webpack', category: 'tools', color: '8DD6F9', logo: 'webpack', logoColor: 'black' },
+  { id: 'vite', name: 'Vite', category: 'tools', color: '646CFF', logo: 'vite', logoColor: 'white' },
+  { id: 'npm', name: 'npm', category: 'tools', color: 'CB3837', logo: 'npm', logoColor: 'white' },
+  { id: 'postman', name: 'Postman', category: 'tools', color: 'FF6C37', logo: 'postman', logoColor: 'white' }
+];
 
-    case SECTION_TYPES.USAGE:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Usage & Examples',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Usage',
-          codeLang: 'bash',
-          code: '# Run CLI tool\nmy-cli --help',
-          note: 'Refer to documentation for additional command flags and configuration options.'
-        }
-      };
+const TECH_DOC_MAP = {
+  javascript: 'https://developer.mozilla.org/docs/Web/JavaScript',
+  typescript: 'https://www.typescriptlang.org/',
+  python: 'https://www.python.org/',
+  java: 'https://www.java.com/',
+  csharp: 'https://learn.microsoft.com/dotnet/csharp/',
+  go: 'https://go.dev/',
+  rust: 'https://www.rust-lang.org/',
+  php: 'https://www.php.net/',
+  ruby: 'https://www.ruby-lang.org/',
+  kotlin: 'https://kotlinlang.org/',
+  swift: 'https://www.swift.org/',
+  cplusplus: 'https://isocpp.org/',
+  html5: 'https://developer.mozilla.org/docs/Web/HTML',
+  css3: 'https://developer.mozilla.org/docs/Web/CSS',
+  dart: 'https://dart.dev/',
+  react: 'https://react.dev/',
+  vuejs: 'https://vuejs.org/',
+  angular: 'https://angular.dev/',
+  svelte: 'https://svelte.dev/',
+  nextjs: 'https://nextjs.org/',
+  nuxtjs: 'https://nuxt.com/',
+  tailwindcss: 'https://tailwindcss.com/',
+  bootstrap: 'https://getbootstrap.com/',
+  sass: 'https://sass-lang.com/',
+  redux: 'https://redux.js.org/',
+  nodejs: 'https://nodejs.org/',
+  express: 'https://expressjs.com/',
+  nestjs: 'https://nestjs.com/',
+  django: 'https://www.djangoproject.com/',
+  flask: 'https://flask.palletsprojects.com/',
+  fastapi: 'https://fastapi.tiangolo.com/',
+  spring: 'https://spring.io/projects/spring-boot',
+  laravel: 'https://laravel.com/',
+  graphql: 'https://graphql.org/',
+  mongodb: 'https://www.mongodb.com/',
+  postgresql: 'https://www.postgresql.org/',
+  mysql: 'https://www.mysql.com/',
+  redis: 'https://redis.io/',
+  sqlite: 'https://www.sqlite.org/',
+  firebase: 'https://firebase.google.com/',
+  supabase: 'https://supabase.com/',
+  docker: 'https://www.docker.com/',
+  kubernetes: 'https://kubernetes.io/',
+  aws: 'https://aws.amazon.com/',
+  githubactions: 'https://github.com/features/actions',
+  vercel: 'https://vercel.com/',
+  netlify: 'https://www.netlify.com/',
+  nginx: 'https://nginx.org/',
+  terraform: 'https://www.terraform.io/',
+  git: 'https://git-scm.com/',
+  github: 'https://github.com/',
+  vscode: 'https://code.visualstudio.com/',
+  figma: 'https://www.figma.com/',
+  jest: 'https://jestjs.io/',
+  eslint: 'https://eslint.org/',
+  webpack: 'https://webpack.js.org/',
+  vite: 'https://vitejs.dev/',
+  npm: 'https://www.npmjs.com/',
+  postman: 'https://www.postman.com/'
+};
 
-    case SECTION_TYPES.API_REFERENCE:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'API Reference',
-        enabled: true,
-        data: {
-          heading: customTitle || 'API Reference',
-          endpoints: [
-            { method: 'GET', path: '/api/v1/health', desc: 'Check service health & status', auth: 'None' },
-            { method: 'POST', path: '/api/v1/data', desc: 'Create a new record', auth: 'Bearer Token' }
-          ]
-        }
-      };
+const techByIdCache = new Map();
+function techById(id) {
+  if (techByIdCache.has(id)) return techByIdCache.get(id);
+  const found = TECH_CATALOG.find(t => t.id === id) || null;
+  techByIdCache.set(id, found);
+  return found;
+}
+function getBadgeUrl(item, style = 'for-the-badge') {
+  const encodedName = encodeURIComponent(String(item.name).replace(/-/g, '--'));
+  return `https://img.shields.io/badge/${encodedName}-${item.color}?style=${style}&logo=${item.logo}&logoColor=${item.logoColor}`;
+}
+function getTechDocUrl(itemOrId) {
+  const id = typeof itemOrId === 'string' ? itemOrId : itemOrId?.id;
+  if (!id) return 'https://github.com';
+  return TECH_DOC_MAP[id] || `https://github.com/topics/${id}`;
+}
 
-    case SECTION_TYPES.BENCHMARKS:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Benchmarks & Performance',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Benchmarks',
-          subtitle: 'Tested on Apple M2 Max, 32GB RAM with Node.js v20',
-          rows: [
-            { task: 'Cold Start Time', baseline: '142ms', current: '18ms', diff: '7.8x faster' },
-            { task: 'Memory Consumption', baseline: '86MB', current: '22MB', diff: '74% reduction' },
-            { task: 'Requests / Second', baseline: '4,200 req/s', current: '21,500 req/s', diff: '5.1x throughput' }
-          ]
-        }
-      };
+/* ==================== MODULE: data/licenses.js ==================== */
 
-    case SECTION_TYPES.FAQ:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'FAQ & Troubleshooting',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Frequently Asked Questions',
-          questions: [
-            { q: 'Is this project free and open source?', a: 'Yes, distributed under the MIT License for free commercial and personal use.' },
-            { q: 'How can I report a bug or feature request?', a: 'Please open an issue on the GitHub repository issues tab.' },
-            { q: 'Can I contribute to the codebase?', a: 'Pull requests are very welcome! Please check the Contributing guide for instructions.' }
-          ]
-        }
-      };
-
-    case SECTION_TYPES.ROADMAP:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Roadmap',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Roadmap',
-          tasks: [
-            { text: 'Initial core prototype and layout', completed: true },
-            { text: 'Visual component and style picker', completed: true },
-            { text: 'Production deployment and release', completed: false }
-          ]
-        }
-      };
-
-    case SECTION_TYPES.CONTRIBUTING:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Contributing Guide',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Contributing',
-          guidelines: 'Contributions make open source an amazing place to learn and build. Any contributions you make are **greatly appreciated**!',
-          steps: [
-            'Fork the Project',
-            'Create your Feature Branch (`git checkout -b feature/AmazingFeature`)',
-            'Commit your Changes (`git commit -m "Add AmazingFeature"`)',
-            'Push to the Branch (`git push origin feature/AmazingFeature`)',
-            'Open a Pull Request'
-          ]
-        }
-      };
-
-    case SECTION_TYPES.SPONSORS:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Sponsors & Support',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Support & Sponsors',
-          message: 'If you find this project helpful, consider supporting its ongoing development!',
-          buyMeACoffee: '',
-          githubSponsor: '',
-          patreon: ''
-        }
-      };
-
-    case SECTION_TYPES.CHANGELOG:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Changelog',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Changelog',
-          releases: [
-            {
-              version: 'v1.0.0',
-              date: new Date().toISOString().slice(0, 10),
-              changes: [
-                'Initial release with full feature set',
-                'Comprehensive documentation and tests'
-              ]
-            }
-          ]
-        }
-      };
-
-    case SECTION_TYPES.LICENSE:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'License',
-        enabled: true,
-        data: {
-          heading: customTitle || 'License',
-          type: 'MIT',
-          presentation: 'badge-minimal',
-          year: new Date().getFullYear().toString(),
-          holder: 'Your Name',
-          projectName: 'My Project'
-        }
-      };
-
-    case SECTION_TYPES.AUTHOR:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'Author & Contact',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Author & Contact',
-          name: 'Your Name',
-          github: 'yourusername',
-          twitter: '',
-          linkedin: '',
-          email: '',
-          buyMeACoffee: ''
-        }
-      };
-
-    case SECTION_TYPES.STATS:
-      return {
-        id: uid,
-        type,
-        title: customTitle || 'GitHub Visuals & Stats',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Stats & Activity',
-          showStreak: false,
-          showTopLangs: false,
-          showActivityGraph: true,
-          showContributors: true,
-          showStarHistory: false,
-          showVisitors: false,
-          theme: 'dark',
-          tileSize: 'medium'
-        }
-      };
-
-    case SECTION_TYPES.CUSTOM:
-    default:
-      return {
-        id: uid,
-        type: SECTION_TYPES.CUSTOM,
-        title: customTitle || 'Custom Section',
-        enabled: true,
-        data: {
-          heading: customTitle || 'Custom Section',
-          markdown: 'Add your custom documentation, architecture notes, or details here.'
-        }
-      };
-  }
+const LICENSE_CATALOG = [
+  {
+    id: "MIT",
+    name: "MIT License",
+    url: "https://opensource.org/license/mit",
+    badgeUrl: "https://img.shields.io/badge/License-MIT-yellow.svg",
+    generateText: (year, holder) => "MIT License\n\nCopyright (c) [year] [fullname]\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.".split('[year]').join(year).split('[fullname]').join(holder)
+  },
+  {
+    id: "Apache-2.0",
+    name: "Apache License 2.0",
+    url: "https://www.apache.org/licenses/LICENSE-2.0",
+    badgeUrl: "https://img.shields.io/badge/License-Apache--2.0-blue.svg",
+    generateText: () => "                                 Apache License\n                           Version 2.0, January 2004\n                        http://www.apache.org/licenses/\n\n   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION\n\n   1. Definitions.\n\n      \"License\" shall mean the terms and conditions for use, reproduction,\n      and distribution as defined by Sections 1 through 9 of this document.\n\n      \"Licensor\" shall mean the copyright owner or entity authorized by\n      the copyright owner that is granting the License.\n\n      \"Legal Entity\" shall mean the union of the acting entity and all\n      other entities that control, are controlled by, or are under common\n      control with that entity. For the purposes of this definition,\n      \"control\" means (i) the power, direct or indirect, to cause the\n      direction or management of such entity, whether by contract or\n      otherwise, or (ii) ownership of fifty percent (50%) or more of the\n      outstanding shares, or (iii) beneficial ownership of such entity.\n\n      \"You\" (or \"Your\") shall mean an individual or Legal Entity\n      exercising permissions granted by this License.\n\n      \"Source\" form shall mean the preferred form for making modifications,\n      including but not limited to software source code, documentation\n      source, and configuration files.\n\n      \"Object\" form shall mean any form resulting from mechanical\n      transformation or translation of a Source form, including but\n      not limited to compiled object code, generated documentation,\n      and conversions to other media types.\n\n      \"Work\" shall mean the work of authorship, whether in Source or\n      Object form, made available under the License, as indicated by a\n      copyright notice that is included in or attached to the work\n      (an example is provided in the Appendix below).\n\n      \"Derivative Works\" shall mean any work, whether in Source or Object\n      form, that is based on (or derived from) the Work and for which the\n      editorial revisions, annotations, elaborations, or other modifications\n      represent, as a whole, an original work of authorship. For the purposes\n      of this License, Derivative Works shall not include works that remain\n      separable from, or merely link (or bind by name) to the interfaces of,\n      the Work and Derivative Works thereof.\n\n      \"Contribution\" shall mean any work of authorship, including\n      the original version of the Work and any modifications or additions\n      to that Work or Derivative Works thereof, that is intentionally\n      submitted to Licensor for inclusion in the Work by the copyright owner\n      or by an individual or Legal Entity authorized to submit on behalf of\n      the copyright owner. For the purposes of this definition, \"submitted\"\n      means any form of electronic, verbal, or written communication sent\n      to the Licensor or its representatives, including but not limited to\n      communication on electronic mailing lists, source code control systems,\n      and issue tracking systems that are managed by, or on behalf of, the\n      Licensor for the purpose of discussing and improving the Work, but\n      excluding communication that is conspicuously marked or otherwise\n      designated in writing by the copyright owner as \"Not a Contribution.\"\n\n      \"Contributor\" shall mean Licensor and any individual or Legal Entity\n      on behalf of whom a Contribution has been received by Licensor and\n      subsequently incorporated within the Work.\n\n   2. Grant of Copyright License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      copyright license to reproduce, prepare Derivative Works of,\n      publicly display, publicly perform, sublicense, and distribute the\n      Work and such Derivative Works in Source or Object form.\n\n   3. Grant of Patent License. Subject to the terms and conditions of\n      this License, each Contributor hereby grants to You a perpetual,\n      worldwide, non-exclusive, no-charge, royalty-free, irrevocable\n      (except as stated in this section) patent license to make, have made,\n      use, offer to sell, sell, import, and otherwise transfer the Work,\n      where such license applies only to those patent claims licensable\n      by such Contributor that are necessarily infringed by their\n      Contribution(s) alone or by combination of their Contribution(s)\n      with the Work to which such Contribution(s) was submitted. If You\n      institute patent litigation against any entity (including a\n      cross-claim or counterclaim in a lawsuit) alleging that the Work\n      or a Contribution incorporated within the Work constitutes direct\n      or contributory patent infringement, then any patent licenses\n      granted to You under this License for that Work shall terminate\n      as of the date such litigation is filed.\n\n   4. Redistribution. You may reproduce and distribute copies of the\n      Work or Derivative Works thereof in any medium, with or without\n      modifications, and in Source or Object form, provided that You\n      meet the following conditions:\n\n      (a) You must give any other recipients of the Work or\n          Derivative Works a copy of this License; and\n\n      (b) You must cause any modified files to carry prominent notices\n          stating that You changed the files; and\n\n      (c) You must retain, in the Source form of any Derivative Works\n          that You distribute, all copyright, patent, trademark, and\n          attribution notices from the Source form of the Work,\n          excluding those notices that do not pertain to any part of\n          the Derivative Works; and\n\n      (d) If the Work includes a \"NOTICE\" text file as part of its\n          distribution, then any Derivative Works that You distribute must\n          include a readable copy of the attribution notices contained\n          within such NOTICE file, excluding those notices that do not\n          pertain to any part of the Derivative Works, in at least one\n          of the following places: within a NOTICE text file distributed\n          as part of the Derivative Works; within the Source form or\n          documentation, if provided along with the Derivative Works; or,\n          within a display generated by the Derivative Works, if and\n          wherever such third-party notices normally appear. The contents\n          of the NOTICE file are for informational purposes only and\n          do not modify the License. You may add Your own attribution\n          notices within Derivative Works that You distribute, alongside\n          or as an addendum to the NOTICE text from the Work, provided\n          that such additional attribution notices cannot be construed\n          as modifying the License.\n\n      You may add Your own copyright statement to Your modifications and\n      may provide additional or different license terms and conditions\n      for use, reproduction, or distribution of Your modifications, or\n      for any such Derivative Works as a whole, provided Your use,\n      reproduction, and distribution of the Work otherwise complies with\n      the conditions stated in this License.\n\n   5. Submission of Contributions. Unless You explicitly state otherwise,\n      any Contribution intentionally submitted for inclusion in the Work\n      by You to the Licensor shall be under the terms and conditions of\n      this License, without any additional terms or conditions.\n      Notwithstanding the above, nothing herein shall supersede or modify\n      the terms of any separate license agreement you may have executed\n      with Licensor regarding such Contributions.\n\n   6. Trademarks. This License does not grant permission to use the trade\n      names, trademarks, service marks, or product names of the Licensor,\n      except as required for reasonable and customary use in describing the\n      origin of the Work and reproducing the content of the NOTICE file.\n\n   7. Disclaimer of Warranty. Unless required by applicable law or\n      agreed to in writing, Licensor provides the Work (and each\n      Contributor provides its Contributions) on an \"AS IS\" BASIS,\n      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or\n      implied, including, without limitation, any warranties or conditions\n      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A\n      PARTICULAR PURPOSE. You are solely responsible for determining the\n      appropriateness of using or redistributing the Work and assume any\n      risks associated with Your exercise of permissions under this License.\n\n   8. Limitation of Liability. In no event and under no legal theory,\n      whether in tort (including negligence), contract, or otherwise,\n      unless required by applicable law (such as deliberate and grossly\n      negligent acts) or agreed to in writing, shall any Contributor be\n      liable to You for damages, including any direct, indirect, special,\n      incidental, or consequential damages of any character arising as a\n      result of this License or out of the use or inability to use the\n      Work (including but not limited to damages for loss of goodwill,\n      work stoppage, computer failure or malfunction, or any and all\n      other commercial damages or losses), even if such Contributor\n      has been advised of the possibility of such damages.\n\n   9. Accepting Warranty or Additional Liability. While redistributing\n      the Work or Derivative Works thereof, You may choose to offer,\n      and charge a fee for, acceptance of support, warranty, indemnity,\n      or other liability obligations and/or rights consistent with this\n      License. However, in accepting such obligations, You may act only\n      on Your own behalf and on Your sole responsibility, not on behalf\n      of any other Contributor, and only if You agree to indemnify,\n      defend, and hold each Contributor harmless for any liability\n      incurred by, or claims asserted against, such Contributor by reason\n      of your accepting any such warranty or additional liability.\n\n   END OF TERMS AND CONDITIONS\n\n   APPENDIX: How to apply the Apache License to your work.\n\n      To apply the Apache License to your work, attach the following\n      boilerplate notice, with the fields enclosed by brackets \"[]\"\n      replaced with your own identifying information. (Don't include\n      the brackets!)  The text should be enclosed in the appropriate\n      comment syntax for the file format. We also recommend that a\n      file or class name and description of purpose be included on the\n      same \"printed page\" as the copyright notice for easier\n      identification within third-party archives.\n\n   Copyright [yyyy] [name of copyright owner]\n\n   Licensed under the Apache License, Version 2.0 (the \"License\");\n   you may not use this file except in compliance with the License.\n   You may obtain a copy of the License at\n\n       http://www.apache.org/licenses/LICENSE-2.0\n\n   Unless required by applicable law or agreed to in writing, software\n   distributed under the License is distributed on an \"AS IS\" BASIS,\n   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n   See the License for the specific language governing permissions and\n   limitations under the License."
+  },
+  {
+    id: "GPL-3.0",
+    name: "GNU GPLv3",
+    url: "https://www.gnu.org/licenses/gpl-3.0",
+    badgeUrl: "https://img.shields.io/badge/License-GPL--3.0-blue.svg",
+    generateText: () => "                    GNU GENERAL PUBLIC LICENSE\n                       Version 3, 29 June 2007\n\n Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n Everyone is permitted to copy and distribute verbatim copies\n of this license document, but changing it is not allowed.\n\n                            Preamble\n\n  The GNU General Public License is a free, copyleft license for\nsoftware and other kinds of works.\n\n  The licenses for most software and other practical works are designed\nto take away your freedom to share and change the works.  By contrast,\nthe GNU General Public License is intended to guarantee your freedom to\nshare and change all versions of a program--to make sure it remains free\nsoftware for all its users.  We, the Free Software Foundation, use the\nGNU General Public License for most of our software; it applies also to\nany other work released this way by its authors.  You can apply it to\nyour programs, too.\n\n  When we speak of free software, we are referring to freedom, not\nprice.  Our General Public Licenses are designed to make sure that you\nhave the freedom to distribute copies of free software (and charge for\nthem if you wish), that you receive source code or can get it if you\nwant it, that you can change the software or use pieces of it in new\nfree programs, and that you know you can do these things.\n\n  To protect your rights, we need to prevent others from denying you\nthese rights or asking you to surrender the rights.  Therefore, you have\ncertain responsibilities if you distribute copies of the software, or if\nyou modify it: responsibilities to respect the freedom of others.\n\n  For example, if you distribute copies of such a program, whether\ngratis or for a fee, you must pass on to the recipients the same\nfreedoms that you received.  You must make sure that they, too, receive\nor can get the source code.  And you must show them these terms so they\nknow their rights.\n\n  Developers that use the GNU GPL protect your rights with two steps:\n(1) assert copyright on the software, and (2) offer you this License\ngiving you legal permission to copy, distribute and/or modify it.\n\n  For the developers' and authors' protection, the GPL clearly explains\nthat there is no warranty for this free software.  For both users' and\nauthors' sake, the GPL requires that modified versions be marked as\nchanged, so that their problems will not be attributed erroneously to\nauthors of previous versions.\n\n  Some devices are designed to deny users access to install or run\nmodified versions of the software inside them, although the manufacturer\ncan do so.  This is fundamentally incompatible with the aim of\nprotecting users' freedom to change the software.  The systematic\npattern of such abuse occurs in the area of products for individuals to\nuse, which is precisely where it is most unacceptable.  Therefore, we\nhave designed this version of the GPL to prohibit the practice for those\nproducts.  If such problems arise substantially in other domains, we\nstand ready to extend this provision to those domains in future versions\nof the GPL, as needed to protect the freedom of users.\n\n  Finally, every program is threatened constantly by software patents.\nStates should not allow patents to restrict development and use of\nsoftware on general-purpose computers, but in those that do, we wish to\navoid the special danger that patents applied to a free program could\nmake it effectively proprietary.  To prevent this, the GPL assures that\npatents cannot be used to render the program non-free.\n\n  The precise terms and conditions for copying, distribution and\nmodification follow.\n\n                       TERMS AND CONDITIONS\n\n  0. Definitions.\n\n  \"This License\" refers to version 3 of the GNU General Public License.\n\n  \"Copyright\" also means copyright-like laws that apply to other kinds of\nworks, such as semiconductor masks.\n\n  \"The Program\" refers to any copyrightable work licensed under this\nLicense.  Each licensee is addressed as \"you\".  \"Licensees\" and\n\"recipients\" may be individuals or organizations.\n\n  To \"modify\" a work means to copy from or adapt all or part of the work\nin a fashion requiring copyright permission, other than the making of an\nexact copy.  The resulting work is called a \"modified version\" of the\nearlier work or a work \"based on\" the earlier work.\n\n  A \"covered work\" means either the unmodified Program or a work based\non the Program.\n\n  To \"propagate\" a work means to do anything with it that, without\npermission, would make you directly or secondarily liable for\ninfringement under applicable copyright law, except executing it on a\ncomputer or modifying a private copy.  Propagation includes copying,\ndistribution (with or without modification), making available to the\npublic, and in some countries other activities as well.\n\n  To \"convey\" a work means any kind of propagation that enables other\nparties to make or receive copies.  Mere interaction with a user through\na computer network, with no transfer of a copy, is not conveying.\n\n  An interactive user interface displays \"Appropriate Legal Notices\"\nto the extent that it includes a convenient and prominently visible\nfeature that (1) displays an appropriate copyright notice, and (2)\ntells the user that there is no warranty for the work (except to the\nextent that warranties are provided), that licensees may convey the\nwork under this License, and how to view a copy of this License.  If\nthe interface presents a list of user commands or options, such as a\nmenu, a prominent item in the list meets this criterion.\n\n  1. Source Code.\n\n  The \"source code\" for a work means the preferred form of the work\nfor making modifications to it.  \"Object code\" means any non-source\nform of a work.\n\n  A \"Standard Interface\" means an interface that either is an official\nstandard defined by a recognized standards body, or, in the case of\ninterfaces specified for a particular programming language, one that\nis widely used among developers working in that language.\n\n  The \"System Libraries\" of an executable work include anything, other\nthan the work as a whole, that (a) is included in the normal form of\npackaging a Major Component, but which is not part of that Major\nComponent, and (b) serves only to enable use of the work with that\nMajor Component, or to implement a Standard Interface for which an\nimplementation is available to the public in source code form.  A\n\"Major Component\", in this context, means a major essential component\n(kernel, window system, and so on) of the specific operating system\n(if any) on which the executable work runs, or a compiler used to\nproduce the work, or an object code interpreter used to run it.\n\n  The \"Corresponding Source\" for a work in object code form means all\nthe source code needed to generate, install, and (for an executable\nwork) run the object code and to modify the work, including scripts to\ncontrol those activities.  However, it does not include the work's\nSystem Libraries, or general-purpose tools or generally available free\nprograms which are used unmodified in performing those activities but\nwhich are not part of the work.  For example, Corresponding Source\nincludes interface definition files associated with source files for\nthe work, and the source code for shared libraries and dynamically\nlinked subprograms that the work is specifically designed to require,\nsuch as by intimate data communication or control flow between those\nsubprograms and other parts of the work.\n\n  The Corresponding Source need not include anything that users\ncan regenerate automatically from other parts of the Corresponding\nSource.\n\n  The Corresponding Source for a work in source code form is that\nsame work.\n\n  2. Basic Permissions.\n\n  All rights granted under this License are granted for the term of\ncopyright on the Program, and are irrevocable provided the stated\nconditions are met.  This License explicitly affirms your unlimited\npermission to run the unmodified Program.  The output from running a\ncovered work is covered by this License only if the output, given its\ncontent, constitutes a covered work.  This License acknowledges your\nrights of fair use or other equivalent, as provided by copyright law.\n\n  You may make, run and propagate covered works that you do not\nconvey, without conditions so long as your license otherwise remains\nin force.  You may convey covered works to others for the sole purpose\nof having them make modifications exclusively for you, or provide you\nwith facilities for running those works, provided that you comply with\nthe terms of this License in conveying all material for which you do\nnot control copyright.  Those thus making or running the covered works\nfor you must do so exclusively on your behalf, under your direction\nand control, on terms that prohibit them from making any copies of\nyour copyrighted material outside their relationship with you.\n\n  Conveying under any other circumstances is permitted solely under\nthe conditions stated below.  Sublicensing is not allowed; section 10\nmakes it unnecessary.\n\n  3. Protecting Users' Legal Rights From Anti-Circumvention Law.\n\n  No covered work shall be deemed part of an effective technological\nmeasure under any applicable law fulfilling obligations under article\n11 of the WIPO copyright treaty adopted on 20 December 1996, or\nsimilar laws prohibiting or restricting circumvention of such\nmeasures.\n\n  When you convey a covered work, you waive any legal power to forbid\ncircumvention of technological measures to the extent such circumvention\nis effected by exercising rights under this License with respect to\nthe covered work, and you disclaim any intention to limit operation or\nmodification of the work as a means of enforcing, against the work's\nusers, your or third parties' legal rights to forbid circumvention of\ntechnological measures.\n\n  4. Conveying Verbatim Copies.\n\n  You may convey verbatim copies of the Program's source code as you\nreceive it, in any medium, provided that you conspicuously and\nappropriately publish on each copy an appropriate copyright notice;\nkeep intact all notices stating that this License and any\nnon-permissive terms added in accord with section 7 apply to the code;\nkeep intact all notices of the absence of any warranty; and give all\nrecipients a copy of this License along with the Program.\n\n  You may charge any price or no price for each copy that you convey,\nand you may offer support or warranty protection for a fee.\n\n  5. Conveying Modified Source Versions.\n\n  You may convey a work based on the Program, or the modifications to\nproduce it from the Program, in the form of source code under the\nterms of section 4, provided that you also meet all of these conditions:\n\n    a) The work must carry prominent notices stating that you modified\n    it, and giving a relevant date.\n\n    b) The work must carry prominent notices stating that it is\n    released under this License and any conditions added under section\n    7.  This requirement modifies the requirement in section 4 to\n    \"keep intact all notices\".\n\n    c) You must license the entire work, as a whole, under this\n    License to anyone who comes into possession of a copy.  This\n    License will therefore apply, along with any applicable section 7\n    additional terms, to the whole of the work, and all its parts,\n    regardless of how they are packaged.  This License gives no\n    permission to license the work in any other way, but it does not\n    invalidate such permission if you have separately received it.\n\n    d) If the work has interactive user interfaces, each must display\n    Appropriate Legal Notices; however, if the Program has interactive\n    interfaces that do not display Appropriate Legal Notices, your\n    work need not make them do so.\n\n  A compilation of a covered work with other separate and independent\nworks, which are not by their nature extensions of the covered work,\nand which are not combined with it such as to form a larger program,\nin or on a volume of a storage or distribution medium, is called an\n\"aggregate\" if the compilation and its resulting copyright are not\nused to limit the access or legal rights of the compilation's users\nbeyond what the individual works permit.  Inclusion of a covered work\nin an aggregate does not cause this License to apply to the other\nparts of the aggregate.\n\n  6. Conveying Non-Source Forms.\n\n  You may convey a covered work in object code form under the terms\nof sections 4 and 5, provided that you also convey the\nmachine-readable Corresponding Source under the terms of this License,\nin one of these ways:\n\n    a) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by the\n    Corresponding Source fixed on a durable physical medium\n    customarily used for software interchange.\n\n    b) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by a\n    written offer, valid for at least three years and valid for as\n    long as you offer spare parts or customer support for that product\n    model, to give anyone who possesses the object code either (1) a\n    copy of the Corresponding Source for all the software in the\n    product that is covered by this License, on a durable physical\n    medium customarily used for software interchange, for a price no\n    more than your reasonable cost of physically performing this\n    conveying of source, or (2) access to copy the\n    Corresponding Source from a network server at no charge.\n\n    c) Convey individual copies of the object code with a copy of the\n    written offer to provide the Corresponding Source.  This\n    alternative is allowed only occasionally and noncommercially, and\n    only if you received the object code with such an offer, in accord\n    with subsection 6b.\n\n    d) Convey the object code by offering access from a designated\n    place (gratis or for a charge), and offer equivalent access to the\n    Corresponding Source in the same way through the same place at no\n    further charge.  You need not require recipients to copy the\n    Corresponding Source along with the object code.  If the place to\n    copy the object code is a network server, the Corresponding Source\n    may be on a different server (operated by you or a third party)\n    that supports equivalent copying facilities, provided you maintain\n    clear directions next to the object code saying where to find the\n    Corresponding Source.  Regardless of what server hosts the\n    Corresponding Source, you remain obligated to ensure that it is\n    available for as long as needed to satisfy these requirements.\n\n    e) Convey the object code using peer-to-peer transmission, provided\n    you inform other peers where the object code and Corresponding\n    Source of the work are being offered to the general public at no\n    charge under subsection 6d.\n\n  A separable portion of the object code, whose source code is excluded\nfrom the Corresponding Source as a System Library, need not be\nincluded in conveying the object code work.\n\n  A \"User Product\" is either (1) a \"consumer product\", which means any\ntangible personal property which is normally used for personal, family,\nor household purposes, or (2) anything designed or sold for incorporation\ninto a dwelling.  In determining whether a product is a consumer product,\ndoubtful cases shall be resolved in favor of coverage.  For a particular\nproduct received by a particular user, \"normally used\" refers to a\ntypical or common use of that class of product, regardless of the status\nof the particular user or of the way in which the particular user\nactually uses, or expects or is expected to use, the product.  A product\nis a consumer product regardless of whether the product has substantial\ncommercial, industrial or non-consumer uses, unless such uses represent\nthe only significant mode of use of the product.\n\n  \"Installation Information\" for a User Product means any methods,\nprocedures, authorization keys, or other information required to install\nand execute modified versions of a covered work in that User Product from\na modified version of its Corresponding Source.  The information must\nsuffice to ensure that the continued functioning of the modified object\ncode is in no case prevented or interfered with solely because\nmodification has been made.\n\n  If you convey an object code work under this section in, or with, or\nspecifically for use in, a User Product, and the conveying occurs as\npart of a transaction in which the right of possession and use of the\nUser Product is transferred to the recipient in perpetuity or for a\nfixed term (regardless of how the transaction is characterized), the\nCorresponding Source conveyed under this section must be accompanied\nby the Installation Information.  But this requirement does not apply\nif neither you nor any third party retains the ability to install\nmodified object code on the User Product (for example, the work has\nbeen installed in ROM).\n\n  The requirement to provide Installation Information does not include a\nrequirement to continue to provide support service, warranty, or updates\nfor a work that has been modified or installed by the recipient, or for\nthe User Product in which it has been modified or installed.  Access to a\nnetwork may be denied when the modification itself materially and\nadversely affects the operation of the network or violates the rules and\nprotocols for communication across the network.\n\n  Corresponding Source conveyed, and Installation Information provided,\nin accord with this section must be in a format that is publicly\ndocumented (and with an implementation available to the public in\nsource code form), and must require no special password or key for\nunpacking, reading or copying.\n\n  7. Additional Terms.\n\n  \"Additional permissions\" are terms that supplement the terms of this\nLicense by making exceptions from one or more of its conditions.\nAdditional permissions that are applicable to the entire Program shall\nbe treated as though they were included in this License, to the extent\nthat they are valid under applicable law.  If additional permissions\napply only to part of the Program, that part may be used separately\nunder those permissions, but the entire Program remains governed by\nthis License without regard to the additional permissions.\n\n  When you convey a copy of a covered work, you may at your option\nremove any additional permissions from that copy, or from any part of\nit.  (Additional permissions may be written to require their own\nremoval in certain cases when you modify the work.)  You may place\nadditional permissions on material, added by you to a covered work,\nfor which you have or can give appropriate copyright permission.\n\n  Notwithstanding any other provision of this License, for material you\nadd to a covered work, you may (if authorized by the copyright holders of\nthat material) supplement the terms of this License with terms:\n\n    a) Disclaiming warranty or limiting liability differently from the\n    terms of sections 15 and 16 of this License; or\n\n    b) Requiring preservation of specified reasonable legal notices or\n    author attributions in that material or in the Appropriate Legal\n    Notices displayed by works containing it; or\n\n    c) Prohibiting misrepresentation of the origin of that material, or\n    requiring that modified versions of such material be marked in\n    reasonable ways as different from the original version; or\n\n    d) Limiting the use for publicity purposes of names of licensors or\n    authors of the material; or\n\n    e) Declining to grant rights under trademark law for use of some\n    trade names, trademarks, or service marks; or\n\n    f) Requiring indemnification of licensors and authors of that\n    material by anyone who conveys the material (or modified versions of\n    it) with contractual assumptions of liability to the recipient, for\n    any liability that these contractual assumptions directly impose on\n    those licensors and authors.\n\n  All other non-permissive additional terms are considered \"further\nrestrictions\" within the meaning of section 10.  If the Program as you\nreceived it, or any part of it, contains a notice stating that it is\ngoverned by this License along with a term that is a further\nrestriction, you may remove that term.  If a license document contains\na further restriction but permits relicensing or conveying under this\nLicense, you may add to a covered work material governed by the terms\nof that license document, provided that the further restriction does\nnot survive such relicensing or conveying.\n\n  If you add terms to a covered work in accord with this section, you\nmust place, in the relevant source files, a statement of the\nadditional terms that apply to those files, or a notice indicating\nwhere to find the applicable terms.\n\n  Additional terms, permissive or non-permissive, may be stated in the\nform of a separately written license, or stated as exceptions;\nthe above requirements apply either way.\n\n  8. Termination.\n\n  You may not propagate or modify a covered work except as expressly\nprovided under this License.  Any attempt otherwise to propagate or\nmodify it is void, and will automatically terminate your rights under\nthis License (including any patent licenses granted under the third\nparagraph of section 11).\n\n  However, if you cease all violation of this License, then your\nlicense from a particular copyright holder is reinstated (a)\nprovisionally, unless and until the copyright holder explicitly and\nfinally terminates your license, and (b) permanently, if the copyright\nholder fails to notify you of the violation by some reasonable means\nprior to 60 days after the cessation.\n\n  Moreover, your license from a particular copyright holder is\nreinstated permanently if the copyright holder notifies you of the\nviolation by some reasonable means, this is the first time you have\nreceived notice of violation of this License (for any work) from that\ncopyright holder, and you cure the violation prior to 30 days after\nyour receipt of the notice.\n\n  Termination of your rights under this section does not terminate the\nlicenses of parties who have received copies or rights from you under\nthis License.  If your rights have been terminated and not permanently\nreinstated, you do not qualify to receive new licenses for the same\nmaterial under section 10.\n\n  9. Acceptance Not Required for Having Copies.\n\n  You are not required to accept this License in order to receive or\nrun a copy of the Program.  Ancillary propagation of a covered work\noccurring solely as a consequence of using peer-to-peer transmission\nto receive a copy likewise does not require acceptance.  However,\nnothing other than this License grants you permission to propagate or\nmodify any covered work.  These actions infringe copyright if you do\nnot accept this License.  Therefore, by modifying or propagating a\ncovered work, you indicate your acceptance of this License to do so.\n\n  10. Automatic Licensing of Downstream Recipients.\n\n  Each time you convey a covered work, the recipient automatically\nreceives a license from the original licensors, to run, modify and\npropagate that work, subject to this License.  You are not responsible\nfor enforcing compliance by third parties with this License.\n\n  An \"entity transaction\" is a transaction transferring control of an\norganization, or substantially all assets of one, or subdividing an\norganization, or merging organizations.  If propagation of a covered\nwork results from an entity transaction, each party to that\ntransaction who receives a copy of the work also receives whatever\nlicenses to the work the party's predecessor in interest had or could\ngive under the previous paragraph, plus a right to possession of the\nCorresponding Source of the work from the predecessor in interest, if\nthe predecessor has it or can get it with reasonable efforts.\n\n  You may not impose any further restrictions on the exercise of the\nrights granted or affirmed under this License.  For example, you may\nnot impose a license fee, royalty, or other charge for exercise of\nrights granted under this License, and you may not initiate litigation\n(including a cross-claim or counterclaim in a lawsuit) alleging that\nany patent claim is infringed by making, using, selling, offering for\nsale, or importing the Program or any portion of it.\n\n  11. Patents.\n\n  A \"contributor\" is a copyright holder who authorizes use under this\nLicense of the Program or a work on which the Program is based.  The\nwork thus licensed is called the contributor's \"contributor version\".\n\n  A contributor's \"essential patent claims\" are all patent claims\nowned or controlled by the contributor, whether already acquired or\nhereafter acquired, that would be infringed by some manner, permitted\nby this License, of making, using, or selling its contributor version,\nbut do not include claims that would be infringed only as a\nconsequence of further modification of the contributor version.  For\npurposes of this definition, \"control\" includes the right to grant\npatent sublicenses in a manner consistent with the requirements of\nthis License.\n\n  Each contributor grants you a non-exclusive, worldwide, royalty-free\npatent license under the contributor's essential patent claims, to\nmake, use, sell, offer for sale, import and otherwise run, modify and\npropagate the contents of its contributor version.\n\n  In the following three paragraphs, a \"patent license\" is any express\nagreement or commitment, however denominated, not to enforce a patent\n(such as an express permission to practice a patent or covenant not to\nsue for patent infringement).  To \"grant\" such a patent license to a\nparty means to make such an agreement or commitment not to enforce a\npatent against the party.\n\n  If you convey a covered work, knowingly relying on a patent license,\nand the Corresponding Source of the work is not available for anyone\nto copy, free of charge and under the terms of this License, through a\npublicly available network server or other readily accessible means,\nthen you must either (1) cause the Corresponding Source to be so\navailable, or (2) arrange to deprive yourself of the benefit of the\npatent license for this particular work, or (3) arrange, in a manner\nconsistent with the requirements of this License, to extend the patent\nlicense to downstream recipients.  \"Knowingly relying\" means you have\nactual knowledge that, but for the patent license, your conveying the\ncovered work in a country, or your recipient's use of the covered work\nin a country, would infringe one or more identifiable patents in that\ncountry that you have reason to believe are valid.\n\n  If, pursuant to or in connection with a single transaction or\narrangement, you convey, or propagate by procuring conveyance of, a\ncovered work, and grant a patent license to some of the parties\nreceiving the covered work authorizing them to use, propagate, modify\nor convey a specific copy of the covered work, then the patent license\nyou grant is automatically extended to all recipients of the covered\nwork and works based on it.\n\n  A patent license is \"discriminatory\" if it does not include within\nthe scope of its coverage, prohibits the exercise of, or is\nconditioned on the non-exercise of one or more of the rights that are\nspecifically granted under this License.  You may not convey a covered\nwork if you are a party to an arrangement with a third party that is\nin the business of distributing software, under which you make payment\nto the third party based on the extent of your activity of conveying\nthe work, and under which the third party grants, to any of the\nparties who would receive the covered work from you, a discriminatory\npatent license (a) in connection with copies of the covered work\nconveyed by you (or copies made from those copies), or (b) primarily\nfor and in connection with specific products or compilations that\ncontain the covered work, unless you entered into that arrangement,\nor that patent license was granted, prior to 28 March 2007.\n\n  Nothing in this License shall be construed as excluding or limiting\nany implied license or other defenses to infringement that may\notherwise be available to you under applicable patent law.\n\n  12. No Surrender of Others' Freedom.\n\n  If conditions are imposed on you (whether by court order, agreement or\notherwise) that contradict the conditions of this License, they do not\nexcuse you from the conditions of this License.  If you cannot convey a\ncovered work so as to satisfy simultaneously your obligations under this\nLicense and any other pertinent obligations, then as a consequence you may\nnot convey it at all.  For example, if you agree to terms that obligate you\nto collect a royalty for further conveying from those to whom you convey\nthe Program, the only way you could satisfy both those terms and this\nLicense would be to refrain entirely from conveying the Program.\n\n  13. Use with the GNU Affero General Public License.\n\n  Notwithstanding any other provision of this License, you have\npermission to link or combine any covered work with a work licensed\nunder version 3 of the GNU Affero General Public License into a single\ncombined work, and to convey the resulting work.  The terms of this\nLicense will continue to apply to the part which is the covered work,\nbut the special requirements of the GNU Affero General Public License,\nsection 13, concerning interaction through a network will apply to the\ncombination as such.\n\n  14. Revised Versions of this License.\n\n  The Free Software Foundation may publish revised and/or new versions of\nthe GNU General Public License from time to time.  Such new versions will\nbe similar in spirit to the present version, but may differ in detail to\naddress new problems or concerns.\n\n  Each version is given a distinguishing version number.  If the\nProgram specifies that a certain numbered version of the GNU General\nPublic License \"or any later version\" applies to it, you have the\noption of following the terms and conditions either of that numbered\nversion or of any later version published by the Free Software\nFoundation.  If the Program does not specify a version number of the\nGNU General Public License, you may choose any version ever published\nby the Free Software Foundation.\n\n  If the Program specifies that a proxy can decide which future\nversions of the GNU General Public License can be used, that proxy's\npublic statement of acceptance of a version permanently authorizes you\nto choose that version for the Program.\n\n  Later license versions may give you additional or different\npermissions.  However, no additional obligations are imposed on any\nauthor or copyright holder as a result of your choosing to follow a\nlater version.\n\n  15. Disclaimer of Warranty.\n\n  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\nAPPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\nHOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY\nOF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nTHE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM\nIS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF\nALL NECESSARY SERVICING, REPAIR OR CORRECTION.\n\n  16. Limitation of Liability.\n\n  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\nWILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS\nTHE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY\nGENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE\nUSE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF\nDATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD\nPARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),\nEVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF\nSUCH DAMAGES.\n\n  17. Interpretation of Sections 15 and 16.\n\n  If the disclaimer of warranty and limitation of liability provided\nabove cannot be given local legal effect according to their terms,\nreviewing courts shall apply local law that most closely approximates\nan absolute waiver of all civil liability in connection with the\nProgram, unless a warranty or assumption of liability accompanies a\ncopy of the Program in return for a fee.\n\n                     END OF TERMS AND CONDITIONS\n\n            How to Apply These Terms to Your New Programs\n\n  If you develop a new program, and you want it to be of the greatest\npossible use to the public, the best way to achieve this is to make it\nfree software which everyone can redistribute and change under these terms.\n\n  To do so, attach the following notices to the program.  It is safest\nto attach them to the start of each source file to most effectively\nstate the exclusion of warranty; and each file should have at least\nthe \"copyright\" line and a pointer to where the full notice is found.\n\n    <one line to give the program's name and a brief idea of what it does.>\n    Copyright (C) <year>  <name of author>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU General Public License as published by\n    the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU General Public License for more details.\n\n    You should have received a copy of the GNU General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\nAlso add information on how to contact you by electronic and paper mail.\n\n  If the program does terminal interaction, make it output a short\nnotice like this when it starts in an interactive mode:\n\n    <program>  Copyright (C) <year>  <name of author>\n    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n    This is free software, and you are welcome to redistribute it\n    under certain conditions; type `show c' for details.\n\nThe hypothetical commands `show w' and `show c' should show the appropriate\nparts of the General Public License.  Of course, your program's commands\nmight be different; for a GUI interface, you would use an \"about box\".\n\n  You should also get your employer (if you work as a programmer) or school,\nif any, to sign a \"copyright disclaimer\" for the program, if necessary.\nFor more information on this, and how to apply and follow the GNU GPL, see\n<https://www.gnu.org/licenses/>.\n\n  The GNU General Public License does not permit incorporating your program\ninto proprietary programs.  If your program is a subroutine library, you\nmay consider it more useful to permit linking proprietary applications with\nthe library.  If this is what you want to do, use the GNU Lesser General\nPublic License instead of this License.  But first, please read\n<https://www.gnu.org/licenses/why-not-lgpl.html>."
+  },
+  {
+    id: "AGPL-3.0",
+    name: "GNU AGPLv3",
+    url: "https://www.gnu.org/licenses/agpl-3.0",
+    badgeUrl: "https://img.shields.io/badge/License-AGPL--3.0-blue.svg",
+    generateText: () => "                    GNU AFFERO GENERAL PUBLIC LICENSE\n                       Version 3, 19 November 2007\n\n Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n Everyone is permitted to copy and distribute verbatim copies\n of this license document, but changing it is not allowed.\n\n                            Preamble\n\n  The GNU Affero General Public License is a free, copyleft license for\nsoftware and other kinds of works, specifically designed to ensure\ncooperation with the community in the case of network server software.\n\n  The licenses for most software and other practical works are designed\nto take away your freedom to share and change the works.  By contrast,\nour General Public Licenses are intended to guarantee your freedom to\nshare and change all versions of a program--to make sure it remains free\nsoftware for all its users.\n\n  When we speak of free software, we are referring to freedom, not\nprice.  Our General Public Licenses are designed to make sure that you\nhave the freedom to distribute copies of free software (and charge for\nthem if you wish), that you receive source code or can get it if you\nwant it, that you can change the software or use pieces of it in new\nfree programs, and that you know you can do these things.\n\n  Developers that use our General Public Licenses protect your rights\nwith two steps: (1) assert copyright on the software, and (2) offer\nyou this License which gives you legal permission to copy, distribute\nand/or modify the software.\n\n  A secondary benefit of defending all users' freedom is that\nimprovements made in alternate versions of the program, if they\nreceive widespread use, become available for other developers to\nincorporate.  Many developers of free software are heartened and\nencouraged by the resulting cooperation.  However, in the case of\nsoftware used on network servers, this result may fail to come about.\nThe GNU General Public License permits making a modified version and\nletting the public access it on a server without ever releasing its\nsource code to the public.\n\n  The GNU Affero General Public License is designed specifically to\nensure that, in such cases, the modified source code becomes available\nto the community.  It requires the operator of a network server to\nprovide the source code of the modified version running there to the\nusers of that server.  Therefore, public use of a modified version, on\na publicly accessible server, gives the public access to the source\ncode of the modified version.\n\n  An older license, called the Affero General Public License and\npublished by Affero, was designed to accomplish similar goals.  This is\na different license, not a version of the Affero GPL, but Affero has\nreleased a new version of the Affero GPL which permits relicensing under\nthis license.\n\n  The precise terms and conditions for copying, distribution and\nmodification follow.\n\n                       TERMS AND CONDITIONS\n\n  0. Definitions.\n\n  \"This License\" refers to version 3 of the GNU Affero General Public License.\n\n  \"Copyright\" also means copyright-like laws that apply to other kinds of\nworks, such as semiconductor masks.\n\n  \"The Program\" refers to any copyrightable work licensed under this\nLicense.  Each licensee is addressed as \"you\".  \"Licensees\" and\n\"recipients\" may be individuals or organizations.\n\n  To \"modify\" a work means to copy from or adapt all or part of the work\nin a fashion requiring copyright permission, other than the making of an\nexact copy.  The resulting work is called a \"modified version\" of the\nearlier work or a work \"based on\" the earlier work.\n\n  A \"covered work\" means either the unmodified Program or a work based\non the Program.\n\n  To \"propagate\" a work means to do anything with it that, without\npermission, would make you directly or secondarily liable for\ninfringement under applicable copyright law, except executing it on a\ncomputer or modifying a private copy.  Propagation includes copying,\ndistribution (with or without modification), making available to the\npublic, and in some countries other activities as well.\n\n  To \"convey\" a work means any kind of propagation that enables other\nparties to make or receive copies.  Mere interaction with a user through\na computer network, with no transfer of a copy, is not conveying.\n\n  An interactive user interface displays \"Appropriate Legal Notices\"\nto the extent that it includes a convenient and prominently visible\nfeature that (1) displays an appropriate copyright notice, and (2)\ntells the user that there is no warranty for the work (except to the\nextent that warranties are provided), that licensees may convey the\nwork under this License, and how to view a copy of this License.  If\nthe interface presents a list of user commands or options, such as a\nmenu, a prominent item in the list meets this criterion.\n\n  1. Source Code.\n\n  The \"source code\" for a work means the preferred form of the work\nfor making modifications to it.  \"Object code\" means any non-source\nform of a work.\n\n  A \"Standard Interface\" means an interface that either is an official\nstandard defined by a recognized standards body, or, in the case of\ninterfaces specified for a particular programming language, one that\nis widely used among developers working in that language.\n\n  The \"System Libraries\" of an executable work include anything, other\nthan the work as a whole, that (a) is included in the normal form of\npackaging a Major Component, but which is not part of that Major\nComponent, and (b) serves only to enable use of the work with that\nMajor Component, or to implement a Standard Interface for which an\nimplementation is available to the public in source code form.  A\n\"Major Component\", in this context, means a major essential component\n(kernel, window system, and so on) of the specific operating system\n(if any) on which the executable work runs, or a compiler used to\nproduce the work, or an object code interpreter used to run it.\n\n  The \"Corresponding Source\" for a work in object code form means all\nthe source code needed to generate, install, and (for an executable\nwork) run the object code and to modify the work, including scripts to\ncontrol those activities.  However, it does not include the work's\nSystem Libraries, or general-purpose tools or generally available free\nprograms which are used unmodified in performing those activities but\nwhich are not part of the work.  For example, Corresponding Source\nincludes interface definition files associated with source files for\nthe work, and the source code for shared libraries and dynamically\nlinked subprograms that the work is specifically designed to require,\nsuch as by intimate data communication or control flow between those\nsubprograms and other parts of the work.\n\n  The Corresponding Source need not include anything that users\ncan regenerate automatically from other parts of the Corresponding\nSource.\n\n  The Corresponding Source for a work in source code form is that\nsame work.\n\n  2. Basic Permissions.\n\n  All rights granted under this License are granted for the term of\ncopyright on the Program, and are irrevocable provided the stated\nconditions are met.  This License explicitly affirms your unlimited\npermission to run the unmodified Program.  The output from running a\ncovered work is covered by this License only if the output, given its\ncontent, constitutes a covered work.  This License acknowledges your\nrights of fair use or other equivalent, as provided by copyright law.\n\n  You may make, run and propagate covered works that you do not\nconvey, without conditions so long as your license otherwise remains\nin force.  You may convey covered works to others for the sole purpose\nof having them make modifications exclusively for you, or provide you\nwith facilities for running those works, provided that you comply with\nthe terms of this License in conveying all material for which you do\nnot control copyright.  Those thus making or running the covered works\nfor you must do so exclusively on your behalf, under your direction\nand control, on terms that prohibit them from making any copies of\nyour copyrighted material outside their relationship with you.\n\n  Conveying under any other circumstances is permitted solely under\nthe conditions stated below.  Sublicensing is not allowed; section 10\nmakes it unnecessary.\n\n  3. Protecting Users' Legal Rights From Anti-Circumvention Law.\n\n  No covered work shall be deemed part of an effective technological\nmeasure under any applicable law fulfilling obligations under article\n11 of the WIPO copyright treaty adopted on 20 December 1996, or\nsimilar laws prohibiting or restricting circumvention of such\nmeasures.\n\n  When you convey a covered work, you waive any legal power to forbid\ncircumvention of technological measures to the extent such circumvention\nis effected by exercising rights under this License with respect to\nthe covered work, and you disclaim any intention to limit operation or\nmodification of the work as a means of enforcing, against the work's\nusers, your or third parties' legal rights to forbid circumvention of\ntechnological measures.\n\n  4. Conveying Verbatim Copies.\n\n  You may convey verbatim copies of the Program's source code as you\nreceive it, in any medium, provided that you conspicuously and\nappropriately publish on each copy an appropriate copyright notice;\nkeep intact all notices stating that this License and any\nnon-permissive terms added in accord with section 7 apply to the code;\nkeep intact all notices of the absence of any warranty; and give all\nrecipients a copy of this License along with the Program.\n\n  You may charge any price or no price for each copy that you convey,\nand you may offer support or warranty protection for a fee.\n\n  5. Conveying Modified Source Versions.\n\n  You may convey a work based on the Program, or the modifications to\nproduce it from the Program, in the form of source code under the\nterms of section 4, provided that you also meet all of these conditions:\n\n    a) The work must carry prominent notices stating that you modified\n    it, and giving a relevant date.\n\n    b) The work must carry prominent notices stating that it is\n    released under this License and any conditions added under section\n    7.  This requirement modifies the requirement in section 4 to\n    \"keep intact all notices\".\n\n    c) You must license the entire work, as a whole, under this\n    License to anyone who comes into possession of a copy.  This\n    License will therefore apply, along with any applicable section 7\n    additional terms, to the whole of the work, and all its parts,\n    regardless of how they are packaged.  This License gives no\n    permission to license the work in any other way, but it does not\n    invalidate such permission if you have separately received it.\n\n    d) If the work has interactive user interfaces, each must display\n    Appropriate Legal Notices; however, if the Program has interactive\n    interfaces that do not display Appropriate Legal Notices, your\n    work need not make them do so.\n\n  A compilation of a covered work with other separate and independent\nworks, which are not by their nature extensions of the covered work,\nand which are not combined with it such as to form a larger program,\nin or on a volume of a storage or distribution medium, is called an\n\"aggregate\" if the compilation and its resulting copyright are not\nused to limit the access or legal rights of the compilation's users\nbeyond what the individual works permit.  Inclusion of a covered work\nin an aggregate does not cause this License to apply to the other\nparts of the aggregate.\n\n  6. Conveying Non-Source Forms.\n\n  You may convey a covered work in object code form under the terms\nof sections 4 and 5, provided that you also convey the\nmachine-readable Corresponding Source under the terms of this License,\nin one of these ways:\n\n    a) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by the\n    Corresponding Source fixed on a durable physical medium\n    customarily used for software interchange.\n\n    b) Convey the object code in, or embodied in, a physical product\n    (including a physical distribution medium), accompanied by a\n    written offer, valid for at least three years and valid for as\n    long as you offer spare parts or customer support for that product\n    model, to give anyone who possesses the object code either (1) a\n    copy of the Corresponding Source for all the software in the\n    product that is covered by this License, on a durable physical\n    medium customarily used for software interchange, for a price no\n    more than your reasonable cost of physically performing this\n    conveying of source, or (2) access to copy the\n    Corresponding Source from a network server at no charge.\n\n    c) Convey individual copies of the object code with a copy of the\n    written offer to provide the Corresponding Source.  This\n    alternative is allowed only occasionally and noncommercially, and\n    only if you received the object code with such an offer, in accord\n    with subsection 6b.\n\n    d) Convey the object code by offering access from a designated\n    place (gratis or for a charge), and offer equivalent access to the\n    Corresponding Source in the same way through the same place at no\n    further charge.  You need not require recipients to copy the\n    Corresponding Source along with the object code.  If the place to\n    copy the object code is a network server, the Corresponding Source\n    may be on a different server (operated by you or a third party)\n    that supports equivalent copying facilities, provided you maintain\n    clear directions next to the object code saying where to find the\n    Corresponding Source.  Regardless of what server hosts the\n    Corresponding Source, you remain obligated to ensure that it is\n    available for as long as needed to satisfy these requirements.\n\n    e) Convey the object code using peer-to-peer transmission, provided\n    you inform other peers where the object code and Corresponding\n    Source of the work are being offered to the general public at no\n    charge under subsection 6d.\n\n  A separable portion of the object code, whose source code is excluded\nfrom the Corresponding Source as a System Library, need not be\nincluded in conveying the object code work.\n\n  A \"User Product\" is either (1) a \"consumer product\", which means any\ntangible personal property which is normally used for personal, family,\nor household purposes, or (2) anything designed or sold for incorporation\ninto a dwelling.  In determining whether a product is a consumer product,\ndoubtful cases shall be resolved in favor of coverage.  For a particular\nproduct received by a particular user, \"normally used\" refers to a\ntypical or common use of that class of product, regardless of the status\nof the particular user or of the way in which the particular user\nactually uses, or expects or is expected to use, the product.  A product\nis a consumer product regardless of whether the product has substantial\ncommercial, industrial or non-consumer uses, unless such uses represent\nthe only significant mode of use of the product.\n\n  \"Installation Information\" for a User Product means any methods,\nprocedures, authorization keys, or other information required to install\nand execute modified versions of a covered work in that User Product from\na modified version of its Corresponding Source.  The information must\nsuffice to ensure that the continued functioning of the modified object\ncode is in no case prevented or interfered with solely because\nmodification has been made.\n\n  If you convey an object code work under this section in, or with, or\nspecifically for use in, a User Product, and the conveying occurs as\npart of a transaction in which the right of possession and use of the\nUser Product is transferred to the recipient in perpetuity or for a\nfixed term (regardless of how the transaction is characterized), the\nCorresponding Source conveyed under this section must be accompanied\nby the Installation Information.  But this requirement does not apply\nif neither you nor any third party retains the ability to install\nmodified object code on the User Product (for example, the work has\nbeen installed in ROM).\n\n  The requirement to provide Installation Information does not include a\nrequirement to continue to provide support service, warranty, or updates\nfor a work that has been modified or installed by the recipient, or for\nthe User Product in which it has been modified or installed.  Access to a\nnetwork may be denied when the modification itself materially and\nadversely affects the operation of the network or violates the rules and\nprotocols for communication across the network.\n\n  Corresponding Source conveyed, and Installation Information provided,\nin accord with this section must be in a format that is publicly\ndocumented (and with an implementation available to the public in\nsource code form), and must require no special password or key for\nunpacking, reading or copying.\n\n  7. Additional Terms.\n\n  \"Additional permissions\" are terms that supplement the terms of this\nLicense by making exceptions from one or more of its conditions.\nAdditional permissions that are applicable to the entire Program shall\nbe treated as though they were included in this License, to the extent\nthat they are valid under applicable law.  If additional permissions\napply only to part of the Program, that part may be used separately\nunder those permissions, but the entire Program remains governed by\nthis License without regard to the additional permissions.\n\n  When you convey a copy of a covered work, you may at your option\nremove any additional permissions from that copy, or from any part of\nit.  (Additional permissions may be written to require their own\nremoval in certain cases when you modify the work.)  You may place\nadditional permissions on material, added by you to a covered work,\nfor which you have or can give appropriate copyright permission.\n\n  Notwithstanding any other provision of this License, for material you\nadd to a covered work, you may (if authorized by the copyright holders of\nthat material) supplement the terms of this License with terms:\n\n    a) Disclaiming warranty or limiting liability differently from the\n    terms of sections 15 and 16 of this License; or\n\n    b) Requiring preservation of specified reasonable legal notices or\n    author attributions in that material or in the Appropriate Legal\n    Notices displayed by works containing it; or\n\n    c) Prohibiting misrepresentation of the origin of that material, or\n    requiring that modified versions of such material be marked in\n    reasonable ways as different from the original version; or\n\n    d) Limiting the use for publicity purposes of names of licensors or\n    authors of the material; or\n\n    e) Declining to grant rights under trademark law for use of some\n    trade names, trademarks, or service marks; or\n\n    f) Requiring indemnification of licensors and authors of that\n    material by anyone who conveys the material (or modified versions of\n    it) with contractual assumptions of liability to the recipient, for\n    any liability that these contractual assumptions directly impose on\n    those licensors and authors.\n\n  All other non-permissive additional terms are considered \"further\nrestrictions\" within the meaning of section 10.  If the Program as you\nreceived it, or any part of it, contains a notice stating that it is\ngoverned by this License along with a term that is a further\nrestriction, you may remove that term.  If a license document contains\na further restriction but permits relicensing or conveying under this\nLicense, you may add to a covered work material governed by the terms\nof that license document, provided that the further restriction does\nnot survive such relicensing or conveying.\n\n  If you add terms to a covered work in accord with this section, you\nmust place, in the relevant source files, a statement of the\nadditional terms that apply to those files, or a notice indicating\nwhere to find the applicable terms.\n\n  Additional terms, permissive or non-permissive, may be stated in the\nform of a separately written license, or stated as exceptions;\nthe above requirements apply either way.\n\n  8. Termination.\n\n  You may not propagate or modify a covered work except as expressly\nprovided under this License.  Any attempt otherwise to propagate or\nmodify it is void, and will automatically terminate your rights under\nthis License (including any patent licenses granted under the third\nparagraph of section 11).\n\n  However, if you cease all violation of this License, then your\nlicense from a particular copyright holder is reinstated (a)\nprovisionally, unless and until the copyright holder explicitly and\nfinally terminates your license, and (b) permanently, if the copyright\nholder fails to notify you of the violation by some reasonable means\nprior to 60 days after the cessation.\n\n  Moreover, your license from a particular copyright holder is\nreinstated permanently if the copyright holder notifies you of the\nviolation by some reasonable means, this is the first time you have\nreceived notice of violation of this License (for any work) from that\ncopyright holder, and you cure the violation prior to 30 days after\nyour receipt of the notice.\n\n  Termination of your rights under this section does not terminate the\nlicenses of parties who have received copies or rights from you under\nthis License.  If your rights have been terminated and not permanently\nreinstated, you do not qualify to receive new licenses for the same\nmaterial under section 10.\n\n  9. Acceptance Not Required for Having Copies.\n\n  You are not required to accept this License in order to receive or\nrun a copy of the Program.  Ancillary propagation of a covered work\noccurring solely as a consequence of using peer-to-peer transmission\nto receive a copy likewise does not require acceptance.  However,\nnothing other than this License grants you permission to propagate or\nmodify any covered work.  These actions infringe copyright if you do\nnot accept this License.  Therefore, by modifying or propagating a\ncovered work, you indicate your acceptance of this License to do so.\n\n  10. Automatic Licensing of Downstream Recipients.\n\n  Each time you convey a covered work, the recipient automatically\nreceives a license from the original licensors, to run, modify and\npropagate that work, subject to this License.  You are not responsible\nfor enforcing compliance by third parties with this License.\n\n  An \"entity transaction\" is a transaction transferring control of an\norganization, or substantially all assets of one, or subdividing an\norganization, or merging organizations.  If propagation of a covered\nwork results from an entity transaction, each party to that\ntransaction who receives a copy of the work also receives whatever\nlicenses to the work the party's predecessor in interest had or could\ngive under the previous paragraph, plus a right to possession of the\nCorresponding Source of the work from the predecessor in interest, if\nthe predecessor has it or can get it with reasonable efforts.\n\n  You may not impose any further restrictions on the exercise of the\nrights granted or affirmed under this License.  For example, you may\nnot impose a license fee, royalty, or other charge for exercise of\nrights granted under this License, and you may not initiate litigation\n(including a cross-claim or counterclaim in a lawsuit) alleging that\nany patent claim is infringed by making, using, selling, offering for\nsale, or importing the Program or any portion of it.\n\n  11. Patents.\n\n  A \"contributor\" is a copyright holder who authorizes use under this\nLicense of the Program or a work on which the Program is based.  The\nwork thus licensed is called the contributor's \"contributor version\".\n\n  A contributor's \"essential patent claims\" are all patent claims\nowned or controlled by the contributor, whether already acquired or\nhereafter acquired, that would be infringed by some manner, permitted\nby this License, of making, using, or selling its contributor version,\nbut do not include claims that would be infringed only as a\nconsequence of further modification of the contributor version.  For\npurposes of this definition, \"control\" includes the right to grant\npatent sublicenses in a manner consistent with the requirements of\nthis License.\n\n  Each contributor grants you a non-exclusive, worldwide, royalty-free\npatent license under the contributor's essential patent claims, to\nmake, use, sell, offer for sale, import and otherwise run, modify and\npropagate the contents of its contributor version.\n\n  In the following three paragraphs, a \"patent license\" is any express\nagreement or commitment, however denominated, not to enforce a patent\n(such as an express permission to practice a patent or covenant not to\nsue for patent infringement).  To \"grant\" such a patent license to a\nparty means to make such an agreement or commitment not to enforce a\npatent against the party.\n\n  If you convey a covered work, knowingly relying on a patent license,\nand the Corresponding Source of the work is not available for anyone\nto copy, free of charge and under the terms of this License, through a\npublicly available network server or other readily accessible means,\nthen you must either (1) cause the Corresponding Source to be so\navailable, or (2) arrange to deprive yourself of the benefit of the\npatent license for this particular work, or (3) arrange, in a manner\nconsistent with the requirements of this License, to extend the patent\nlicense to downstream recipients.  \"Knowingly relying\" means you have\nactual knowledge that, but for the patent license, your conveying the\ncovered work in a country, or your recipient's use of the covered work\nin a country, would infringe one or more identifiable patents in that\ncountry that you have reason to believe are valid.\n\n  If, pursuant to or in connection with a single transaction or\narrangement, you convey, or propagate by procuring conveyance of, a\ncovered work, and grant a patent license to some of the parties\nreceiving the covered work authorizing them to use, propagate, modify\nor convey a specific copy of the covered work, then the patent license\nyou grant is automatically extended to all recipients of the covered\nwork and works based on it.\n\n  A patent license is \"discriminatory\" if it does not include within\nthe scope of its coverage, prohibits the exercise of, or is\nconditioned on the non-exercise of one or more of the rights that are\nspecifically granted under this License.  You may not convey a covered\nwork if you are a party to an arrangement with a third party that is\nin the business of distributing software, under which you make payment\nto the third party based on the extent of your activity of conveying\nthe work, and under which the third party grants, to any of the\nparties who would receive the covered work from you, a discriminatory\npatent license (a) in connection with copies of the covered work\nconveyed by you (or copies made from those copies), or (b) primarily\nfor and in connection with specific products or compilations that\ncontain the covered work, unless you entered into that arrangement,\nor that patent license was granted, prior to 28 March 2007.\n\n  Nothing in this License shall be construed as excluding or limiting\nany implied license or other defenses to infringement that may\notherwise be available to you under applicable patent law.\n\n  12. No Surrender of Others' Freedom.\n\n  If conditions are imposed on you (whether by court order, agreement or\notherwise) that contradict the conditions of this License, they do not\nexcuse you from the conditions of this License.  If you cannot convey a\ncovered work so as to satisfy simultaneously your obligations under this\nLicense and any other pertinent obligations, then as a consequence you may\nnot convey it at all.  For example, if you agree to terms that obligate you\nto collect a royalty for further conveying from those to whom you convey\nthe Program, the only way you could satisfy both those terms and this\nLicense would be to refrain entirely from conveying the Program.\n\n  13. Remote Network Interaction; Use with the GNU General Public License.\n\n  Notwithstanding any other provision of this License, if you modify the\nProgram, your modified version must prominently offer all users\ninteracting with it remotely through a computer network (if your version\nsupports such interaction) an opportunity to receive the Corresponding\nSource of your version by providing access to the Corresponding Source\nfrom a network server at no charge, through some standard or customary\nmeans of facilitating copying of software.  This Corresponding Source\nshall include the Corresponding Source for any work covered by version 3\nof the GNU General Public License that is incorporated pursuant to the\nfollowing paragraph.\n\n  Notwithstanding any other provision of this License, you have\npermission to link or combine any covered work with a work licensed\nunder version 3 of the GNU General Public License into a single\ncombined work, and to convey the resulting work.  The terms of this\nLicense will continue to apply to the part which is the covered work,\nbut the work with which it is combined will remain governed by version\n3 of the GNU General Public License.\n\n  14. Revised Versions of this License.\n\n  The Free Software Foundation may publish revised and/or new versions of\nthe GNU Affero General Public License from time to time.  Such new versions\nwill be similar in spirit to the present version, but may differ in detail to\naddress new problems or concerns.\n\n  Each version is given a distinguishing version number.  If the\nProgram specifies that a certain numbered version of the GNU Affero General\nPublic License \"or any later version\" applies to it, you have the\noption of following the terms and conditions either of that numbered\nversion or of any later version published by the Free Software\nFoundation.  If the Program does not specify a version number of the\nGNU Affero General Public License, you may choose any version ever published\nby the Free Software Foundation.\n\n  If the Program specifies that a proxy can decide which future\nversions of the GNU Affero General Public License can be used, that proxy's\npublic statement of acceptance of a version permanently authorizes you\nto choose that version for the Program.\n\n  Later license versions may give you additional or different\npermissions.  However, no additional obligations are imposed on any\nauthor or copyright holder as a result of your choosing to follow a\nlater version.\n\n  15. Disclaimer of Warranty.\n\n  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY\nAPPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT\nHOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM \"AS IS\" WITHOUT WARRANTY\nOF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,\nTHE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR\nPURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM\nIS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF\nALL NECESSARY SERVICING, REPAIR OR CORRECTION.\n\n  16. Limitation of Liability.\n\n  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING\nWILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS\nTHE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY\nGENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE\nUSE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF\nDATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD\nPARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),\nEVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF\nSUCH DAMAGES.\n\n  17. Interpretation of Sections 15 and 16.\n\n  If the disclaimer of warranty and limitation of liability provided\nabove cannot be given local legal effect according to their terms,\nreviewing courts shall apply local law that most closely approximates\nan absolute waiver of all civil liability in connection with the\nProgram, unless a warranty or assumption of liability accompanies a\ncopy of the Program in return for a fee.\n\n                     END OF TERMS AND CONDITIONS\n\n            How to Apply These Terms to Your New Programs\n\n  If you develop a new program, and you want it to be of the greatest\npossible use to the public, the best way to achieve this is to make it\nfree software which everyone can redistribute and change under these terms.\n\n  To do so, attach the following notices to the program.  It is safest\nto attach them to the start of each source file to most effectively\nstate the exclusion of warranty; and each file should have at least\nthe \"copyright\" line and a pointer to where the full notice is found.\n\n    <one line to give the program's name and a brief idea of what it does.>\n    Copyright (C) <year>  <name of author>\n\n    This program is free software: you can redistribute it and/or modify\n    it under the terms of the GNU Affero General Public License as published\n    by the Free Software Foundation, either version 3 of the License, or\n    (at your option) any later version.\n\n    This program is distributed in the hope that it will be useful,\n    but WITHOUT ANY WARRANTY; without even the implied warranty of\n    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n    GNU Affero General Public License for more details.\n\n    You should have received a copy of the GNU Affero General Public License\n    along with this program.  If not, see <https://www.gnu.org/licenses/>.\n\nAlso add information on how to contact you by electronic and paper mail.\n\n  If your software can interact with users remotely through a computer\nnetwork, you should also make sure that it provides a way for users to\nget its source.  For example, if your program is a web application, its\ninterface could display a \"Source\" link that leads users to an archive\nof the code.  There are many ways you could offer source, and different\nsolutions will be better for different programs; see section 13 for the\nspecific requirements.\n\n  You should also get your employer (if you work as a programmer) or school,\nif any, to sign a \"copyright disclaimer\" for the program, if necessary.\nFor more information on this, and how to apply and follow the GNU AGPL, see\n<https://www.gnu.org/licenses/>."
+  },
+  {
+    id: "MPL-2.0",
+    name: "Mozilla Public License 2.0",
+    url: "https://www.mozilla.org/MPL/2.0/",
+    badgeUrl: "https://img.shields.io/badge/License-MPL--2.0-brightgreen.svg",
+    generateText: () => "Mozilla Public License Version 2.0\n==================================\n\n1. Definitions\n--------------\n\n1.1. \"Contributor\"\n    means each individual or legal entity that creates, contributes to\n    the creation of, or owns Covered Software.\n\n1.2. \"Contributor Version\"\n    means the combination of the Contributions of others (if any) used\n    by a Contributor and that particular Contributor's Contribution.\n\n1.3. \"Contribution\"\n    means Covered Software of a particular Contributor.\n\n1.4. \"Covered Software\"\n    means Source Code Form to which the initial Contributor has attached\n    the notice in Exhibit A, the Executable Form of such Source Code\n    Form, and Modifications of such Source Code Form, in each case\n    including portions thereof.\n\n1.5. \"Incompatible With Secondary Licenses\"\n    means\n\n    (a) that the initial Contributor has attached the notice described\n        in Exhibit B to the Covered Software; or\n\n    (b) that the Covered Software was made available under the terms of\n        version 1.1 or earlier of the License, but not also under the\n        terms of a Secondary License.\n\n1.6. \"Executable Form\"\n    means any form of the work other than Source Code Form.\n\n1.7. \"Larger Work\"\n    means a work that combines Covered Software with other material, in\n    a separate file or files, that is not Covered Software.\n\n1.8. \"License\"\n    means this document.\n\n1.9. \"Licensable\"\n    means having the right to grant, to the maximum extent possible,\n    whether at the time of the initial grant or subsequently, any and\n    all of the rights conveyed by this License.\n\n1.10. \"Modifications\"\n    means any of the following:\n\n    (a) any file in Source Code Form that results from an addition to,\n        deletion from, or modification of the contents of Covered\n        Software; or\n\n    (b) any new file in Source Code Form that contains any Covered\n        Software.\n\n1.11. \"Patent Claims\" of a Contributor\n    means any patent claim(s), including without limitation, method,\n    process, and apparatus claims, in any patent Licensable by such\n    Contributor that would be infringed, but for the grant of the\n    License, by the making, using, selling, offering for sale, having\n    made, import, or transfer of either its Contributions or its\n    Contributor Version.\n\n1.12. \"Secondary License\"\n    means either the GNU General Public License, Version 2.0, the GNU\n    Lesser General Public License, Version 2.1, the GNU Affero General\n    Public License, Version 3.0, or any later versions of those\n    licenses.\n\n1.13. \"Source Code Form\"\n    means the form of the work preferred for making modifications.\n\n1.14. \"You\" (or \"Your\")\n    means an individual or a legal entity exercising rights under this\n    License. For legal entities, \"You\" includes any entity that\n    controls, is controlled by, or is under common control with You. For\n    purposes of this definition, \"control\" means (a) the power, direct\n    or indirect, to cause the direction or management of such entity,\n    whether by contract or otherwise, or (b) ownership of more than\n    fifty percent (50%) of the outstanding shares or beneficial\n    ownership of such entity.\n\n2. License Grants and Conditions\n--------------------------------\n\n2.1. Grants\n\nEach Contributor hereby grants You a world-wide, royalty-free,\nnon-exclusive license:\n\n(a) under intellectual property rights (other than patent or trademark)\n    Licensable by such Contributor to use, reproduce, make available,\n    modify, display, perform, distribute, and otherwise exploit its\n    Contributions, either on an unmodified basis, with Modifications, or\n    as part of a Larger Work; and\n\n(b) under Patent Claims of such Contributor to make, use, sell, offer\n    for sale, have made, import, and otherwise transfer either its\n    Contributions or its Contributor Version.\n\n2.2. Effective Date\n\nThe licenses granted in Section 2.1 with respect to any Contribution\nbecome effective for each Contribution on the date the Contributor first\ndistributes such Contribution.\n\n2.3. Limitations on Grant Scope\n\nThe licenses granted in this Section 2 are the only rights granted under\nthis License. No additional rights or licenses will be implied from the\ndistribution or licensing of Covered Software under this License.\nNotwithstanding Section 2.1(b) above, no patent license is granted by a\nContributor:\n\n(a) for any code that a Contributor has removed from Covered Software;\n    or\n\n(b) for infringements caused by: (i) Your and any other third party's\n    modifications of Covered Software, or (ii) the combination of its\n    Contributions with other software (except as part of its Contributor\n    Version); or\n\n(c) under Patent Claims infringed by Covered Software in the absence of\n    its Contributions.\n\nThis License does not grant any rights in the trademarks, service marks,\nor logos of any Contributor (except as may be necessary to comply with\nthe notice requirements in Section 3.4).\n\n2.4. Subsequent Licenses\n\nNo Contributor makes additional grants as a result of Your choice to\ndistribute the Covered Software under a subsequent version of this\nLicense (see Section 10.2) or under the terms of a Secondary License (if\npermitted under the terms of Section 3.3).\n\n2.5. Representation\n\nEach Contributor represents that the Contributor believes its\nContributions are its original creation(s) or it has sufficient rights\nto grant the rights to its Contributions conveyed by this License.\n\n2.6. Fair Use\n\nThis License is not intended to limit any rights You have under\napplicable copyright doctrines of fair use, fair dealing, or other\nequivalents.\n\n2.7. Conditions\n\nSections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted\nin Section 2.1.\n\n3. Responsibilities\n-------------------\n\n3.1. Distribution of Source Form\n\nAll distribution of Covered Software in Source Code Form, including any\nModifications that You create or to which You contribute, must be under\nthe terms of this License. You must inform recipients that the Source\nCode Form of the Covered Software is governed by the terms of this\nLicense, and how they can obtain a copy of this License. You may not\nattempt to alter or restrict the recipients' rights in the Source Code\nForm.\n\n3.2. Distribution of Executable Form\n\nIf You distribute Covered Software in Executable Form then:\n\n(a) such Covered Software must also be made available in Source Code\n    Form, as described in Section 3.1, and You must inform recipients of\n    the Executable Form how they can obtain a copy of such Source Code\n    Form by reasonable means in a timely manner, at a charge no more\n    than the cost of distribution to the recipient; and\n\n(b) You may distribute such Executable Form under the terms of this\n    License, or sublicense it under different terms, provided that the\n    license for the Executable Form does not attempt to limit or alter\n    the recipients' rights in the Source Code Form under this License.\n\n3.3. Distribution of a Larger Work\n\nYou may create and distribute a Larger Work under terms of Your choice,\nprovided that You also comply with the requirements of this License for\nthe Covered Software. If the Larger Work is a combination of Covered\nSoftware with a work governed by one or more Secondary Licenses, and the\nCovered Software is not Incompatible With Secondary Licenses, this\nLicense permits You to additionally distribute such Covered Software\nunder the terms of such Secondary License(s), so that the recipient of\nthe Larger Work may, at their option, further distribute the Covered\nSoftware under the terms of either this License or such Secondary\nLicense(s).\n\n3.4. Notices\n\nYou may not remove or alter the substance of any license notices\n(including copyright notices, patent notices, disclaimers of warranty,\nor limitations of liability) contained within the Source Code Form of\nthe Covered Software, except that You may alter any license notices to\nthe extent required to remedy known factual inaccuracies.\n\n3.5. Application of Additional Terms\n\nYou may choose to offer, and to charge a fee for, warranty, support,\nindemnity or liability obligations to one or more recipients of Covered\nSoftware. However, You may do so only on Your own behalf, and not on\nbehalf of any Contributor. You must make it absolutely clear that any\nsuch warranty, support, indemnity, or liability obligation is offered by\nYou alone, and You hereby agree to indemnify every Contributor for any\nliability incurred by such Contributor as a result of warranty, support,\nindemnity or liability terms You offer. You may include additional\ndisclaimers of warranty and limitations of liability specific to any\njurisdiction.\n\n4. Inability to Comply Due to Statute or Regulation\n---------------------------------------------------\n\nIf it is impossible for You to comply with any of the terms of this\nLicense with respect to some or all of the Covered Software due to\nstatute, judicial order, or regulation then You must: (a) comply with\nthe terms of this License to the maximum extent possible; and (b)\ndescribe the limitations and the code they affect. Such description must\nbe placed in a text file included with all distributions of the Covered\nSoftware under this License. Except to the extent prohibited by statute\nor regulation, such description must be sufficiently detailed for a\nrecipient of ordinary skill to be able to understand it.\n\n5. Termination\n--------------\n\n5.1. The rights granted under this License will terminate automatically\nif You fail to comply with any of its terms. However, if You become\ncompliant, then the rights granted under this License from a particular\nContributor are reinstated (a) provisionally, unless and until such\nContributor explicitly and finally terminates Your grants, and (b) on an\nongoing basis, if such Contributor fails to notify You of the\nnon-compliance by some reasonable means prior to 60 days after You have\ncome back into compliance. Moreover, Your grants from a particular\nContributor are reinstated on an ongoing basis if such Contributor\nnotifies You of the non-compliance by some reasonable means, this is the\nfirst time You have received notice of non-compliance with this License\nfrom such Contributor, and You become compliant prior to 30 days after\nYour receipt of the notice.\n\n5.2. If You initiate litigation against any entity by asserting a patent\ninfringement claim (excluding declaratory judgment actions,\ncounter-claims, and cross-claims) alleging that a Contributor Version\ndirectly or indirectly infringes any patent, then the rights granted to\nYou by any and all Contributors for the Covered Software under Section\n2.1 of this License shall terminate.\n\n5.3. In the event of termination under Sections 5.1 or 5.2 above, all\nend user license agreements (excluding distributors and resellers) which\nhave been validly granted by You or Your distributors under this License\nprior to termination shall survive termination.\n\n************************************************************************\n*                                                                      *\n*  6. Disclaimer of Warranty                                           *\n*  -------------------------                                           *\n*                                                                      *\n*  Covered Software is provided under this License on an \"as is\"       *\n*  basis, without warranty of any kind, either expressed, implied, or  *\n*  statutory, including, without limitation, warranties that the       *\n*  Covered Software is free of defects, merchantable, fit for a        *\n*  particular purpose or non-infringing. The entire risk as to the     *\n*  quality and performance of the Covered Software is with You.        *\n*  Should any Covered Software prove defective in any respect, You     *\n*  (not any Contributor) assume the cost of any necessary servicing,   *\n*  repair, or correction. This disclaimer of warranty constitutes an   *\n*  essential part of this License. No use of any Covered Software is   *\n*  authorized under this License except under this disclaimer.         *\n*                                                                      *\n************************************************************************\n\n************************************************************************\n*                                                                      *\n*  7. Limitation of Liability                                          *\n*  --------------------------                                          *\n*                                                                      *\n*  Under no circumstances and under no legal theory, whether tort      *\n*  (including negligence), contract, or otherwise, shall any           *\n*  Contributor, or anyone who distributes Covered Software as          *\n*  permitted above, be liable to You for any direct, indirect,         *\n*  special, incidental, or consequential damages of any character      *\n*  including, without limitation, damages for lost profits, loss of    *\n*  goodwill, work stoppage, computer failure or malfunction, or any    *\n*  and all other commercial damages or losses, even if such party      *\n*  shall have been informed of the possibility of such damages. This   *\n*  limitation of liability shall not apply to liability for death or   *\n*  personal injury resulting from such party's negligence to the       *\n*  extent applicable law prohibits such limitation. Some               *\n*  jurisdictions do not allow the exclusion or limitation of           *\n*  incidental or consequential damages, so this exclusion and          *\n*  limitation may not apply to You.                                    *\n*                                                                      *\n************************************************************************\n\n8. Litigation\n-------------\n\nAny litigation relating to this License may be brought only in the\ncourts of a jurisdiction where the defendant maintains its principal\nplace of business and such litigation shall be governed by laws of that\njurisdiction, without reference to its conflict-of-law provisions.\nNothing in this Section shall prevent a party's ability to bring\ncross-claims or counter-claims.\n\n9. Miscellaneous\n----------------\n\nThis License represents the complete agreement concerning the subject\nmatter hereof. If any provision of this License is held to be\nunenforceable, such provision shall be reformed only to the extent\nnecessary to make it enforceable. Any law or regulation which provides\nthat the language of a contract shall be construed against the drafter\nshall not be used to construe this License against a Contributor.\n\n10. Versions of the License\n---------------------------\n\n10.1. New Versions\n\nMozilla Foundation is the license steward. Except as provided in Section\n10.3, no one other than the license steward has the right to modify or\npublish new versions of this License. Each version will be given a\ndistinguishing version number.\n\n10.2. Effect of New Versions\n\nYou may distribute the Covered Software under the terms of the version\nof the License under which You originally received the Covered Software,\nor under the terms of any subsequent version published by the license\nsteward.\n\n10.3. Modified Versions\n\nIf you create software not governed by this License, and you want to\ncreate a new license for such software, you may create and use a\nmodified version of this License if you rename the license and remove\nany references to the name of the license steward (except to note that\nsuch modified license differs from this License).\n\n10.4. Distributing Source Code Form that is Incompatible With Secondary\nLicenses\n\nIf You choose to distribute Source Code Form that is Incompatible With\nSecondary Licenses under the terms of this version of the License, the\nnotice described in Exhibit B of this License must be attached.\n\nExhibit A - Source Code Form License Notice\n-------------------------------------------\n\n  This Source Code Form is subject to the terms of the Mozilla Public\n  License, v. 2.0. If a copy of the MPL was not distributed with this\n  file, You can obtain one at https://mozilla.org/MPL/2.0/.\n\nIf it is not possible or desirable to put the notice in a particular\nfile, then You may include the notice in a location (such as a LICENSE\nfile in a relevant directory) where a recipient would be likely to look\nfor such a notice.\n\nYou may add additional accurate notices of copyright ownership.\n\nExhibit B - \"Incompatible With Secondary Licenses\" Notice\n---------------------------------------------------------\n\n  This Source Code Form is \"Incompatible With Secondary Licenses\", as\n  defined by the Mozilla Public License, v. 2.0."
+  },
+  {
+    id: "BSD-3-Clause",
+    name: "BSD 3-Clause License",
+    url: "https://opensource.org/license/bsd-3-clause",
+    badgeUrl: "https://img.shields.io/badge/License-BSD--3--Clause-blue.svg",
+    generateText: (year, holder) => "BSD 3-Clause License\n\nCopyright (c) [year], [fullname]\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\n3. Neither the name of the copyright holder nor the names of its\n   contributors may be used to endorse or promote products derived from\n   this software without specific prior written permission.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.".split('[year]').join(year).split('[fullname]').join(holder)
+  },
+  {
+    id: "BSD-2-Clause",
+    name: "BSD 2-Clause License",
+    url: "https://opensource.org/license/bsd-2-clause",
+    badgeUrl: "https://img.shields.io/badge/License-BSD--2--Clause-blue.svg",
+    generateText: (year, holder) => "BSD 2-Clause License\n\nCopyright (c) [year], [fullname]\n\nRedistribution and use in source and binary forms, with or without\nmodification, are permitted provided that the following conditions are met:\n\n1. Redistributions of source code must retain the above copyright notice, this\n   list of conditions and the following disclaimer.\n\n2. Redistributions in binary form must reproduce the above copyright notice,\n   this list of conditions and the following disclaimer in the documentation\n   and/or other materials provided with the distribution.\n\nTHIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"\nAND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\nIMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE\nDISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE\nFOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\nDAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\nSERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\nCAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,\nOR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE\nOF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.".split('[year]').join(year).split('[fullname]').join(holder)
+  },
+  {
+    id: "ISC",
+    name: "ISC License",
+    url: "https://opensource.org/license/isc-license-txt",
+    badgeUrl: "https://img.shields.io/badge/License-ISC-blue.svg",
+    generateText: (year, holder) => "ISC License\n\nCopyright (c) [year] [fullname]\n\nPermission to use, copy, modify, and/or distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH\nREGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY\nAND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,\nINDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM\nLOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR\nOTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR\nPERFORMANCE OF THIS SOFTWARE.".split('[year]').join(year).split('[fullname]').join(holder)
+  },
+  {
+    id: "Unlicense",
+    name: "The Unlicense",
+    url: "https://unlicense.org/",
+    badgeUrl: "https://img.shields.io/badge/License-Unlicense-informational.svg",
+    generateText: () => "This is free and unencumbered software released into the public domain.\n\nAnyone is free to copy, modify, publish, use, compile, sell, or\ndistribute this software, either in source code form or as a compiled\nbinary, for any purpose, commercial or non-commercial, and by any\nmeans.\n\nIn jurisdictions that recognize copyright laws, the author or authors\nof this software dedicate any and all copyright interest in the\nsoftware to the public domain. We make this dedication for the benefit\nof the public at large and to the detriment of our heirs and\nsuccessors. We intend this dedication to be an overt act of\nrelinquishment in perpetuity of all present and future rights to this\nsoftware under copyright law.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR\nOTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,\nARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.\n\nFor more information, please refer to <https://unlicense.org>"
+  },
+];
+function getLicenseById(id) {
+  if (!id) return LICENSE_CATALOG[0];
+  const norm = String(id).toLowerCase().replace(/[^a-z0-9]/g, '');
+  return LICENSE_CATALOG.find(l => l.id.toLowerCase().replace(/[^a-z0-9]/g, '') === norm) || LICENSE_CATALOG[0];
 }
 
 /* ==================== MODULE: data/templates.js ==================== */
 
+function sec(type, dataOverrides, titleOverride) {
+  const s = createSection(type, titleOverride);
+  s.data = { ...s.data, ...dataOverrides };
+  return s;
+}
 const TEMPLATES = [
   {
-    id: 'fullstack',
-    name: 'Fullstack SaaS / Web App',
-    icon: '??',
-    description: 'Hero, Live Demo, Features, Tech Stack, Env Vars, Quickstart, Deployment',
+    id: 'web-app',
+    name: 'Web App / SaaS',
+    description: 'Full-stack web application with tech stack, install steps, and env vars.',
     sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'HyperScale App',
-          tagline: 'The modern real-time analytics platform built for high-growth engineering teams.',
-          align: 'center',
-          logoUrl: 'https://raw.githubusercontent.com/username/repo/main/logo.png',
-          showLogo: false,
-          repoOwner: 'acme-corp',
-          repoName: 'hyperscale-app'
-        }
-      },
-      {
-        id: 'sec-badges',
-        type: SECTION_TYPES.BADGES,
-        title: 'Repo Badges & Stats',
-        enabled: true,
-        data: {
-          style: 'for-the-badge',
-          showStars: true,
-          showForks: true,
-          showIssues: true,
-          showLicense: true,
-          showRelease: true,
-          showLastCommit: false,
-          customBadges: [{ label: 'Status', message: 'Active', color: 'success', logo: 'statuspage' }]
-        }
-      },
-      {
-        id: 'sec-about',
-        type: SECTION_TYPES.ABOUT,
-        title: 'About the Project',
-        enabled: true,
-        data: {
-          heading: 'About The Project',
-          content: 'HyperScale is a cloud-native monitoring platform that collects and synthesizes distributed metrics in real time. It provides microsecond insights and automated anomaly alerts with zero configuration.'
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Built With',
-        enabled: true,
-        data: {
-          heading: 'Built With',
-          style: 'for-the-badge',
-          technologies: ['nextjs', 'typescript', 'tailwind', 'nodejs', 'postgres', 'redis', 'docker']
-        }
-      },
-      {
-        id: 'sec-features',
-        type: SECTION_TYPES.FEATURES,
-        title: 'Key Features',
-        enabled: true,
-        data: {
-          heading: 'Key Features',
-          items: [
-            { icon: '?', title: 'Sub-millisecond latency', desc: 'Real-time ingestion pipeline handling millions of events per second.' },
-            { icon: '??', title: 'Enterprise-grade Security', desc: 'End-to-end encryption, SOC2 compliant audit logs, and role-based access control.' },
-            { icon: '??', title: 'Interactive Dashboards', desc: 'Drill-down visualizations and customizable widgets for developer telemetry.' }
-          ]
-        }
-      },
-      {
-        id: 'sec-demo',
-        type: SECTION_TYPES.DEMO,
-        title: 'Live Demo',
-        enabled: true,
-        data: {
-          heading: 'Live Demo',
-          imageUrl: 'https://raw.githubusercontent.com/username/repo/main/preview.png',
-          caption: 'Interactive Dashboard Preview',
-          liveUrl: 'https://hyperscale.demo.dev'
-        }
-      },
-      {
-        id: 'sec-install',
-        type: SECTION_TYPES.INSTALLATION,
-        title: 'Getting Started',
-        enabled: true,
-        data: {
-          heading: 'Getting Started',
-          prerequisites: 'Node.js 18+ and Docker installed.',
-          packageManager: 'pnpm',
-          steps: [
-            { title: 'Clone the repo', cmd: 'git clone https://github.com/acme-corp/hyperscale-app.git' },
-            { title: 'Install dependencies', cmd: 'pnpm install' },
-            { title: 'Spin up database', cmd: 'docker compose up -d' },
-            { title: 'Run the development server', cmd: 'pnpm run dev' }
-          ]
-        }
-      },
-      {
-        id: 'sec-env',
-        type: SECTION_TYPES.ENV_VARS,
-        title: 'Environment Variables',
-        enabled: true,
-        data: {
-          heading: 'Environment Variables',
-          variables: [
-            { key: 'DATABASE_URL', desc: 'PostgreSQL connection string', default: 'postgresql://postgres:pass@localhost:5432/db', required: true },
-            { key: 'REDIS_URL', desc: 'Redis host string', default: 'redis://localhost:6379', required: false },
-            { key: 'NEXTAUTH_SECRET', desc: 'Encryption key for session tokens', default: '', required: true }
-          ]
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'MIT',
-          year: '2026',
-          holder: 'Acme Corporation'
-        }
-      }
+      sec(SECTION_TYPES.HERO, { projectName: 'My Web App', tagline: 'A modern full-stack web application.' }),
+      sec(SECTION_TYPES.BADGES, {}),
+      sec(SECTION_TYPES.TOC, {}),
+      sec(SECTION_TYPES.ABOUT, { content: 'Describe the problem your app solves and who it is for.' }),
+      sec(SECTION_TYPES.TECH_STACK, { technologies: ['typescript', 'react', 'nodejs', 'postgresql', 'docker'] }),
+      sec(SECTION_TYPES.FEATURES, {}),
+      sec(SECTION_TYPES.INSTALLATION, {}),
+      sec(SECTION_TYPES.ENV_VARS, {}),
+      sec(SECTION_TYPES.CONTRIBUTING, {}),
+      sec(SECTION_TYPES.LICENSE, {})
     ]
   },
   {
-    id: 'library',
-    name: 'NPM / Developer Library',
-    icon: '??',
-    description: 'Installation, Usage Code Examples, API Reference, Benchmarks, TypeScript types',
+    id: 'npm-library',
+    name: 'npm / JS Library',
+    description: 'A published package with an install command, usage example, and API reference.',
     sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'fast-cache-ts',
-          tagline: 'Ultra-lightweight, in-memory LRU cache with TTL support and TypeScript generics.',
-          align: 'left',
-          showLogo: false,
-          repoOwner: 'devtools',
-          repoName: 'fast-cache-ts'
-        }
-      },
-      {
-        id: 'sec-badges',
-        type: SECTION_TYPES.BADGES,
-        title: 'Badges',
-        enabled: true,
-        data: {
-          style: 'flat-square',
-          showStars: true,
-          showForks: false,
-          showIssues: true,
-          showLicense: true,
-          showRelease: true,
-          showLastCommit: true,
-          customBadges: [
-            { label: 'npm', message: 'v2.1.0', color: 'CB3837', logo: 'npm' },
-            { label: 'coverage', message: '99%', color: 'brightgreen', logo: 'jest' }
-          ]
-        }
-      },
-      {
-        id: 'sec-about',
-        type: SECTION_TYPES.ABOUT,
-        title: 'Overview',
-        enabled: true,
-        data: {
-          heading: 'Overview',
-          content: '`fast-cache-ts` is a zero-dependency LRU cache optimized for V8 engine execution. It boasts 3x faster get/set operations compared to traditional cache maps and is fully typed.'
-        }
-      },
-      {
-        id: 'sec-install',
-        type: SECTION_TYPES.INSTALLATION,
-        title: 'Installation',
-        enabled: true,
-        data: {
-          heading: 'Installation',
-          prerequisites: 'Node.js 16+ or Bun/Deno.',
-          packageManager: 'npm',
-          steps: [
-            { title: 'Install via npm', cmd: 'npm install fast-cache-ts' },
-            { title: 'Or via pnpm', cmd: 'pnpm add fast-cache-ts' }
-          ]
-        }
-      },
-      {
-        id: 'sec-usage',
-        type: SECTION_TYPES.USAGE,
-        title: 'Quickstart & Examples',
-        enabled: true,
-        data: {
-          heading: 'Quickstart',
-          codeLang: 'typescript',
-          code: 'import { FastCache } from \'fast-cache-ts\';\n\n// Create a cache with max 500 items and 60s TTL\nconst cache = new FastCache<string, number>({\n  maxSize: 500,\n  ttlMs: 60_000\n});\n\ncache.set(\'score\', 100);\nconsole.log(cache.get(\'score\')); // 100',
-          note: 'Supports automatic expiration, eviction callbacks, and custom hash functions.'
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'MIT',
-          year: '2026',
-          holder: 'FastCache Contributors'
-        }
-      }
+      sec(SECTION_TYPES.HERO, { projectName: 'my-package', tagline: 'A useful JavaScript/TypeScript package.' }),
+      sec(SECTION_TYPES.BADGES, { showNpmVersion: true, showNpmDownloads: true }),
+      sec(SECTION_TYPES.ABOUT, {}),
+      sec(SECTION_TYPES.INSTALLATION, { steps: [{ title: 'Install via npm', cmd: 'npm install my-package' }] }),
+      sec(SECTION_TYPES.USAGE, { codeLang: 'javascript', code: "import { thing } from 'my-package';\n\nthing();" }),
+      sec(SECTION_TYPES.API_REFERENCE, {}),
+      sec(SECTION_TYPES.CONTRIBUTING, {}),
+      sec(SECTION_TYPES.LICENSE, {})
     ]
   },
   {
-    id: 'cli',
-    name: 'CLI Tool / Terminal App',
-    icon: '?',
-    description: 'Terminal demo, curl/brew install, command flags table, examples',
+    id: 'cli-tool',
+    name: 'CLI Tool',
+    description: 'A command-line tool with install and usage instructions.',
     sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'git-ship',
-          tagline: 'One command to squash, sign, tag, and publish your Git releases effortlessly.',
-          align: 'center',
-          showLogo: false,
-          repoOwner: 'ship-tools',
-          repoName: 'git-ship'
-        }
-      },
-      {
-        id: 'sec-badges',
-        type: SECTION_TYPES.BADGES,
-        title: 'Badges',
-        enabled: true,
-        data: {
-          style: 'for-the-badge',
-          showStars: true,
-          showForks: true,
-          showIssues: true,
-          showLicense: true,
-          showRelease: true,
-          showLastCommit: false,
-          customBadges: [{ label: 'Brew', message: 'v1.4.0', color: 'orange', logo: 'homebrew' }]
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Built With',
-        enabled: true,
-        data: {
-          heading: 'Built With',
-          style: 'for-the-badge',
-          technologies: ['rust', 'shell', 'git', 'githubactions']
-        }
-      },
-      {
-        id: 'sec-install',
-        type: SECTION_TYPES.INSTALLATION,
-        title: 'Installation',
-        enabled: true,
-        data: {
-          heading: 'Installation',
-          prerequisites: 'Git installed.',
-          packageManager: 'curl',
-          steps: [
-            { title: 'Install via Homebrew (macOS/Linux)', cmd: 'brew install git-ship' },
-            { title: 'Or install via Cargo', cmd: 'cargo install git-ship' },
-            { title: 'Or via Shell Script', cmd: 'curl -fsSL https://git-ship.sh/install | sh' }
-          ]
-        }
-      },
-      {
-        id: 'sec-usage',
-        type: SECTION_TYPES.USAGE,
-        title: 'Commands & Flags',
-        enabled: true,
-        data: {
-          heading: 'Usage',
-          codeLang: 'bash',
-          code: '# Ship a minor version release\ngit ship --minor\n\n# Ship a patch with custom changelog\ngit ship --patch --notes "Hotfix for auth bug"\n\n# Dry run without pushing\ngit ship --dry-run',
-          note: 'Run `git ship --help` to view all available interactive prompt options.'
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'Apache-2.0',
-          year: '2026',
-          holder: 'Git Ship Developers'
-        }
-      }
+      sec(SECTION_TYPES.HERO, { projectName: 'my-cli', tagline: 'A handy command-line tool.' }),
+      sec(SECTION_TYPES.BADGES, { showNpmVersion: true }),
+      sec(SECTION_TYPES.ABOUT, {}),
+      sec(SECTION_TYPES.INSTALLATION, { steps: [{ title: 'Install globally', cmd: 'npm install -g my-cli' }] }),
+      sec(SECTION_TYPES.USAGE, { codeLang: 'bash', code: 'my-cli --help' }),
+      sec(SECTION_TYPES.FAQ, {}),
+      sec(SECTION_TYPES.LICENSE, {})
     ]
   },
   {
-    id: 'mobile',
-    name: 'Mobile App (iOS / Android)',
-    icon: '??',
-    description: 'App Store / Play Store badges, feature showcase, screenshots, build guide',
+    id: 'data-project',
+    name: 'Data / ML Project',
+    description: 'A Python-based data science or machine learning project.',
     sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'FitFlow Mobile',
-          tagline: 'Track workouts, sync with wearables, and crush your daily fitness goals.',
-          align: 'center',
-          showLogo: false,
-          repoOwner: 'fitflow-app',
-          repoName: 'fitflow-mobile'
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Built With',
-        enabled: true,
-        data: {
-          heading: 'Built With',
-          style: 'for-the-badge',
-          technologies: ['flutter', 'dart', 'firebase', 'sqlite', 'swift', 'kotlin']
-        }
-      },
-      {
-        id: 'sec-features',
-        type: SECTION_TYPES.FEATURES,
-        title: 'Features',
-        enabled: true,
-        data: {
-          heading: 'Features',
-          items: [
-            { icon: '?', title: 'Apple Watch & WearOS Sync', desc: 'Seamless Bluetooth sync with heart rate and step counter sensors.' },
-            { icon: '??', title: 'Offline-First Architecture', desc: 'Full workout tracking capabilities even with no internet connection.' },
-            { icon: '??', title: 'Progress Graphs', desc: 'Interactive charts showing PRs, volume, and weekly trends.' }
-          ]
-        }
-      },
-      {
-        id: 'sec-install',
-        type: SECTION_TYPES.INSTALLATION,
-        title: 'Local Build Instructions',
-        enabled: true,
-        data: {
-          heading: 'Running Locally',
-          prerequisites: 'Flutter SDK 3.x and Android Studio / Xcode installed.',
-          packageManager: 'flutter',
-          steps: [
-            { title: 'Fetch packages', cmd: 'flutter pub get' },
-            { title: 'Run on connected device/simulator', cmd: 'flutter run' }
-          ]
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'GPL-3.0',
-          year: '2026',
-          holder: 'FitFlow Team'
-        }
-      }
+      sec(SECTION_TYPES.HERO, { projectName: 'My ML Project', tagline: 'A machine learning project.' }),
+      sec(SECTION_TYPES.BADGES, {}),
+      sec(SECTION_TYPES.ABOUT, {}),
+      sec(SECTION_TYPES.TECH_STACK, { technologies: ['python', 'docker'] }),
+      sec(SECTION_TYPES.MERMAID, { diagram: 'graph LR\n  A[Raw Data] --> B[Preprocessing]\n  B --> C[Model Training]\n  C --> D[Evaluation]' }),
+      sec(SECTION_TYPES.INSTALLATION, { steps: [
+        { title: 'Clone the repository', cmd: 'git clone https://github.com/username/my-project.git\ncd my-project' },
+        { title: 'Install dependencies', cmd: 'pip install -r requirements.txt' }
+      ] }),
+      sec(SECTION_TYPES.USAGE, { codeLang: 'bash', code: 'python train.py' }),
+      sec(SECTION_TYPES.LICENSE, {})
     ]
   },
   {
-    id: 'student',
-    name: 'Student / Hackathon Project',
-    icon: '??',
-    description: 'Problem statement, solution, demo video, team members, architecture',
-    sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'EcoSort AI',
-          tagline: 'AI-powered smart recycling assistant designed at HackNation 2026.',
-          align: 'center',
-          showLogo: false,
-          repoOwner: 'hacknation-team',
-          repoName: 'ecosort-ai'
-        }
-      },
-      {
-        id: 'sec-about',
-        type: SECTION_TYPES.ABOUT,
-        title: 'Problem & Solution',
-        enabled: true,
-        data: {
-          heading: 'Inspiration & Problem',
-          content: 'Over 60% of recyclable material ends up in landfills because consumers are unsure which bin to use. EcoSort uses computer vision on your smartphone camera to classify items in under 200ms and display local recycling municipal rules.'
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Tech Stack',
-        enabled: true,
-        data: {
-          heading: 'Tech Stack',
-          style: 'for-the-badge',
-          technologies: ['python', 'pytorch', 'fastapi', 'react', 'tailwind', 'vercel']
-        }
-      },
-      {
-        id: 'sec-features',
-        type: SECTION_TYPES.FEATURES,
-        title: 'Accomplishments',
-        enabled: true,
-        data: {
-          heading: 'What We Accomplished',
-          items: [
-            { icon: '??', title: '1st Place Sustainability Track', desc: 'Awarded top prize among 80+ participating collegiate teams.' },
-            { icon: '??', title: '94% Image Accuracy', desc: 'Fine-tuned MobileNetV3 model on 15,000 community waste photos.' },
-            { icon: '??', title: 'Built in 36 Hours', desc: 'Complete end-to-end prototype deployed to production during the hackathon.' }
-          ]
-        }
-      },
-      {
-        id: 'sec-author',
-        type: SECTION_TYPES.AUTHOR,
-        title: 'The Team',
-        enabled: true,
-        data: {
-          heading: 'The Team',
-          name: 'The EcoSort Creators',
-          github: 'hacknation-team',
-          twitter: '',
-          linkedin: '',
-          email: 'team@ecosort.dev',
-          buyMeACoffee: ''
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'MIT',
-          year: '2026',
-          holder: 'EcoSort Team'
-        }
-      }
-    ]
-  },
-  {
-    id: 'profile',
+    id: 'personal-profile',
     name: 'GitHub Profile README',
-    icon: '??',
-    description: 'Personal bio, skill badges, dynamic GitHub stats cards, social links',
+    description: 'A personal profile README with stats and social links.',
     sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'Hi there, I\'m Alex ??',
-          tagline: 'Passionate Fullstack Developer & Open Source Enthusiast based in San Francisco, CA.',
-          align: 'center',
-          showLogo: false,
-          repoOwner: 'alexdev',
-          repoName: 'alexdev'
-        }
-      },
-      {
-        id: 'sec-about',
-        type: SECTION_TYPES.ABOUT,
-        title: 'About Me',
-        enabled: true,
-        data: {
-          heading: 'About Me',
-          content: '- ?? Currently working on developer tooling and high-throughput web APIs\n- ?? Learning Rust and distributed systems\n- ?? Ask me about React, Node.js, and Cloud Infrastructure\n- ?? Reach out to me: `alex@example.com`\n- ? Fun fact: I brew my own specialty pour-over coffee ?'
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Languages & Tools',
-        enabled: true,
-        data: {
-          heading: 'Languages & Tools',
-          style: 'for-the-badge',
-          technologies: ['typescript', 'javascript', 'python', 'rust', 'react', 'nextjs', 'nodejs', 'postgres', 'docker', 'aws']
-        }
-      },
-      {
-        id: 'sec-custom-stats',
-        type: SECTION_TYPES.CUSTOM,
-        title: 'GitHub Stats Cards',
-        enabled: true,
-        data: {
-          heading: '?? GitHub Stats',
-          markdown: '<div align="center">\n  <img src="https://github-readme-stats.vercel.app/api?username=yourusername&show_icons=true&theme=radical" alt="GitHub Stats" />\n  <br/>\n  <img src="https://github-readme-streak-stats.herokuapp.com/?user=yourusername&theme=radical" alt="GitHub Streak" />\n</div>'
-        }
-      },
-      {
-        id: 'sec-author',
-        type: SECTION_TYPES.AUTHOR,
-        title: 'Connect With Me',
-        enabled: true,
-        data: {
-          heading: 'Connect With Me',
-          name: 'Alex Dev',
-          github: 'alexdev',
-          twitter: 'alex_dev',
-          linkedin: 'alex-developer',
-          email: 'alex@example.com',
-          buyMeACoffee: 'alexdev'
-        }
-      }
-    ]
-  },
-  {
-    id: 'ai',
-    name: 'AI / Machine Learning Project',
-    icon: '??',
-    description: 'Model architecture, dataset overview, GPU requirements, setup notebook, inference',
-    sections: [
-      {
-        id: 'sec-hero',
-        type: SECTION_TYPES.HERO,
-        title: 'Header & Title',
-        enabled: true,
-        data: {
-          projectName: 'NeuralVision-LLM',
-          tagline: 'Lightweight multi-modal transformer for high-accuracy document extraction on edge devices.',
-          align: 'center',
-          showLogo: false,
-          repoOwner: 'open-ai-lab',
-          repoName: 'neuralvision-llm'
-        }
-      },
-      {
-        id: 'sec-badges',
-        type: SECTION_TYPES.BADGES,
-        title: 'Badges',
-        enabled: true,
-        data: {
-          style: 'for-the-badge',
-          showStars: true,
-          showForks: true,
-          showIssues: true,
-          showLicense: true,
-          showRelease: true,
-          showLastCommit: false,
-          customBadges: [
-            { label: 'HuggingFace', message: 'Models', color: 'FFD21E', logo: 'huggingface' }
-          ]
-        }
-      },
-      {
-        id: 'sec-tech',
-        type: SECTION_TYPES.TECH_STACK,
-        title: 'Built With',
-        enabled: true,
-        data: {
-          heading: 'Built With',
-          style: 'for-the-badge',
-          technologies: ['python', 'pytorch', 'huggingface', 'fastapi', 'docker']
-        }
-      },
-      {
-        id: 'sec-install',
-        type: SECTION_TYPES.INSTALLATION,
-        title: 'Installation & Setup',
-        enabled: true,
-        data: {
-          heading: 'Installation',
-          prerequisites: 'Python 3.10+ and CUDA 12.0 compatible GPU (optional for CPU inference).',
-          packageManager: 'pip',
-          steps: [
-            { title: 'Create virtual environment', cmd: 'python -m venv venv && source venv/bin/activate' },
-            { title: 'Install dependencies', cmd: 'pip install -r requirements.txt' },
-            { title: 'Download model weights', cmd: 'python scripts/download_weights.py --model 7b-quantized' }
-          ]
-        }
-      },
-      {
-        id: 'sec-usage',
-        type: SECTION_TYPES.USAGE,
-        title: 'Inference Example',
-        enabled: true,
-        data: {
-          heading: 'Quick Inference',
-          codeLang: 'python',
-          code: 'from neuralvision import VisionModel\n\nmodel = VisionModel.from_pretrained("open-ai-lab/neuralvision-7b")\nresult = model.extract_document("sample_receipt.jpg")\n\nprint(result.to_json(indent=2))',
-          note: 'Benchmark: ~140ms per invoice image on an NVIDIA RTX 4090.'
-        }
-      },
-      {
-        id: 'sec-license',
-        type: SECTION_TYPES.LICENSE,
-        title: 'License',
-        enabled: true,
-        data: {
-          heading: 'License',
-          type: 'Apache-2.0',
-          year: '2026',
-          holder: 'NeuralVision Open Source'
-        }
-      }
+      sec(SECTION_TYPES.HERO, { projectName: "Hi, I'm Your Name", tagline: 'Software developer building things on the web.' }),
+      sec(SECTION_TYPES.ABOUT, { heading: 'About Me', content: "I'm a developer interested in..." }),
+      sec(SECTION_TYPES.TECH_STACK, { technologies: ['javascript', 'typescript', 'react', 'python', 'git'] }),
+      sec(SECTION_TYPES.STATS, { showTopLangs: true, showStreak: true }),
+      sec(SECTION_TYPES.AUTHOR, { heading: 'Connect With Me' })
     ]
   }
 ];
+function getTemplateById(id) {
+  return TEMPLATES.find(t => t.id === id) || null;
+}
 
 /* ==================== MODULE: services/githubApi.js ==================== */
 
-const GITHUB_TO_TECH_MAP = {
-  'typescript': { id: 'typescript', skill: 'ts' },
-  'javascript': { id: 'javascript', skill: 'js' },
-  'python': { id: 'python', skill: 'py' },
-  'rust': { id: 'rust', skill: 'rust' },
-  'go': { id: 'go', skill: 'go' },
-  'java': { id: 'java', skill: 'java' },
-  'c++': { id: 'cpp', skill: 'cpp' },
-  'c': { id: 'c', skill: 'c' },
-  'c#': { id: 'csharp', skill: 'cs' },
-  'php': { id: 'php', skill: 'php' },
-  'swift': { id: 'swift', skill: 'swift' },
-  'kotlin': { id: 'kotlin', skill: 'kotlin' },
-  'dart': { id: 'dart', skill: 'dart' },
-  'ruby': { id: 'ruby', skill: 'ruby' },
-  'html': { id: 'html5', skill: 'html' },
-  'css': { id: 'css3', skill: 'css' },
-  'scss': { id: 'sass', skill: 'sass' },
-  'shell': { id: 'shell', skill: 'bash' },
-  'vue': { id: 'vue', skill: 'vue' },
-  'svelte': { id: 'svelte', skill: 'svelte' },
-  'solidity': { id: 'solidity', skill: 'solidity' },
-  'elixir': { id: 'elixir', skill: 'elixir' },
-  'lua': { id: 'lua', skill: 'lua' },
-  'r': { id: 'r', skill: 'r' },
-  'scala': { id: 'scala', skill: 'scala' },
-  'dockerfile': { id: 'docker', skill: 'docker' }
-};
-
-// Map npm package names & keywords to Tech Catalog IDs
-const NPM_PACKAGE_MAP = {
-  'react': 'react',
-  'react-dom': 'react',
-  'next': 'nextjs',
-  'vue': 'vue',
-  'nuxt': 'nuxtjs',
-  'svelte': 'svelte',
-  '@sveltejs/kit': 'svelte',
-  '@angular/core': 'angular',
-  'tailwindcss': 'tailwind',
-  '@tailwindcss/postcss': 'tailwind',
-  'vite': 'vite',
-  'astro': 'astro',
-  'redux': 'redux',
-  '@reduxjs/toolkit': 'redux',
-  'react-native': 'reactnative',
-  'bootstrap': 'bootstrap',
-  'sass': 'sass',
-  'three': 'threejs',
-  'electron': 'electron',
-  'express': 'express',
-  'fastify': 'fastify',
-  '@nestjs/core': 'nestjs',
-  'graphql': 'graphql',
-  'prisma': 'prisma',
-  '@prisma/client': 'prisma',
-  'drizzle-orm': 'drizzle',
-  'mongoose': 'mongodb',
-  'pg': 'postgres',
-  'mysql2': 'mysql',
-  'redis': 'redis',
-  'ioredis': 'redis',
-  'sqlite3': 'sqlite',
-  '@supabase/supabase-js': 'supabase',
-  'firebase': 'firebase',
-  'jest': 'jest',
-  'vitest': 'vitest',
-  'cypress': 'cypress',
-  'playwright': 'playwright',
-  '@playwright/test': 'playwright',
-  'eslint': 'eslint',
-  'prettier': 'prettier',
-  'typescript': 'typescript'
-};
-
-// Map Python packages to Tech Catalog IDs
-const PYTHON_PACKAGE_MAP = {
-  'fastapi': 'fastapi',
-  'flask': 'flask',
-  'django': 'django',
-  'torch': 'pytorch',
-  'pytorch': 'pytorch',
-  'tensorflow': 'tensorflow',
-  'pytest': 'vitest',
-  'redis': 'redis',
-  'psycopg2': 'postgres',
-  'pymongo': 'mongodb',
-  'sqlalchemy': 'sqlalchemy',
-  'docker': 'docker'
-};
-
-// Map Rust crates to Tech Catalog IDs
-const RUST_CRATE_MAP = {
-  'tokio': 'rust',
-  'actix-web': 'rust',
-  'axum': 'rust',
-  'serde': 'rust',
-  'diesel': 'database',
-  'sqlx': 'database',
-  'tauri': 'rust'
-};
-
-// Map Go modules to Tech Catalog IDs
-const GO_MODULE_MAP = {
-  'gin-gonic/gin': 'go',
-  'gofiber/fiber': 'go',
-  'labstack/echo': 'go',
-  'gorm.io/gorm': 'database'
-};
+const CACHE_PREFIX = 'readmify_scan_';
+const CACHE_TTL_MS = 30 * 60 * 1000;
 function parseGitHubRepoInput(input) {
-  if (!input || typeof input !== 'string') return null;
-  const clean = input.trim().replace(/\/$/, '');
-
-  // Format: https://github.com/owner/repo or http://...
-  const urlMatch = clean.match(/github\.com\/([^\/]+)\/([^\/\?#]+)/);
-  if (urlMatch) {
-    return { owner: urlMatch[1], repo: urlMatch[2].replace(/\.git$/, '') };
-  }
-
-  // Format: git@github.com:owner/repo.git
-  const gitSshMatch = clean.match(/git@github\.com:([^\/]+)\/([^\/\?#]+)/);
-  if (gitSshMatch) {
-    return { owner: gitSshMatch[1], repo: gitSshMatch[2].replace(/\.git$/, '') };
-  }
-
-  // Format: owner/repo
-  const slashMatch = clean.match(/^([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/);
-  if (slashMatch) {
-    return { owner: slashMatch[1], repo: slashMatch[2].replace(/\.git$/, '') };
-  }
-
+  if (!input) return null;
+  const trimmed = input.trim().replace(/\.git$/, '').replace(/\/$/, '');
+  const urlMatch = trimmed.match(/github\.com\/([^/\s]+)\/([^/\s]+)/i);
+  if (urlMatch) return { owner: urlMatch[1], repo: urlMatch[2] };
+  const shortMatch = trimmed.match(/^([\w.-]+)\/([\w.-]+)$/);
+  if (shortMatch) return { owner: shortMatch[1], repo: shortMatch[2] };
   return null;
 }
 
-async function fetchRawFile(owner, repo, branch, filePath) {
-  const rawUrl = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${filePath}`;
+function readCache(key) {
   try {
-    const res = await fetch(rawUrl);
-    if (res.ok) {
-      return await res.text();
-    }
-  } catch (err) {
-    // raw fetch failed, fallback to API
-  }
-
-  try {
-    const apiRes = await fetch(
-      `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${filePath}?ref=${encodeURIComponent(branch)}`,
-      { headers: { 'Accept': 'application/vnd.github.raw+json' } }
-    );
-    if (apiRes.ok) {
-      return await apiRes.text();
-    }
-  } catch (err) {
-    // ignore
-  }
-
-  return null;
-}
-
-function parseEnvContent(envText) {
-  if (!envText) return [];
-  const lines = envText.split('\n');
-  const vars = [];
-  let pendingComment = '';
-
-  for (let line of lines) {
-    line = line.trim();
-    if (!line) {
-      pendingComment = '';
-      continue;
-    }
-    if (line.startsWith('#')) {
-      const commentText = line.replace(/^#+\s*/, '').trim();
-      if (commentText) {
-        pendingComment = pendingComment ? `${pendingComment} ${commentText}` : commentText;
-      }
-      continue;
-    }
-
-    const eqIdx = line.indexOf('=');
-    if (eqIdx !== -1) {
-      const key = line.substring(0, eqIdx).trim();
-      let val = line.substring(eqIdx + 1).trim().replace(/^['"]|['"]$/g, '');
-      const commentSplit = val.split(/\s+#\s+/);
-      let inlineComment = '';
-      if (commentSplit.length > 1) {
-        val = commentSplit[0].trim();
-        inlineComment = commentSplit.slice(1).join(' ').trim();
-      }
-
-      const desc = inlineComment || pendingComment || `Configuration key for ${key}`;
-      const isRequired = val === '' || val.includes('required') || val.includes('change_me') || val.includes('your_');
-
-      vars.push({
-        key,
-        desc,
-        default: val || '-',
-        required: isRequired
-      });
-      pendingComment = '';
-    }
-  }
-
-  return vars;
-}
-
-function buildAsciiDirectoryTree(filePaths) {
-  if (!filePaths || !filePaths.length) return '';
-
-  const ignoredPrefixes = [
-    'node_modules/', '.git/', '.next/', 'dist/', 'build/', 'target/',
-    '__pycache__/', 'venv/', '.venv/', '.cache/', '.vscode/', '.idea/',
-    'vendor/', '.turbo/', 'coverage/', '.docusaurus/', '.output/'
-  ];
-
-  const filteredPaths = filePaths.filter(p => !ignoredPrefixes.some(ign => p.startsWith(ign)));
-
-  // Build tree node hierarchy
-  const root = {};
-  for (const p of filteredPaths) {
-    const parts = p.split('/');
-    if (parts.length > 3) continue; // limit depth to 3 levels for clean presentation
-    let curr = root;
-    for (const part of parts) {
-      if (!curr[part]) curr[part] = {};
-      curr = curr[part];
-    }
-  }
-
-  const lines = ['.'];
-  function formatNode(node, prefix = '') {
-    const keys = Object.keys(node).sort((a, b) => {
-      const aIsDir = Object.keys(node[a]).length > 0;
-      const bIsDir = Object.keys(node[b]).length > 0;
-      if (aIsDir && !bIsDir) return -1;
-      if (!aIsDir && bIsDir) return 1;
-      return a.localeCompare(b);
-    });
-
-    keys.forEach((key, index) => {
-      const isLast = index === keys.length - 1;
-      const pointer = isLast ? '└── ' : '├── ';
-      const isDir = Object.keys(node[key]).length > 0;
-      lines.push(`${prefix}${pointer}${key}${isDir ? '/' : ''}`);
-      if (isDir) {
-        formatNode(node[key], `${prefix}${isLast ? '    ' : '│   '}`);
-      }
-    });
-  }
-
-  formatNode(root);
-  return lines.slice(0, 35).join('\n'); // keep max 35 lines
-}
-
-function synthesizeSmartFeatures(analysis) {
-  const { languages, matchedTechIds, packageManager, hasDocker, hasCi, hasEnv, envVars, scripts, repoName } = analysis;
-  const features = [];
-
-  const techSet = new Set(matchedTechIds);
-
-  // 1. Framework / Core Architecture
-  if (techSet.has('nextjs')) {
-    features.push({
-      icon: '⚡',
-      title: 'Next.js App Router Architecture',
-      desc: 'High-performance React application leveraging modern server components, streaming SSR, and optimized client bundles.'
-    });
-  } else if (techSet.has('react')) {
-    features.push({
-      icon: '⚛️',
-      title: 'Modern React Interface',
-      desc: 'Component-driven, reactive user interface engineered for responsiveness and high performance.'
-    });
-  } else if (techSet.has('vue') || techSet.has('nuxtjs')) {
-    features.push({
-      icon: '💚',
-      title: 'Vue / Nuxt Reactive Architecture',
-      desc: 'Progressive, intuitive frontend architecture with reactive state management and fast rendering.'
-    });
-  } else if (techSet.has('fastapi')) {
-    features.push({
-      icon: '⚡',
-      title: 'FastAPI High-Performance Engine',
-      desc: 'Asynchronous REST APIs with automatic OpenAPI/Swagger documentation and strict type validation.'
-    });
-  } else if (techSet.has('express')) {
-    features.push({
-      icon: '🚀',
-      title: 'Lightweight Express.js Backend',
-      desc: 'Modular, event-driven RESTful architecture with clean middleware handling and routing.'
-    });
-  } else if (techSet.has('rust')) {
-    features.push({
-      icon: '🦀',
-      title: 'Blazing-Fast Rust Foundation',
-      desc: 'Zero-cost abstractions, memory safety without garbage collection, and concurrency support.'
-    });
-  } else if (techSet.has('go')) {
-    features.push({
-      icon: '🐹',
-      title: 'Concurrent Go Architecture',
-      desc: 'High-throughput networking and minimal memory footprint powered by lightweight Goroutines.'
-    });
-  }
-
-  // 2. Styling / UI Design
-  if (techSet.has('tailwind')) {
-    features.push({
-      icon: '🎨',
-      title: 'Tailwind CSS Design System',
-      desc: 'Utility-first modern responsive styling with seamless dark/light theme adaptability.'
-    });
-  }
-
-  // 3. Type Safety
-  if (techSet.has('typescript')) {
-    features.push({
-      icon: '🛡️',
-      title: 'Strict TypeScript Safety',
-      desc: 'End-to-end type safety, autocompletion, and robust compile-time contract verification.'
-    });
-  }
-
-  // 4. Database & ORM
-  if (techSet.has('prisma')) {
-    features.push({
-      icon: '🗄️',
-      title: 'Type-Safe Prisma ORM',
-      desc: 'Automated database migrations, declarative schemas, and type-safe query generation.'
-    });
-  } else if (techSet.has('postgres')) {
-    features.push({
-      icon: '🐘',
-      title: 'PostgreSQL Relational Storage',
-      desc: 'ACID-compliant relational database management with advanced indexing and JSON capabilities.'
-    });
-  } else if (techSet.has('mongodb')) {
-    features.push({
-      icon: '🍃',
-      title: 'Scalable Document Storage',
-      desc: 'Flexible NoSQL document model powered by MongoDB for rapid development.'
-    });
-  }
-
-  // 5. Containerization
-  if (hasDocker) {
-    features.push({
-      icon: '🐳',
-      title: 'Docker Containerization',
-      desc: 'Instant containerized local environment and production deployment via Docker.'
-    });
-  }
-
-  // 6. Automated Testing
-  if (techSet.has('vitest') || techSet.has('jest') || scripts.test) {
-    features.push({
-      icon: '🧪',
-      title: 'Automated Test Suite',
-      desc: 'Comprehensive unit, integration, and regression testing suite for reliability and stability.'
-    });
-  }
-
-  // 7. CI/CD Workflows
-  if (hasCi) {
-    features.push({
-      icon: '🔄',
-      title: 'Continuous Integration & Delivery',
-      desc: 'Automated GitHub Actions workflows verifying code quality, builds, and test suites on every push.'
-    });
-  }
-
-  // Fallback defaults if few detected
-  if (features.length < 3) {
-    features.push({
-      icon: '🎯',
-      title: 'Developer-Friendly Setup',
-      desc: 'Clean repository layout with straightforward configuration and clear dependencies.'
-    });
-    features.push({
-      icon: '📦',
-      title: 'Lightweight & Modular',
-      desc: 'Built with minimal dependencies to ensure fast build times and easy extensibility.'
-    });
-  }
-
-  return features.slice(0, 6);
-}
-
-async function fetchJsonSafe(url) {
-  try {
-    const r = await fetch(url);
-    if (!r.ok) return null;
-    return await r.json();
-  } catch (e) { return null; }
-}
-
-function getScanCache(key) {
-  try {
-    const raw = localStorage.getItem('readmify_last_scan:' + key);
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (Date.now() - (parsed.at || 0) > 1000 * 60 * 30) return null;
-    return parsed.data;
-  } catch (e) { return null; }
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > CACHE_TTL_MS) return null;
+    return data;
+  } catch (e) {
+    return null;
+  }
 }
 
-function setScanCache(key, data) {
-  try { localStorage.setItem('readmify_last_scan:' + key, JSON.stringify({ at: Date.now(), data })); } catch (e) {}
-}
-async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () => {}) {
-  onProgress({ step: 1, message: `Connecting to GitHub API for ${owner}/${repo}...` });
-
-  // 1. Fetch Repo Metadata & Languages in parallel (+ contributors, release, last commit — all optional)
-  const [repoRes, langRes] = await Promise.all([
-    fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`),
-    fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`)
-  ]);
-
-  if (!repoRes.ok) {
-    if (repoRes.status === 404) {
-      throw new Error(`Repository "${owner}/${repo}" was not found or is private.`);
-    } else if (repoRes.status === 403) {
-      throw new Error('GitHub API rate limit reached. Please wait a moment or try again.');
-    }
-    throw new Error(`GitHub API returned error ${repoRes.status}`);
-  }
-
-  const repoData = await repoRes.json();
-  const langData = langRes.ok ? await langRes.json() : {};
-  const defaultBranch = repoData.default_branch || 'main';
-
-  // Calculate languages
-  const totalBytes = Object.values(langData).reduce((a, b) => a + b, 0);
-  const languages = [];
-  const matchedTechSet = new Set();
-  const skillSlugs = [];
-
-  for (const [langName, bytes] of Object.entries(langData)) {
-    const pct = totalBytes > 0 ? Math.round((bytes / totalBytes) * 100) : 0;
-    languages.push({ name: langName, bytes, percentage: pct });
-
-    const mapped = GITHUB_TO_TECH_MAP[langName.toLowerCase()];
-    if (mapped) {
-      matchedTechSet.add(mapped.id);
-      if (mapped.skill) skillSlugs.push(mapped.skill);
-    }
-  }
-
-  onProgress({ step: 2, message: `Scanning repository file tree on branch "${defaultBranch}"...` });
-
-  // 2. Fetch Recursive Git Tree
-  let filePaths = [];
+function writeCache(key, data) {
   try {
-    const treeRes = await fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/trees/${encodeURIComponent(defaultBranch)}?recursive=1`);
-    if (treeRes.ok) {
-      const treeData = await treeRes.json();
-      if (Array.isArray(treeData.tree)) {
-        filePaths = treeData.tree.map(item => item.path);
-      }
-    }
-  } catch (err) {
-    console.warn('Could not fetch recursive git tree:', err);
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ ts: Date.now(), data }));
+  } catch (e) { /* storage full or unavailable — non-fatal */ }
+}
+
+async function fetchJson(url) {
+  const res = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
+  if (!res.ok) throw new Error(`GitHub API ${res.status} for ${url}`);
+  return res.json();
+}
+
+async function fetchRawFile(owner, repo, branch, path) {
+  try {
+    const res = await fetch(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}`);
+    if (!res.ok) return null;
+    return await res.text();
+  } catch (e) {
+    return null;
   }
+}
+async function fetchGitHubRepoFullDetails(owner, repo, onProgress) {
+  const cacheKey = `${owner}/${repo}`.toLowerCase();
+  const cached = readCache(cacheKey);
+  if (cached) return cached;
 
-  onProgress({ step: 3, message: `Analyzing ${filePaths.length || 'project'} files & manifests...` });
+  const report = (msg) => { if (typeof onProgress === 'function') onProgress({ message: msg }); };
 
-  // Detect ecosystem presence from file paths
-  const hasPackageJson = filePaths.some(p => p === 'package.json');
-  const hasPnpmLock = filePaths.some(p => p === 'pnpm-lock.yaml');
-  const hasYarnLock = filePaths.some(p => p === 'yarn.lock');
-  const hasBunLock = filePaths.some(p => p === 'bun.lockb' || p === 'bun.lock');
-  const hasNpmLock = filePaths.some(p => p === 'package-lock.json');
-  const hasTsConfig = filePaths.some(p => p.startsWith('tsconfig') || p.endsWith('.ts') || p.endsWith('.tsx'));
-  const hasTailwind = filePaths.some(p => p.includes('tailwind.config') || p.includes('tailwind.css'));
-  const hasDocker = filePaths.some(p => p.toLowerCase().includes('dockerfile') || p.includes('docker-compose'));
-  const hasEnvExample = filePaths.find(p => p === '.env.example' || p === '.env.sample' || p === '.env.template');
-  const hasCargo = filePaths.some(p => p === 'Cargo.toml');
-  const hasGoMod = filePaths.some(p => p === 'go.mod');
-  const hasRequirements = filePaths.some(p => p === 'requirements.txt');
-  const hasPyproject = filePaths.some(p => p === 'pyproject.toml');
+  report('Fetching repo metadata...');
+  const repoInfo = await fetchJson(`https://api.github.com/repos/${owner}/${repo}`);
 
-  // CI Workflows
-  const workflowFiles = filePaths
-    .filter(p => p.startsWith('.github/workflows/') && (p.endsWith('.yml') || p.endsWith('.yaml')))
-    .map(p => p.replace('.github/workflows/', ''));
+  report('Fetching languages...');
+  let languages = {};
+  try { languages = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/languages`); } catch (e) { /* optional */ }
 
-  if (hasTsConfig) matchedTechSet.add('typescript');
-  if (hasTailwind) matchedTechSet.add('tailwind');
-  if (hasDocker) matchedTechSet.add('docker');
-  if (workflowFiles.length > 0) matchedTechSet.add('githubactions');
+  const branch = repoInfo.default_branch || 'main';
 
-  // Determine Package Manager
-  let packageManager = 'npm';
-  if (hasBunLock) packageManager = 'bun';
-  else if (hasPnpmLock) packageManager = 'pnpm';
-  else if (hasYarnLock) packageManager = 'yarn';
-  else if (hasCargo) packageManager = 'cargo';
-  else if (hasGoMod) packageManager = 'go';
-  else if (hasRequirements || hasPyproject) packageManager = 'pip';
+  report('Reading package manifest...');
+  let packageJson = null;
+  const pkgRaw = await fetchRawFile(owner, repo, branch, 'package.json');
+  if (pkgRaw) { try { packageJson = JSON.parse(pkgRaw); } catch (e) { /* malformed, skip */ } }
 
-  if (packageManager === 'pnpm') matchedTechSet.add('pnpm');
-  if (packageManager === 'bun') matchedTechSet.add('bun');
-  if (packageManager === 'yarn') matchedTechSet.add('yarn');
+  const hasRequirementsTxt = !!(await fetchRawFile(owner, repo, branch, 'requirements.txt'));
+  const hasCargoToml = !!(await fetchRawFile(owner, repo, branch, 'Cargo.toml'));
+  const hasGoMod = !!(await fetchRawFile(owner, repo, branch, 'go.mod'));
 
-  // 3. Deep manifest fetching
-  let packageJsonData = null;
-  let parsedEnvVars = [];
-  let scripts = {};
+  report('Fetching contributors...');
+  let contributors = [];
+  try { contributors = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/contributors?per_page=6`); } catch (e) { /* optional */ }
 
-  // Fetch package.json if present
-  if (hasPackageJson) {
-    onProgress({ step: 4, message: 'Inspecting package.json dependencies and scripts...' });
-    const pkgRaw = await fetchRawFile(owner, repo, defaultBranch, 'package.json');
-    if (pkgRaw) {
-      try {
-        packageJsonData = JSON.parse(pkgRaw);
-        scripts = packageJsonData.scripts || {};
+  report('Fetching latest release...');
+  let latestRelease = null;
+  try { latestRelease = await fetchJson(`https://api.github.com/repos/${owner}/${repo}/releases/latest`); } catch (e) { /* no releases, fine */ }
 
-        const allDeps = {
-          ...(packageJsonData.dependencies || {}),
-          ...(packageJsonData.devDependencies || {})
-        };
+  const topLanguages = Object.keys(languages).slice(0, 8);
+  const matchedTechIds = guessTechIds(topLanguages, packageJson);
 
-        for (const depName of Object.keys(allDeps)) {
-          const lower = depName.toLowerCase();
-          if (NPM_PACKAGE_MAP[lower]) {
-            matchedTechSet.add(NPM_PACKAGE_MAP[lower]);
-          }
-        }
-      } catch (e) {
-        console.warn('Failed to parse package.json:', e);
-      }
-    }
-  }
-
-  // Fetch Python requirements or pyproject if present
-  if (hasRequirements || hasPyproject) {
-    onProgress({ step: 4, message: 'Inspecting Python dependencies...' });
-    const reqText = hasRequirements ? await fetchRawFile(owner, repo, defaultBranch, 'requirements.txt') : '';
-    const pyprojText = hasPyproject ? await fetchRawFile(owner, repo, defaultBranch, 'pyproject.toml') : '';
-    const combined = `${reqText || ''}\n${pyprojText || ''}`.toLowerCase();
-
-    for (const [pkg, techId] of Object.entries(PYTHON_PACKAGE_MAP)) {
-      if (combined.includes(pkg)) {
-        matchedTechSet.add(techId);
-      }
-    }
-  }
-
-  // Fetch Rust Cargo.toml if present
-  if (hasCargo) {
-    onProgress({ step: 4, message: 'Inspecting Cargo.toml crates...' });
-    const cargoRaw = await fetchRawFile(owner, repo, defaultBranch, 'Cargo.toml');
-    if (cargoRaw) {
-      const lower = cargoRaw.toLowerCase();
-      for (const [crate, techId] of Object.entries(RUST_CRATE_MAP)) {
-        if (lower.includes(crate)) matchedTechSet.add(techId);
-      }
-    }
-  }
-
-  // Fetch Go go.mod if present
-  if (hasGoMod) {
-    onProgress({ step: 4, message: 'Inspecting go.mod modules...' });
-    const goModRaw = await fetchRawFile(owner, repo, defaultBranch, 'go.mod');
-    if (goModRaw) {
-      const lower = goModRaw.toLowerCase();
-      for (const [mod, techId] of Object.entries(GO_MODULE_MAP)) {
-        if (lower.includes(mod)) matchedTechSet.add(techId);
-      }
-    }
-  }
-
-  // Fetch .env.example if present
-  if (hasEnvExample) {
-    onProgress({ step: 5, message: `Parsing environment variables from ${hasEnvExample}...` });
-    const envRaw = await fetchRawFile(owner, repo, defaultBranch, hasEnvExample);
-    if (envRaw) {
-      parsedEnvVars = parseEnvContent(envRaw);
-    }
-  }
-
-  onProgress({ step: 6, message: 'Mapping directory architecture and synthesising features...' });
-
-  // 4. Generate Project Structure ASCII Tree
-  const asciiTree = buildAsciiDirectoryTree(filePaths);
-
-  // 5. Generate tailored installation steps
-  const installSteps = [];
-  installSteps.push({
-    title: 'Clone the repository',
-    cmd: `git clone https://github.com/${owner}/${repo}.git\ncd ${repo}`
-  });
-
-  if (hasPackageJson) {
-    const installCmd = packageManager === 'yarn' ? 'yarn install' : `${packageManager} install`;
-    installSteps.push({
-      title: 'Install dependencies',
-      cmd: installCmd
-    });
-
-    // Dev/Start script
-    if (scripts.dev) {
-      const devCmd = packageManager === 'yarn' ? 'yarn dev' : `${packageManager} run dev`;
-      installSteps.push({
-        title: 'Start development server',
-        cmd: devCmd
-      });
-    } else if (scripts.start) {
-      const startCmd = packageManager === 'yarn' ? 'yarn start' : `${packageManager} start`;
-      installSteps.push({
-        title: 'Start the application',
-        cmd: startCmd
-      });
-    }
-
-    if (scripts.test) {
-      installSteps.push({
-        title: 'Run test suite',
-        cmd: `${packageManager} test`
-      });
-    }
-  } else if (hasRequirements || hasPyproject) {
-    installSteps.push({
-      title: 'Set up Python virtual environment',
-      cmd: 'python -m venv venv\nsource venv/bin/activate  # On Windows: .\\venv\\Scripts\\activate'
-    });
-    if (hasRequirements) {
-      installSteps.push({
-        title: 'Install dependencies',
-        cmd: 'pip install -r requirements.txt'
-      });
-    }
-    if (matchedTechSet.has('fastapi')) {
-      installSteps.push({
-        title: 'Start FastAPI server',
-        cmd: 'uvicorn main:app --reload'
-      });
-    } else if (matchedTechSet.has('flask')) {
-      installSteps.push({
-        title: 'Start Flask application',
-        cmd: 'flask run'
-      });
-    } else if (matchedTechSet.has('django')) {
-      installSteps.push({
-        title: 'Run Django migrations and start server',
-        cmd: 'python manage.py migrate\npython manage.py runserver'
-      });
-    } else {
-      installSteps.push({
-        title: 'Run application',
-        cmd: 'python main.py'
-      });
-    }
-  } else if (hasCargo) {
-    installSteps.push({
-      title: 'Build project with Cargo',
-      cmd: 'cargo build --release'
-    });
-    installSteps.push({
-      title: 'Run application',
-      cmd: 'cargo run'
-    });
+  let installSteps = [{ title: 'Clone the repository', cmd: `git clone https://github.com/${owner}/${repo}.git\ncd ${repo}` }];
+  if (packageJson) {
+    installSteps.push({ title: 'Install dependencies', cmd: 'npm install' });
+    if (packageJson.scripts?.dev) installSteps.push({ title: 'Start the dev server', cmd: 'npm run dev' });
+    else if (packageJson.scripts?.start) installSteps.push({ title: 'Start the app', cmd: 'npm start' });
+  } else if (hasRequirementsTxt) {
+    installSteps.push({ title: 'Install dependencies', cmd: 'pip install -r requirements.txt' });
+  } else if (hasCargoToml) {
+    installSteps.push({ title: 'Build the project', cmd: 'cargo build --release' });
   } else if (hasGoMod) {
-    installSteps.push({
-      title: 'Download dependencies',
-      cmd: 'go mod download'
-    });
-    installSteps.push({
-      title: 'Run application',
-      cmd: 'go run .'
-    });
+    installSteps.push({ title: 'Build the project', cmd: 'go build ./...' });
   }
-
-  // 6. Prerequisites definition
-  let prerequisites = '';
-  if (hasPackageJson) {
-    const nodeEng = packageJsonData?.engines?.node ? ` (Node.js ${packageJsonData.engines.node})` : ' (Node.js 18+)';
-    prerequisites = `${packageManager.toUpperCase()}${nodeEng} and Git installed on your system.`;
-  } else if (hasRequirements || hasPyproject) {
-    prerequisites = 'Python 3.9+ and Git installed on your system.';
-  } else if (hasCargo) {
-    prerequisites = 'Rust and Cargo toolchain (latest stable) installed.';
-  } else if (hasGoMod) {
-    prerequisites = 'Go 1.20+ installed on your system.';
-  } else {
-    prerequisites = 'Git installed on your system.';
-  }
-
-  // 7. Workflow status badges
-  const workflowBadges = workflowFiles.map(file => {
-    const name = file.replace(/\.(yml|yaml)$/, '').replace(/[-_]/g, ' ').toUpperCase();
-    return {
-      name,
-      file,
-      url: `https://github.com/${owner}/${repo}/actions/workflows/${file}`
-    };
-  });
-
-  // 8. Synthesize smart features
-  const matchedTechIds = Array.from(matchedTechSet);
-  const smartFeatures = synthesizeSmartFeatures({
-    languages,
-    matchedTechIds,
-    packageManager,
-    hasDocker,
-    hasCi: workflowFiles.length > 0,
-    hasEnv: parsedEnvVars.length > 0,
-    envVars: parsedEnvVars,
-    scripts,
-    repoName: repoData.name || repo
-  });
-
-  onProgress({ step: 7, message: 'Fetching contributors, releases & social card…' });
-
-  // 9. Optional enrichment (never blocks offline fallback)
-  const cacheKey = `${owner}/${repo}`;
-  let extra = getScanCache(cacheKey);
-  if (!extra) {
-    const [contribs, latestRelease, lastCommit] = await Promise.all([
-      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contributors?per_page=5`),
-      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/releases/latest`),
-      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits?per_page=1`)
-    ]);
-    extra = {
-      topContributors: Array.isArray(contribs) ? contribs.slice(0, 5).map(c => ({ login: c.login, url: c.html_url, contributions: c.contributions })) : [],
-      latestRelease: latestRelease?.tag_name || '',
-      lastCommitDate: lastCommit?.[0]?.commit?.committer?.date || ''
-    };
-    setScanCache(cacheKey, extra);
-  }
-
-  onProgress({ step: 7, message: 'Analysis complete! Ready to generate README.' });
-
-  const ogImage = `https://opengraph.githubassets.com/1/${encodeURIComponent(repoData.owner?.login || owner)}/${encodeURIComponent(repoData.name || repo)}`;
 
   const result = {
-    owner: repoData.owner?.login || owner,
-    repo: repoData.name || repo,
-    description: repoData.description || packageJsonData?.description || '',
-    stars: repoData.stargazers_count || 0,
-    forks: repoData.forks_count || 0,
-    openIssues: repoData.open_issues_count || 0,
-    license: repoData.license?.spdx_id || repoData.license?.name || packageJsonData?.license || 'MIT',
-    topics: repoData.topics || packageJsonData?.keywords || [],
-    defaultBranch,
-    homepage: repoData.homepage || packageJsonData?.homepage || '',
-    languages,
+    owner, repo,
+    description: repoInfo.description || '',
+    homepage: repoInfo.homepage || '',
+    stars: repoInfo.stargazers_count || 0,
+    defaultBranch: branch,
+    topLanguages,
     matchedTechIds,
-    skillSlugs,
-    packageManager,
-    prerequisites,
+    packageJson,
     installSteps,
-    envVars: parsedEnvVars,
-    features: smartFeatures,
-    projectTree: asciiTree,
-    workflowBadges,
-    hasDocker,
-    totalFiles: filePaths.length,
-    rawFilesScanned: (hasPackageJson ? 1 : 0) + (hasEnvExample ? 1 : 0) + (hasCargo ? 1 : 0) + (hasGoMod ? 1 : 0) + (hasRequirements ? 1 : 0),
-    topContributors: extra.topContributors || [],
-    latestRelease: extra.latestRelease || '',
-    lastCommitDate: extra.lastCommitDate || '',
-    ogImage
+    contributors: (contributors || []).map(c => ({ login: c.login, avatarUrl: c.avatar_url, url: c.html_url })),
+    latestVersion: latestRelease?.tag_name || null,
+    license: repoInfo.license?.spdx_id || null
   };
-  setScanCache(cacheKey + ':full', result);
+
+  writeCache(cacheKey, result);
   return result;
 }
 
-async function fetchGitHubRepoDetails(owner, repo) {
-  return await fetchGitHubRepoFullDetails(owner, repo);
+const LANGUAGE_TO_TECH = {
+  JavaScript: 'javascript', TypeScript: 'typescript', Python: 'python', Java: 'java',
+  'C#': 'csharp', Go: 'go', Rust: 'rust', PHP: 'php', Ruby: 'ruby', Kotlin: 'kotlin',
+  Swift: 'swift', 'C++': 'cplusplus', HTML: 'html5', CSS: 'css3', Dart: 'dart'
+};
+
+const PKG_DEP_TO_TECH = {
+  react: 'react', vue: 'vuejs', '@angular/core': 'angular', svelte: 'svelte',
+  next: 'nextjs', nuxt: 'nuxtjs', tailwindcss: 'tailwindcss', bootstrap: 'bootstrap',
+  express: 'express', '@nestjs/core': 'nestjs', graphql: 'graphql', mongoose: 'mongodb',
+  pg: 'postgresql', mysql2: 'mysql', redis: 'redis', firebase: 'firebase', jest: 'jest',
+  eslint: 'eslint', webpack: 'webpack', vite: 'vite'
+};
+
+function guessTechIds(topLanguages, packageJson) {
+  const ids = new Set();
+  for (const lang of topLanguages) {
+    if (LANGUAGE_TO_TECH[lang]) ids.add(LANGUAGE_TO_TECH[lang]);
+  }
+  if (packageJson) {
+    ids.add('nodejs');
+    const deps = { ...(packageJson.dependencies || {}), ...(packageJson.devDependencies || {}) };
+    for (const dep of Object.keys(deps)) {
+      if (PKG_DEP_TO_TECH[dep]) ids.add(PKG_DEP_TO_TECH[dep]);
+    }
+  }
+  return Array.from(ids);
 }
 
 /* ==================== MODULE: services/npmApi.js ==================== */
 
-const NPM_REGISTRY = 'https://registry.npmjs.org';
-const NPM_DOWNLOADS = 'https://api.npmjs.org/downloads/point/last-month';
-
-async function fetchJson(url, timeoutMs = 6000) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), timeoutMs);
-  try {
-    const res = await fetch(url, { signal: ctrl.signal });
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (e) {
-    return null;
-  } finally {
-    clearTimeout(t);
-  }
-}
-async function enrichNpmPackage(pkgName) {
-  if (!pkgName) return null;
-  const safe = encodeURIComponent(pkgName);
-  const [meta, dl] = await Promise.all([
-    fetchJson(`${NPM_REGISTRY}/${safe}/latest`),
-    fetchJson(`${NPM_DOWNLOADS}/${safe}`)
-  ]);
-  if (!meta && !dl) return null;
+async function enrichNpmPackage(packageName) {
+  if (!packageName || !packageName.trim()) return null;
+  const name = packageName.trim();
+  const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/latest`);
+  if (!res.ok) throw new Error(`Package "${name}" not found on npm`);
+  const data = await res.json();
   return {
-    name: pkgName,
-    version: meta?.version || '',
-    description: meta?.description || '',
-    homepage: meta?.homepage || '',
-    keywords: Array.isArray(meta?.keywords) ? meta.keywords.slice(0, 8) : [],
-    downloads: dl?.downloads || 0
+    name: data.name,
+    version: data.version,
+    description: data.description || ''
   };
 }
-function npmBadgeUrls(pkgName, style = 'for-the-badge') {
-  const safe = encodeURIComponent(pkgName);
+function npmBadgeUrls(packageName, style = 'for-the-badge') {
+  const encoded = encodeURIComponent(packageName);
   return {
-    version: `https://img.shields.io/npm/v/${safe}?style=${style}`,
-    downloads: `https://img.shields.io/npm/dw/${safe}?style=${style}`
+    version: `https://img.shields.io/npm/v/${encoded}.svg?style=${style}&logo=npm`,
+    downloads: `https://img.shields.io/npm/dm/${encoded}.svg?style=${style}&logo=npm`,
+    packageUrl: `https://www.npmjs.com/package/${packageName}`
   };
 }
 
 /* ==================== MODULE: utils/exportUtils.js ==================== */
 
-async function copyToClipboard(text, successMessage = 'README copied to clipboard!') {
+async function copyToClipboard(text, successMessage = 'Copied to clipboard!') {
   try {
-    if (navigator.clipboard && window.isSecureContext) {
+    if (window.isSecureContext && navigator.clipboard) {
       await navigator.clipboard.writeText(text);
     } else {
-      // Fallback for older browsers or insecure origins
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
       document.execCommand('copy');
-      textArea.remove();
+      document.body.removeChild(ta);
     }
     showToast(successMessage, 'success');
     fireConfetti();
     return true;
-  } catch (err) {
-    console.error('Failed to copy text: ', err);
-    showToast('Failed to copy to clipboard', 'error');
+  } catch (e) {
+    console.error('Copy failed:', e);
+    showToast('Could not copy to clipboard', 'error');
     return false;
   }
 }
@@ -2580,375 +732,222 @@ function downloadReadmeFile(content, filename = 'README.md') {
   try {
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('README.md downloaded successfully!', 'success');
+    showToast(`${filename} downloaded!`, 'success');
     fireConfetti();
-  } catch (err) {
-    console.error('Download failed: ', err);
-    showToast('Download failed. Please try copying markdown instead.', 'error');
+  } catch (e) {
+    console.error('Download failed:', e);
+    showToast('Could not download file', 'error');
   }
 }
+
+const TOAST_ICONS = { success: '✓', error: '✕', info: 'i' };
+const TOAST_COLORS = { success: '#10B981', error: '#EF4444', info: '#71717A' };
 function showToast(message, type = 'info') {
-  let toastContainer = document.getElementById('readmify-toast-container');
-  if (!toastContainer) {
-    toastContainer = document.createElement('div');
-    toastContainer.id = 'readmify-toast-container';
-    toastContainer.className = 'fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none';
-    document.body.appendChild(toastContainer);
+  let container = document.getElementById('readmify-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'readmify-toast-container';
+    container.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none;';
+    document.body.appendChild(container);
   }
 
   const toast = document.createElement('div');
-  const icon = type === 'success' ? '?' : type === 'error' ? '?' : '??';
-  const borderCol = type === 'success' ? 'border-emerald-500/50 text-emerald-300' : type === 'error' ? 'border-rose-500/50 text-rose-300' : 'border-indigo-500/50 text-indigo-300';
+  const color = TOAST_COLORS[type] || TOAST_COLORS.info;
+  toast.style.cssText = `background:#18181b;color:#fafafa;border-left:3px solid ${color};padding:10px 14px;border-radius:6px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;max-width:320px;`;
+  toast.textContent = `${TOAST_ICONS[type] || ''} ${message}`.trim();
+  container.appendChild(toast);
 
-  toast.className = `flex items-center gap-3 px-4 py-3 bg-slate-900/95 border ${borderCol} rounded-xl shadow-2xl backdrop-blur-md text-sm font-medium transition-all duration-300 transform translate-y-4 opacity-0 pointer-events-auto`;
-  toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-
-  toastContainer.appendChild(toast);
-
-  // Trigger animation
   requestAnimationFrame(() => {
-    toast.classList.remove('translate-y-4', 'opacity-0');
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
   });
 
   setTimeout(() => {
-    toast.classList.add('translate-y-4', 'opacity-0');
-    setTimeout(() => toast.remove(), 300);
-  }, 3500);
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    setTimeout(() => toast.remove(), 250);
+  }, 3200);
 }
 function fireConfetti() {
   if (typeof window.confetti === 'function') {
     window.confetti({
-      particleCount: 70,
-      spread: 60,
+      particleCount: 60,
+      spread: 55,
       origin: { y: 0.8 },
-      colors: ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B']
+      colors: ['#fafafa', '#71717a', '#3b82f6', '#10b981', '#f59e0b']
     });
   }
 }
 
 /* ==================== MODULE: utils/markdownGenerator.js ==================== */
 
-const techByIdCache = new Map();
-function techById(id) {
-  if (techByIdCache.has(id)) return techByIdCache.get(id);
-  const found = TECH_CATALOG.find(t => t.id === id) || null;
-  if (techByIdCache.size > 500) techByIdCache.clear();
-  techByIdCache.set(id, found);
-  return found;
-}function generateMarkdown(sections) {
+function githubSlug(heading) {
+  return String(heading)
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-');
+}
+
+function headingOf(section) {
+  if (!section.enabled) return null;
+  const skip = [SECTION_TYPES.HERO, SECTION_TYPES.BADGES, SECTION_TYPES.TOC];
+  if (skip.includes(section.type)) return null;
+  const heading = section.data?.heading;
+  if (!heading) return null;
+  return heading;
+}
+function generateMarkdown(sections) {
   if (!sections || !Array.isArray(sections)) return '';
 
-  const chunks = [];
   const heroSection = sections.find(s => s.type === SECTION_TYPES.HERO && s.enabled);
-  const repoOwner = heroSection?.data?.repoOwner || 'yourusername';
-  const repoName = heroSection?.data?.repoName || 'your-repo';
+  const context = {
+    repoOwner: heroSection?.data?.repoOwner || 'yourusername',
+    repoName: heroSection?.data?.repoName || 'your-repo',
+    tocEntries: sections
+      .map(s => headingOf(s))
+      .filter(Boolean)
+      .map(h => ({ heading: h, anchor: githubSlug(h) }))
+  };
 
+  const chunks = [];
   for (const section of sections) {
     if (!section.enabled) continue;
-
-    const md = generateSectionMarkdown(section, { repoOwner, repoName });
-    if (md && md.trim().length > 0) {
-      chunks.push(md.trim());
-    }
+    const md = generateSectionMarkdown(section, context);
+    if (md && md.trim()) chunks.push(md.trim());
   }
-
   return chunks.join('\n\n') + '\n';
 }
 
-function generateSectionMarkdown(section, context) {
+function generateSectionMarkdown(section, ctx) {
   const { type, data } = section;
-  const { repoOwner, repoName } = context;
+  const { repoOwner, repoName } = ctx;
 
   switch (type) {
     case SECTION_TYPES.HERO: {
       const align = data.align || 'center';
-      const isCentered = align === 'center';
       const width = data.logoWidth || '100%';
-      const radius = data.logoRadius || '8px';
-      let logoTag = '';
+      let logo = '';
       if (data.showLogo && data.logoUrl) {
-        const rawImg = `<img src="${data.logoUrl}" alt="${data.projectName || 'Project'} Banner" width="${width}" style="border-radius: ${radius}; margin-bottom: 1rem; max-width: 100%;" />`;
-        const wrappedImg = data.logoLinkUrl ? `<a href="${data.logoLinkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
-        logoTag = `${wrappedImg}\n  <br/>`;
+        logo = `<img src="${data.logoUrl}" alt="${data.projectName || 'Project'} banner" width="${width}" />\n  <br/>`;
       }
-      // Optional capsule-render banner (opt-in, online-only progressive enhancement)
-      let capsuleTag = '';
-      if (data.showCapsuleBanner) {
-        const cType = data.capsuleType || 'wave';
-        const cColor = data.capsuleColor || 'auto';
-        const cText = encodeURIComponent(data.projectName || 'Project');
-        const cDesc = encodeURIComponent(data.tagline || '');
-        capsuleTag = `<img src="https://capsule-render.vercel.app/api?type=${cType}&color=${cColor}&height=220&section=header&text=${cText}&fontSize=60&desc=${cDesc}&descSize=16" alt="${data.projectName || 'Project'} banner" width="100%" />\n  <br/>`;
+      if (align === 'center') {
+        return `<div align="center">\n  ${logo}\n  <h1>${data.projectName || 'Project Title'}</h1>\n  <p>${data.tagline || ''}</p>\n</div>`;
       }
-      // Optional typing-SVG animated tagline (opt-in)
-      let taglineTag = `<p>${data.tagline || ''}</p>`;
-      if (data.animateTagline && data.tagline) {
-        const lines = String(data.tagline).split(/[.;|\n]+/).map(s => s.trim()).filter(Boolean).slice(0, 3);
-        if (lines.length > 0) {
-          const q = encodeURIComponent(lines.join(';'));
-          taglineTag = `<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=600&lines=${q}" alt="${data.tagline}" /></a>`;
-        }
+      if (align === 'right') {
+        return `<div align="right">\n  ${logo}\n  <h1>${data.projectName || 'Project Title'}</h1>\n  <p>${data.tagline || ''}</p>\n</div>`;
       }
-
-      if (isCentered) {
-        return `<div align="center">
-  ${capsuleTag}${logoTag}
-  <h1>${data.projectName || 'Project Title'}</h1>
-  ${taglineTag}
-</div>`;
-      } else if (align === 'right') {
-        return `<div align="right">
-  ${capsuleTag}${logoTag}
-  <h1>${data.projectName || 'Project Title'}</h1>
-  ${taglineTag}
-</div>`;
-      } else {
-        const logo = data.showLogo && data.logoUrl
-          ? (data.logoLinkUrl ? `[![Banner](${data.logoUrl})](${data.logoLinkUrl})\n\n` : `![Banner](${data.logoUrl})\n\n`)
-          : '';
-        return `${logo}# ${data.projectName || 'Project Title'}\n\n> ${data.tagline || ''}`;
-      }
+      const logoMd = data.showLogo && data.logoUrl ? `![Banner](${data.logoUrl})\n\n` : '';
+      return `${logoMd}# ${data.projectName || 'Project Title'}\n\n> ${data.tagline || ''}`;
     }
 
     case SECTION_TYPES.BADGES: {
-      const bOwner = data.repoOwner || repoOwner;
-      const bRepo = data.repoName || repoName;
       const style = data.style || 'for-the-badge';
       const align = data.align || 'center';
-      const format = data.format || 'html';
       const badges = [];
 
-      function addBadge(label, imgUrl, linkUrl) {
-        if (format === 'html') {
-          if (linkUrl) {
-            badges.push(`<a href="${linkUrl}"><img src="${imgUrl}" alt="${label}" /></a>`);
-          } else {
-            badges.push(`<img src="${imgUrl}" alt="${label}" />`);
-          }
-        } else {
-          if (linkUrl) {
-            badges.push(`[![${label}](${imgUrl})](${linkUrl})`);
-          } else {
-            badges.push(`![${label}](${imgUrl})`);
-          }
-        }
-      }
+      // These get wrapped in a raw <p align="..."> block below, and GFM treats an HTML
+      // block as opaque — markdown ![]()/[]() syntax inside it would render as literal
+      // text, not an image — so badges here must be real <a>/<img> HTML, not markdown.
+      const add = (label, imgUrl, linkUrl) => {
+        const img = `<img src="${imgUrl}" alt="${label}" />`;
+        badges.push(linkUrl ? `<a href="${linkUrl}">${img}</a>` : img);
+      };
 
-      if (data.showStars) {
-        addBadge('GitHub Stars', `https://img.shields.io/github/stars/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/stargazers`);
-      }
-      if (data.showForks) {
-        addBadge('GitHub Forks', `https://img.shields.io/github/forks/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/network/members`);
-      }
-      if (data.showIssues) {
-        addBadge('GitHub Issues', `https://img.shields.io/github/issues/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/issues`);
-      }
-      if (data.showPRs) {
-        addBadge('GitHub Pull Requests', `https://img.shields.io/github/issues-pr/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/pulls`);
-      }
-      if (data.showLicense) {
-        addBadge('GitHub License', `https://img.shields.io/github/license/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/blob/main/LICENSE`);
-      }
-      if (data.showRelease) {
-        addBadge('GitHub Release', `https://img.shields.io/github/v/release/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/releases`);
-      }
-      if (data.showLastCommit) {
-        addBadge('GitHub Last Commit', `https://img.shields.io/github/last-commit/${bOwner}/${bRepo}?style=${style}`);
-      }
-      if (data.showCodeSize) {
-        addBadge('GitHub Code Size', `https://img.shields.io/github/languages/code-size/${bOwner}/${bRepo}?style=${style}`);
-      }
-      if (data.showContributors) {
-        addBadge('GitHub Contributors', `https://img.shields.io/github/contributors/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/graphs/contributors`);
-      }
-      if (data.showActionsCI) {
-        const wf = data.ciWorkflowFile || 'ci.yml';
-        addBadge('CI Status', `https://github.com/${bOwner}/${bRepo}/actions/workflows/${wf}/badge.svg`, `https://github.com/${bOwner}/${bRepo}/actions`);
-      }
-      if (data.showTopLang) {
-        addBadge('Top Language', `https://img.shields.io/github/languages/top/${bOwner}/${bRepo}?style=${style}`);
-      }
-      if (data.showWatchers) {
-        addBadge('GitHub Watchers', `https://img.shields.io/github/watchers/${bOwner}/${bRepo}?style=${style}`, `https://github.com/${bOwner}/${bRepo}/watchers`);
+      if (data.showStars) add('GitHub Stars', `https://img.shields.io/github/stars/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/stargazers`);
+      if (data.showForks) add('GitHub Forks', `https://img.shields.io/github/forks/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/network/members`);
+      if (data.showIssues) add('GitHub Issues', `https://img.shields.io/github/issues/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/issues`);
+      if (data.showLicense) add('License', `https://img.shields.io/github/license/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/blob/main/LICENSE`);
+      if (data.showLastCommit) add('Last Commit', `https://img.shields.io/github/last-commit/${repoOwner}/${repoName}?style=${style}`);
+      if (data.showRelease) add('Release', `https://img.shields.io/github/v/release/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/releases`);
+      if (data.showContributors) add('Contributors', `https://img.shields.io/github/contributors/${repoOwner}/${repoName}?style=${style}`, `https://github.com/${repoOwner}/${repoName}/graphs/contributors`);
+      if (data.showActionsCI) add('CI', `https://github.com/${repoOwner}/${repoName}/actions/workflows/ci.yml/badge.svg`, `https://github.com/${repoOwner}/${repoName}/actions`);
+
+      if (data.npmPackageName && (data.showNpmVersion || data.showNpmDownloads)) {
+        const npmUrls = npmBadgeUrls(data.npmPackageName, style);
+        if (data.showNpmVersion) add('npm version', npmUrls.version, npmUrls.packageUrl);
+        if (data.showNpmDownloads) add('npm downloads', npmUrls.downloads, npmUrls.packageUrl);
       }
 
       if (Array.isArray(data.customBadges)) {
         for (const cb of data.customBadges) {
           if (!cb.label || !cb.message) continue;
-          const logoPart = cb.logo ? `&logo=${encodeURIComponent(cb.logo)}` : '';
-          const url = `https://img.shields.io/badge/${encodeURIComponent(cb.label)}-${encodeURIComponent(cb.message)}-${cb.color || 'blue'}?style=${style}${logoPart}`;
-          addBadge(cb.label, url);
+          const url = `https://img.shields.io/badge/${encodeURIComponent(cb.label)}-${encodeURIComponent(cb.message)}-${cb.color || 'blue'}?style=${style}`;
+          add(cb.label, url, cb.link || '');
         }
       }
 
       if (badges.length === 0) return '';
-
-      if (format === 'html') {
-        const inner = badges.join('\n  ');
-        return `<p align="${align}">\n  ${inner}\n</p>`;
-      } else {
-        if (align === 'center') {
-          return `<div align="center">\n\n${badges.join('  \n')}\n\n</div>`;
-        } else if (align === 'right') {
-          return `<div align="right">\n\n${badges.join('  \n')}\n\n</div>`;
-        } else {
-          return badges.join('  \n');
-        }
-      }
+      return `<p align="${align}">\n  ${badges.join('\n  ')}\n</p>`;
     }
 
-    case SECTION_TYPES.ABOUT: {
-      return `## ${data.heading || 'About The Project'}\n\n${data.content || ''}`;
+    case SECTION_TYPES.ABOUT:
+      return `## ${data.heading || 'About'}\n\n${data.content || ''}`;
+
+    case SECTION_TYPES.TOC: {
+      if (ctx.tocEntries.length === 0) return '';
+      const items = ctx.tocEntries.map(e => `- [${e.heading}](#${e.anchor})`).join('\n');
+      return `## ${data.heading || 'Table of Contents'}\n\n${items}`;
     }
 
     case SECTION_TYPES.TECH_STACK: {
-      const layout = data.layout || 'categorized';
       const style = data.style || 'for-the-badge';
       const align = data.align || 'center';
-      const techIds = data.technologies || [];
+      const items = (data.technologies || []).map(id => techById(id)).filter(Boolean);
+      if (items.length === 0) return `## ${data.heading || 'Built With'}\n\n*(No technologies selected yet)*`;
 
-      if (techIds.length === 0) {
-        return `## ${data.heading || 'Built With'}\n\n*(No technologies selected yet)*`;
+      if (data.layout === 'table') {
+        const rows = items.map(item => `| **${item.name}** | [Docs](${getTechDocUrl(item)}) |`).join('\n');
+        return `## ${data.heading || 'Built With'}\n\n| Technology | Docs |\n| :--- | :--- |\n${rows}`;
       }
 
-      const sizeMap = { small: 28, medium: 40, large: 52, xlarge: 64 };
-      const iconPx = sizeMap[data.iconSize] || (parseInt(data.iconSize, 10) || 40);
-      const items = techIds.map(id => techById(id)).filter(Boolean);
-
-      // 1. Categorized Layout (Real-world industry standard)
-      if (layout === 'categorized') {
-        const catMap = {};
-        for (const item of items) {
-          const catId = item.category || 'tools';
-          if (!catMap[catId]) catMap[catId] = [];
-          catMap[catId].push(item);
-        }
-
-        const catBlocks = [];
-        for (const catDef of TECH_CATEGORIES) {
-          if (catDef.id === 'all') continue;
-          const catItems = catMap[catDef.id];
-          if (!catItems || catItems.length === 0) continue;
-
-          const badgeRows = catItems.map(item => {
-            const docUrl = getTechDocUrl(item);
-            const badgeUrl = getBadgeUrl(item, style);
-            return `[![${item.name}](${badgeUrl})](${docUrl})`;
-          }).join(' ');
-
-          catBlocks.push(`### ${catDef.name}\n\n${badgeRows}`);
-        }
-
-        return `## ${data.heading || 'Built With'}\n\n${catBlocks.join('\n\n')}`;
-      }
-
-      // 2. Devicon / SimpleIcons Interactive Grid with Doc Links
-      if (layout === 'devicon-grid') {
-        const marginPx = data.spacing === 'compact' ? 4 : data.spacing === 'relaxed' ? 12 : 8;
-        const rows = items.map(item => {
-          const docUrl = getTechDocUrl(item);
-          const labelHtml = data.showLabels ? `<br/><sub style="font-size:10px">${item.name}</sub>` : '';
-          return `  <a href="${docUrl}" target="_blank" rel="noreferrer" style="margin: ${marginPx}px; display: inline-block; text-align: center; text-decoration: none;">\n    <img src="https://cdn.simpleicons.org/${item.logo}/${item.color}" alt="${item.name}" width="${iconPx}" height="${iconPx}" title="${item.name}" />${labelHtml}\n  </a>`;
-        }).join('\n');
-
-        return `## ${data.heading || 'Built With'}\n\n<p align="${align}">\n${rows}\n</p>`;
-      }
-
-      // 3. SkillIcons Ribbon
-      if (layout === 'skillicons') {
-        const theme = data.skilliconsTheme || 'dark';
-        const perline = data.skilliconsPerline || 10;
-        const skillUrl = getSkillIconsUrl(techIds, theme, perline);
-        if (skillUrl) {
-          return `## ${data.heading || 'Built With'}\n\n<p align="${align}">\n  <a href="https://skillicons.dev">\n    <img src="${skillUrl}" alt="Tech Stack" />\n  </a>\n</p>`;
-        }
-      }
-
-      // 4. Matrix / Comparison Table
-      if (layout === 'matrix-table') {
-        const tableRows = items.map(item => {
-          const catName = TECH_CATEGORIES.find(c => c.id === item.category)?.name || 'General';
-          const docUrl = getTechDocUrl(item);
-          return `| **${item.name}** | ${catName} | Core Dependency | [Documentation](${docUrl}) |`;
-        }).join('\n');
-
-        return `## ${data.heading || 'Built With'}\n\n| Technology | Category | Role | Official Docs |\n| :--- | :--- | :--- | :--- |\n${tableRows}`;
-      }
-
-      // 5. Default Shields.io Badges
-      const badgeList = items.map(item => {
-        const docUrl = getTechDocUrl(item);
-        const badgeUrl = getBadgeUrl(item, style);
-        return `[![${item.name}](${badgeUrl})](${docUrl})`;
-      });
-
-      if (align === 'center') {
-        return `## ${data.heading || 'Built With'}\n\n<p align="center">\n  ${badgeList.join('\n  ')}\n</p>`;
-      } else if (align === 'right') {
-        return `## ${data.heading || 'Built With'}\n\n<p align="right">\n  ${badgeList.join('\n  ')}\n</p>`;
-      } else {
-        return `## ${data.heading || 'Built With'}\n\n${badgeList.join(' ')}`;
-      }
+      // Raw <a>/<img> HTML, not markdown ![]()/[]() syntax — this is wrapped in a raw
+      // <p> block below, which GFM treats as opaque, so nested markdown wouldn't parse.
+      const badges = items.map(item => `<a href="${getTechDocUrl(item)}"><img src="${getBadgeUrl(item, style)}" alt="${item.name}" /></a>`);
+      return `## ${data.heading || 'Built With'}\n\n<p align="${align}">\n  ${badges.join('\n  ')}\n</p>`;
     }
 
     case SECTION_TYPES.FEATURES: {
       const items = data.items || [];
       if (items.length === 0) return '';
-      const list = items.map(item => {
-        const icon = item.icon ? `${item.icon} ` : '';
-        return `- ${icon}**${item.title || ''}**: ${item.desc || ''}`;
-      }).join('\n');
-
+      const list = items.map(item => `- **${item.title || ''}**: ${item.desc || ''}`).join('\n');
       return `## ${data.heading || 'Key Features'}\n\n${list}`;
     }
 
     case SECTION_TYPES.DEMO: {
-      const caption = data.caption || 'Project Preview';
-      const width = data.width || '100%';
-      const radius = data.radius || '8px';
       const align = data.align || 'center';
-      const linkUrl = data.linkUrl || data.liveUrl;
+      const width = data.width || '100%';
       let imageMd = '';
       if (data.imageUrl) {
-        const rawImg = `<img src="${data.imageUrl}" alt="${caption}" width="${width}" style="border-radius: ${radius}; max-width: 100%;" />`;
-        const wrappedImg = linkUrl ? `<a href="${linkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
-        if (width !== '100%' || align !== 'left' || radius !== '0px' || linkUrl) {
-          imageMd = `<div align="${align}">\n  ${wrappedImg}\n</div>`;
-        } else {
-          imageMd = `![${caption}](${data.imageUrl})`;
-        }
+        const rawImg = `<img src="${data.imageUrl}" alt="${data.caption || 'Preview'}" width="${width}" />`;
+        imageMd = `<div align="${align}">\n  ${rawImg}\n</div>`;
       }
-      const liveLinkMd = data.liveUrl && !linkUrl ? `\n\n**Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
-      return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${liveLinkMd}`;
+      const liveMd = data.liveUrl ? `\n\n**Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
+      return `## ${data.heading || 'Preview'}\n\n${imageMd}${liveMd}`;
     }
 
     case SECTION_TYPES.INSTALLATION: {
       const lines = [`## ${data.heading || 'Getting Started'}`];
-      if (data.prerequisites) {
-        lines.push(`\n### Prerequisites\n\n${data.prerequisites}`);
-      }
+      if (data.prerequisites) lines.push(`\n### Prerequisites\n\n${data.prerequisites}`);
       lines.push('\n### Installation\n');
-
-      if (Array.isArray(data.steps) && data.steps.length > 0) {
-        data.steps.forEach((step, idx) => {
-          lines.push(`${idx + 1}. **${step.title}**\n   \`\`\`bash\n   ${step.cmd}\n   \`\`\``);
-        });
-      }
+      (data.steps || []).forEach((step, idx) => {
+        lines.push(`${idx + 1}. **${step.title}**\n   \`\`\`bash\n   ${step.cmd}\n   \`\`\``);
+      });
       return lines.join('\n');
     }
 
-    case SECTION_TYPES.PROJECT_STRUCTURE: {
-      const tree = data.tree || '';
-      if (!tree.trim()) return '';
-      return `## ${data.heading || 'Project Structure'}\n\n\`\`\`text\n${tree.trim()}\n\`\`\``;
+    case SECTION_TYPES.USAGE: {
+      const lang = data.codeLang || 'bash';
+      const code = data.code ? `\`\`\`${lang}\n${data.code}\n\`\`\`` : '';
+      const note = data.note ? `\n\n> [!NOTE]\n> ${data.note}` : '';
+      return `## ${data.heading || 'Usage'}\n\n${code}${note}`;
     }
 
     case SECTION_TYPES.ENV_VARS: {
@@ -2958,6809 +957,1438 @@ function generateSectionMarkdown(section, context) {
       return `## ${data.heading || 'Environment Variables'}\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
     }
 
-    case SECTION_TYPES.USAGE: {
-      const lang = data.codeLang || 'bash';
-      const codeBlock = data.code ? `\`\`\`${lang}\n${data.code}\n\`\`\`` : '';
-      const note = data.note ? `\n\n> [!NOTE]\n> ${data.note}` : '';
-      return `## ${data.heading || 'Usage'}\n\n${codeBlock}${note}`;
-    }
-
     case SECTION_TYPES.API_REFERENCE: {
-      const endpoints = data.endpoints || [];
-      if (endpoints.length === 0) return '';
-      const rows = endpoints.map(ep => `| \`${ep.method || 'GET'}\` | \`${ep.path || '/'}\` | ${ep.desc || '-'} | \`${ep.auth || 'None'}\` |`).join('\n');
-      return `## ${data.heading || 'API Reference'}\n\n| Method | Endpoint | Description | Auth |\n| :--- | :--- | :--- | :--- |\n${rows}`;
+      const eps = data.endpoints || [];
+      if (eps.length === 0) return '';
+      const rows = eps.map(e => `| \`${e.method || 'GET'}\` | \`${e.path || '/'}\` | ${e.desc || '-'} |`).join('\n');
+      return `## ${data.heading || 'API Reference'}\n\n| Method | Endpoint | Description |\n| :--- | :--- | :--- |\n${rows}`;
     }
 
-    case SECTION_TYPES.BENCHMARKS: {
-      const rows = data.rows || [];
-      const subtitle = data.subtitle ? `*${data.subtitle}*\n\n` : '';
-      if (rows.length === 0) return '';
-      const tableRows = rows.map(r => `| **${r.task}** | ${r.baseline || '-'} | **${r.current || '-'}** | \`${r.diff || '-'}\` |`).join('\n');
-      return `## ${data.heading || 'Benchmarks'}\n\n${subtitle}| Benchmark Task | Baseline | Project | Improvement |\n| :--- | :--- | :--- | :--- |\n${tableRows}`;
+    case SECTION_TYPES.MERMAID: {
+      if (!data.diagram || !data.diagram.trim()) return '';
+      return `## ${data.heading || 'Diagram'}\n\n\`\`\`mermaid\n${data.diagram.trim()}\n\`\`\``;
     }
 
     case SECTION_TYPES.FAQ: {
-      const questions = data.questions || [];
-      if (questions.length === 0) return '';
-      const details = questions.map(q => `<details>\n<summary><strong>${q.q || 'Question'}</strong></summary>\n<br/>\n\n${q.a || 'Answer'}\n\n</details>`).join('\n\n');
-      return `## ${data.heading || 'Frequently Asked Questions'}\n\n${details}`;
+      const qs = data.questions || [];
+      if (qs.length === 0) return '';
+      const details = qs.map(q => `<details>\n<summary><strong>${q.q || 'Question'}</strong></summary>\n<br/>\n\n${q.a || ''}\n\n</details>`).join('\n\n');
+      return `## ${data.heading || 'FAQ'}\n\n${details}`;
     }
 
     case SECTION_TYPES.ROADMAP: {
       const tasks = data.tasks || [];
       if (tasks.length === 0) return '';
-      const taskList = tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n');
-      return `## ${data.heading || 'Roadmap'}\n\n${taskList}`;
+      const list = tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n');
+      return `## ${data.heading || 'Roadmap'}\n\n${list}`;
     }
 
-    case SECTION_TYPES.CONTRIBUTING: {
-      const guide = data.guidelines || 'Contributions are what make open source great!';
-      const steps = (data.steps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
-      const contribAvatars = `<p align="center">\n  <a href="https://github.com/${repoOwner}/${repoName}/graphs/contributors">\n    <img src="https://contrib.rocks/image?repo=${repoOwner}/${repoName}" alt="Contributors" />\n  </a>\n</p>`;
-      return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}\n\n${contribAvatars}`;
-    }
-
-    case SECTION_TYPES.SPONSORS: {
-      const msg = data.message ? `${data.message}\n\n` : '';
-      const badges = [];
-      if (data.buyMeACoffee) {
-        badges.push(`[![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/${data.buyMeACoffee})`);
-      }
-      if (data.githubSponsor) {
-        badges.push(`[![GitHub Sponsors](https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://github.com/sponsors/${data.githubSponsor})`);
-      }
-      if (data.patreon) {
-        badges.push(`[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://patreon.com/${data.patreon})`);
-      }
-      const badgeStr = badges.length > 0 ? `<p align="center">\n  ${badges.join('  \n  ')}\n</p>` : '';
-      return `## ${data.heading || 'Support & Sponsors'}\n\n${msg}${badgeStr}`;
-    }
-
-    case SECTION_TYPES.CHANGELOG: {
-      const releases = data.releases || [];
-      if (releases.length === 0) return '';
-      const list = releases.map(rel => {
-        const changes = (rel.changes || []).map(c => `- ${c}`).join('\n');
-        return `### ${rel.version || 'v1.0.0'} (${rel.date || 'Latest'})\n\n${changes}`;
-      }).join('\n\n');
-      return `## ${data.heading || 'Changelog'}\n\n${list}`;
-    }
+    case SECTION_TYPES.CONTRIBUTING:
+      return `## ${data.heading || 'Contributing'}\n\n${data.guidelines || 'Contributions are welcome! Please open an issue or pull request.'}`;
 
     case SECTION_TYPES.LICENSE: {
       const lic = getLicenseById(data.type || 'MIT');
-      const year = data.year || new Date().getFullYear().toString();
-      const holder = data.holder || 'The Authors';
-      const projectName = data.projectName || repoName || 'This project';
-      const presentation = data.presentation || 'badge-minimal';
-
-      const badgeTag = `<p align="center">\n  <a href="${lic.url}">\n    <img src="${lic.badgeUrl}" alt="License: ${lic.id}" />\n  </a>\n</p>`;
-
-      if (presentation === 'collapsible-details') {
-        const fullText = lic.generateText(year, holder, projectName);
-        return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**. See [\`LICENSE\`](LICENSE) for more information.\n\n<details>\n<summary><strong>View Full ${lic.name} Agreement</strong></summary>\n<br/>\n\n\`\`\`text\n${fullText}\n\`\`\`\n\n</details>\n\nCopyright (c) ${year} ${holder}`;
-      }
-
-      if (presentation === 'summary-table') {
-        const perms = lic.permissions.map(p => `[x] ${p}`).join('<br/>') || '-';
-        const limits = lic.limitations.map(l => `[ ] ${l}`).join('<br/>') || '-';
-        const conds = lic.conditions.map(c => `[!] ${c}`).join('<br/>') || '-';
-
-        return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**.\n\n| Permissions | Limitations | Conditions |\n| :--- | :--- | :--- |\n| ${perms} | ${limits} | ${conds} |\n\nCopyright (c) ${year} ${holder}. See [\`LICENSE\`](LICENSE) for the full text.`;
-      }
-
-      // Default: badge-minimal
-      return `## ${data.heading || 'License'}\n\n${badgeTag}\n\nDistributed under the **${lic.name}**. See [\`LICENSE\`](LICENSE) for more information.\n\nCopyright (c) ${year} ${holder}`;
+      const year = data.year || String(new Date().getFullYear());
+      const holder = data.holder || 'Your Name';
+      const badge = `<p align="center">\n  <a href="${lic.url}"><img src="${lic.badgeUrl}" alt="License: ${lic.id}" /></a>\n</p>`;
+      return `## ${data.heading || 'License'}\n\n${badge}\n\nDistributed under the **${lic.name}**. See [\`LICENSE\`](LICENSE) for the full text.\n\nCopyright (c) ${year} ${holder}`;
     }
 
     case SECTION_TYPES.AUTHOR: {
       const badges = [];
-      if (data.github) {
-        badges.push(`[![GitHub](https://img.shields.io/badge/GitHub-${encodeURIComponent(data.github)}-181717?style=flat&logo=github)](https://github.com/${data.github})`);
-      }
-      if (data.twitter) {
-        badges.push(`[![Twitter](https://img.shields.io/badge/Twitter-${encodeURIComponent(data.twitter)}-1DA1F2?style=flat&logo=x)](https://twitter.com/${data.twitter})`);
-      }
-      if (data.linkedin) {
-        badges.push(`[![LinkedIn](https://img.shields.io/badge/LinkedIn-${encodeURIComponent(data.linkedin)}-0077B5?style=flat&logo=linkedin)](https://linkedin.com/in/${data.linkedin})`);
-      }
-      if (data.buyMeACoffee) {
-        badges.push(`[![BuyMeACoffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=flat&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/${data.buyMeACoffee})`);
-      }
-
-      const badgeStr = badges.length > 0 ? `\n\n${badges.join(' ')}` : '';
-      const emailStr = data.email ? `\n\nEmail: [${data.email}](mailto:${data.email})` : '';
-
-      return `## ${data.heading || 'Author & Acknowledgements'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
+      if (data.github) badges.push(`[![GitHub](https://img.shields.io/badge/GitHub-${encodeURIComponent(data.github)}-181717?style=flat&logo=github)](https://github.com/${data.github})`);
+      if (data.twitter) badges.push(`[![Twitter](https://img.shields.io/badge/Twitter-${encodeURIComponent(data.twitter)}-1DA1F2?style=flat&logo=x)](https://twitter.com/${data.twitter})`);
+      if (data.linkedin) badges.push(`[![LinkedIn](https://img.shields.io/badge/LinkedIn-${encodeURIComponent(data.linkedin)}-0077B5?style=flat&logo=linkedin)](https://linkedin.com/in/${data.linkedin})`);
+      const emailMd = data.email ? `\n\nEmail: [${data.email}](mailto:${data.email})` : '';
+      const badgeMd = badges.length ? `\n\n${badges.join(' ')}` : '';
+      return `## ${data.heading || 'Author'}\n\n**${data.name || 'Author'}**${emailMd}${badgeMd}`;
     }
 
     case SECTION_TYPES.STATS: {
-      const user = (data.githubUser || repoOwner || '').trim();
-      const repo = `${repoOwner}/${repoName}`;
-      const theme = data.theme === 'light' ? 'default' : 'github_dark';
+      // Don't silently fall back to the Hero section's placeholder repo owner
+      // ("username"/"yourusername") — that isn't a real GitHub account, so the
+      // stats images would just fail to load. Require an explicit username.
+      const placeholders = new Set(['', 'username', 'yourusername']);
+      const candidate = (data.githubUser || repoOwner || '').trim();
+      const user = placeholders.has(candidate.toLowerCase()) ? '' : candidate;
+      if (!user) return `## ${data.heading || 'Stats'}\n\n*(Set a GitHub username in this section's settings to enable stats)*`;
+      const theme = data.theme === 'light' ? 'default' : 'dark';
+      // Raw <a>/<img> HTML — wrapped in a raw <p> block below, which GFM treats as
+      // opaque, so nested markdown ![]()/[]() syntax wouldn't parse there.
       const imgs = [];
-      if (data.showActivityGraph && user) {
-        imgs.push(`[![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=${encodeURIComponent(user)}&theme=github-compact)](https://github.com/${encodeURIComponent(user)})`);
-      }
-      if (data.showContributors) {
-        imgs.push(`<a href="https://github.com/${repo}/graphs/contributors"><img src="https://contrib.rocks/image?repo=${repo}" alt="Contributors" /></a>`);
-      }
-      if (data.showStarHistory) {
-        imgs.push(`[![Star History](https://api.star-history.com/svg?repos=${repo}&type=Date)](https://star-history.com/#${repo}&Date)`);
-      }
-      if (data.showTopLangs && user) {
-        imgs.push(`[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=${encodeURIComponent(user)}&layout=compact&theme=${theme})](https://github.com/${encodeURIComponent(user)})`);
-      }
-      if (data.showStreak && user) {
-        imgs.push(`[![Streak](https://streak-stats.demolab.com?user=${encodeURIComponent(user)}&theme=${theme === 'default' ? 'default' : 'dark'})](https://github.com/${encodeURIComponent(user)})`);
-      }
-      if (data.showVisitors && user) {
-        imgs.push(`![Visitors](https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&style=flat-square)`);
-      }
-      if (imgs.length === 0) return `## ${data.heading || 'Stats & Activity'}\n\n*(Enable visuals in section settings — all optional, online-only)*`;
-      return `## ${data.heading || 'Stats & Activity'}\n\n<p align="center">\n  ${imgs.join('\n  <br/>\n  ')}\n</p>`;
+      if (data.showTopLangs) imgs.push(`<a href="https://github.com/${encodeURIComponent(user)}"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${encodeURIComponent(user)}&layout=compact&theme=${theme === 'dark' ? 'github_dark' : 'default'}" alt="Top Languages" /></a>`);
+      if (data.showStreak) imgs.push(`<a href="https://github.com/${encodeURIComponent(user)}"><img src="https://streak-stats.demolab.com?user=${encodeURIComponent(user)}&theme=${theme}" alt="Streak" /></a>`);
+      if (data.showStarHistory) imgs.push(`<a href="https://star-history.com/#${repoOwner}/${repoName}&Date"><img src="https://api.star-history.com/svg?repos=${repoOwner}/${repoName}&type=Date" alt="Star History" /></a>`);
+      if (imgs.length === 0) return '';
+      return `## ${data.heading || 'Stats'}\n\n<p align="center">\n  ${imgs.join('\n  <br/>\n  ')}\n</p>`;
     }
 
-    case SECTION_TYPES.CUSTOM: {
-      return `## ${data.heading || 'Custom Section'}\n\n${data.markdown || ''}`;
-    }
+    case SECTION_TYPES.CUSTOM:
+      return data.markdown ? `${data.heading ? `## ${data.heading}\n\n` : ''}${data.markdown}` : '';
 
     default:
       return '';
   }
 }
 
-/* ==================== MODULE: components/healthScore.js ==================== */
+/* ==================== MODULE: utils/renderReadme.js ==================== */
 
-function countWords(text) {
-  if (!text) return 0;
-  const t = String(text).replace(/[#*`>\-\[\]()!]/g, ' ').trim();
-  return t ? t.split(/\s+/).length : 0;
-}
+function renderReadmeHtml(sections) {
+  const markdown = generateMarkdown(sections);
 
-function fleschScore(text) {
-  if (!text || text.trim().length < 20) return null;
-  const words = text.trim().split(/\s+/).filter(Boolean);
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length || 1;
-  const syllables = words.reduce((a, w) => {
-    const m = w.toLowerCase().replace(/[^a-z]/g, '').match(/[aeiouy]+/g);
-    return a + (m ? m.length : 1);
-  }, 0);
-  const wps = words.length / sentences;
-  const spw = syllables / Math.max(1, words.length);
-  return Math.max(0, Math.min(100, Math.round(206.835 - 1.015 * wps - 84.6 * spw)));
-}
-function calculateReadmeScore(sections) {
-  if (!sections || !Array.isArray(sections)) {
-    return { score: 0, label: 'Empty', color: '#EF4444', tips: ['Start by configuring your project basics'], readability: null };
+  if (!window.marked) {
+    return { markdown, html: `<pre>${markdown.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</pre>` };
   }
 
-  let score = 0;
-  const tips = [];
-  const enabledTypes = new Set(sections.filter(s => s.enabled).map(s => s.type));
+  window.marked.setOptions({ gfm: true, breaks: true });
+  const rawHtml = window.marked.parse(markdown);
+  const html = window.DOMPurify
+    ? window.DOMPurify.sanitize(rawHtml, { FORBID_ATTR: ['style'], FORBID_TAGS: ['style', 'script'] })
+    : rawHtml;
 
-  // 1. Title & Tagline (15)
-  const hero = sections.find(s => s.type === SECTION_TYPES.HERO && s.enabled);
-  if (hero && hero.data?.projectName && hero.data?.projectName !== 'Project Title' && hero.data.projectName.trim().length > 1) {
-    score += 12;
-    const tag = (hero.data.tagline || '').trim();
-    if (tag.length >= 20 && tag.length <= 140) score += 3;
-    else if (tag.length < 10) tips.push('Add a concise tagline (20–120 chars) describing what your project does');
-    else tips.push({ text: 'Keep tagline 20–120 chars for GitHub + SEO.', action: { type: 'view', mode: 'canvas' }, actionLabel: 'Edit hero' });
-  } else {
-    tips.push({ text: 'Add a clear project name in Header & Title', action: { type: 'enable', sectionType: SECTION_TYPES.HERO }, actionLabel: 'Enable hero' });
-  }
-
-  // 2. Badges (8)
-  if (enabledTypes.has(SECTION_TYPES.BADGES)) score += 8;
-  else tips.push({ text: 'Enable badges (Stars, License, Build) for social proof', action: { type: 'enable', sectionType: SECTION_TYPES.BADGES }, actionLabel: 'Enable badges' });
-
-  // 3. About + readability (15)
-  const about = sections.find(s => s.type === SECTION_TYPES.ABOUT && s.enabled);
-  const aboutWords = countWords(about?.data?.content || '');
-  if (about && aboutWords > 20) {
-    score += 10;
-    if (aboutWords >= 40) score += 5;
-    else tips.push('Expand About to 40+ words: problem → solution → who it helps');
-  } else {
-    tips.push({ text: 'Add an About section explaining the problem your project solves', action: { type: 'enable', sectionType: SECTION_TYPES.ABOUT }, actionLabel: 'Enable about' });
-  }
-
-  // 4. Tech Stack (10)
-  const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
-  if (tech && tech.data?.technologies?.length > 0) {
-    score += 10;
-    if (!tech.data.technologies.length || tech.data.technologies.length < 3) tips.push('Pick 3+ technologies so auto-scan + badges look credible');
-  } else {
-    tips.push({ text: 'Select technologies in "Built With" to showcase your tech stack', action: { type: 'enable', sectionType: SECTION_TYPES.TECH_STACK }, actionLabel: 'Pick tech' });
-  }
-
-  // 5. Features (10)
-  const features = sections.find(s => s.type === SECTION_TYPES.FEATURES && s.enabled);
-  if (features && features.data?.items?.length >= 2) score += 10;
-  else tips.push({ text: 'Highlight 2+ key features to attract users', action: { type: 'enable', sectionType: SECTION_TYPES.FEATURES }, actionLabel: 'Add features' });
-
-  // 6. Installation (12)
-  const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION && s.enabled);
-  if (install && install.data?.steps?.length > 0) {
-    score += 12;
-    const hasCode = (install.data.steps || []).some(st => (st.cmd || '').includes('\n') || (st.cmd || '').length > 8);
-    if (!hasCode) tips.push('Make install steps copy-pasteable (clone → install → run)');
-  } else {
-    tips.push({ text: 'Provide step-by-step Installation instructions', action: { type: 'enable', sectionType: SECTION_TYPES.INSTALLATION }, actionLabel: 'Add install' });
-  }
-
-  // 7. Demo / preview bonus (5)
-  const demo = sections.find(s => s.type === SECTION_TYPES.DEMO && s.enabled);
-  if (demo && (demo.data?.imageUrl || demo.data?.liveUrl)) score += 5;
-  else if (hero?.data?.repoOwner && hero.data.repoOwner !== 'username') tips.push('Add a demo screenshot or live link — repos with visuals get more stars');
-
-  // 8. License (7)
-  if (enabledTypes.has(SECTION_TYPES.LICENSE)) {
-    score += 7;
-    const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE && s.enabled);
-    if (lic && (!lic.data?.holder || lic.data.holder === 'Your Name')) tips.push('Set License holder to your name/org (not "Your Name")');
-  } else {
-    tips.push({ text: 'Add a License section to define open-source permissions', action: { type: 'enable', sectionType: SECTION_TYPES.LICENSE }, actionLabel: 'Add license' });
-  }
-
-  // 9. Author/Contributing (6)
-  if (enabledTypes.has(SECTION_TYPES.AUTHOR) || enabledTypes.has(SECTION_TYPES.CONTRIBUTING)) score += 6;
-  else tips.push('Add Author or Contributing so people know who built it');
-
-  // 10. Env vars conditional (up to 2 bonus, no penalty)
-  const env = sections.find(s => s.type === SECTION_TYPES.ENV_VARS && s.enabled);
-  if (env && env.data?.variables?.length > 0) score += 2;
-
-  // SEO hygiene (no extra points, just tips)
-  const allText = sections.filter(s => s.enabled).map(s => JSON.stringify(s.data || '')).join(' ');
-  if (/(TODO|FIXME|XXX)/i.test(allText)) tips.push('Remove TODO/FIXME placeholders before publishing');
-  if (/localhost|127\.0\.0\.1/.test(allText)) tips.push('Replace localhost URLs with public links for GitHub readers');
-
-  const readability = fleschScore(about?.data?.content || hero?.data?.tagline || '');
-  if (readability !== null && readability < 40) tips.push('Simplify About sentences — aim for grade-8 readability');
-
-  let label = 'Needs Work';
-  let color = '#EF4444';
-  if (score >= 90) { label = 'Outstanding'; color = '#10B981'; }
-  else if (score >= 75) { label = 'Great'; color = '#06B6D4'; }
-  else if (score >= 50) { label = 'Good'; color = '#F59E0B'; }
-
-  return { score: Math.min(score, 100), label, color, tips, readability };
+  return { markdown, html };
 }
 
 /* ==================== MODULE: store.js ==================== */
 
-const STORAGE_KEY = 'readmify_v1_state';
+const STORAGE_KEY = 'readmify_v2_state';
 
 class ReadmifyStore {
   constructor() {
     this.listeners = new Set();
     this.state = this.loadInitialState();
     this._saveTimer = null;
-    this.lastSavedAt = Date.now();
     this._undoStack = [];
-  }
-
-  flushSave() {
-    if (this._saveTimer) {
-      clearTimeout(this._saveTimer);
-      this._saveTimer = null;
-    }
-    this.saveToStorage(true);
   }
 
   loadInitialState() {
     try {
-      if (typeof localStorage !== 'undefined') {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-            return {
-              sections: parsed.sections,
-              activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
-              previewTheme: parsed.previewTheme || 'dark',
-              viewMode: (parsed.viewMode && parsed.viewMode !== 'editor') ? parsed.viewMode : 'canvas'
-            };
-          }
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+          return {
+            sections: parsed.sections,
+            activeSectionId: parsed.activeSectionId || parsed.sections[0].id,
+            previewTheme: parsed.previewTheme || 'dark',
+            viewMode: parsed.viewMode || 'editor'
+          };
         }
       }
     } catch (e) {
-      console.warn('Could not restore saved state from localStorage:', e);
+      console.warn('Could not restore saved state:', e);
     }
-
     return {
       sections: JSON.parse(JSON.stringify(INITIAL_SECTIONS)),
       activeSectionId: INITIAL_SECTIONS[0].id,
       previewTheme: 'dark',
-      viewMode: 'canvas'
+      viewMode: 'editor'
     };
   }
 
-  saveToStorage(immediate = false) {
-    // Debounced persist: big base64 images make JSON.stringify expensive.
-    // Coalesce rapid typing into one write ~700ms after last change.
-    if (!immediate) {
-      if (this._saveTimer) return;
-      this._saveTimer = setTimeout(() => {
-        this._saveTimer = null;
-        this.saveToStorage(true);
-      }, 700);
-      return;
-    }
-    try {
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
-        this.lastSavedAt = Date.now();
-        // Notify save indicator without full re-render
-        try {
-          window.dispatchEvent(new CustomEvent('readmify:saved', { detail: { at: this.lastSavedAt } }));
-        } catch (e) { /* noop */ }
-      }
-    } catch (e) {
-      console.warn('Could not persist state to localStorage:', e);
-    }
-  }
+  getState() { return this.state; }
 
-  getState() {
-    return this.state;
-  }
-
-  subscribe(listener) {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
+  subscribe(fn) {
+    this.listeners.add(fn);
+    return () => this.listeners.delete(fn);
   }
 
   notify(meta = {}) {
+    for (const fn of this.listeners) fn(this.state, meta);
+    this.scheduleSave();
+  }
+
+  scheduleSave() {
+    if (this._saveTimer) clearTimeout(this._saveTimer);
+    this._saveTimer = setTimeout(() => this.saveToStorage(), 500);
+  }
+
+  flushSave() {
+    if (this._saveTimer) { clearTimeout(this._saveTimer); this._saveTimer = null; }
     this.saveToStorage();
-    for (const listener of this.listeners) {
-      try {
-        listener(this.state, meta);
-      } catch (err) {
-        console.error('Error in store listener:', err);
-      }
-    }
   }
 
-  // --- ACTIONS ---
-
-  setActiveSection(sectionId) {
-    if (this.state.activeSectionId !== sectionId) {
-      this.state.activeSectionId = sectionId;
-      this.notify({ type: 'SET_ACTIVE_SECTION', sectionId, force: true });
-    }
-  }
-
-  setPreviewTheme(theme) {
-    if (this.state.previewTheme !== theme) {
-      this.state.previewTheme = theme;
-      this.notify({ type: 'SET_THEME', theme });
-    }
+  saveToStorage() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        sections: this.state.sections,
+        activeSectionId: this.state.activeSectionId,
+        previewTheme: this.state.previewTheme,
+        viewMode: this.state.viewMode
+      }));
+    } catch (e) { console.warn('Could not save state:', e); }
   }
 
   setViewMode(viewMode) {
-    if (this.state.viewMode !== viewMode) {
-      this.state.viewMode = viewMode;
-      this.notify({ type: 'SET_VIEW_MODE', viewMode, force: true });
-    }
+    if (this.state.viewMode === viewMode) return;
+    this.state.viewMode = viewMode;
+    this.notify({ type: 'SET_VIEW_MODE' });
   }
 
-  toggleSection(sectionId, enabled) {
-    const section = this.state.sections.find(s => s.id === sectionId);
-    if (section) {
-      section.enabled = enabled !== undefined ? enabled : !section.enabled;
-      this.notify({ type: 'TOGGLE_SECTION', sectionId, enabled: section.enabled, force: true });
-    }
+  setPreviewTheme(theme) {
+    if (this.state.previewTheme === theme) return;
+    this.state.previewTheme = theme;
+    this.notify({ type: 'SET_THEME' });
   }
 
-  updateSectionData(sectionId, partialData) {
-    const section = this.state.sections.find(s => s.id === sectionId);
-    if (section) {
-      section.data = { ...section.data, ...partialData };
-      this.notify({ type: 'UPDATE_SECTION_DATA', sectionId, partialData });
-    }
+  setActiveSection(id) {
+    this.state.activeSectionId = id;
+    this.notify({ type: 'SET_ACTIVE_SECTION' });
   }
 
-  moveSection(sectionId, direction) {
-    const index = this.state.sections.findIndex(s => s.id === sectionId);
-    if (index === -1) return;
+  findSection(id) {
+    return this.state.sections.find(s => s.id === id);
+  }
 
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= this.state.sections.length) return;
+  updateSectionData(id, partialData) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.data = { ...section.data, ...partialData };
+    this.notify({ type: 'UPDATE_SECTION_DATA', sectionId: id });
+  }
 
-    const [item] = this.state.sections.splice(index, 1);
-    this.state.sections.splice(targetIndex, 0, item);
-    this.notify({ type: 'MOVE_SECTION', force: true });
+  renameSection(id, title) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.title = title;
+    this.notify({ type: 'RENAME_SECTION', sectionId: id });
+  }
+
+  toggleSection(id, enabled) {
+    const section = this.findSection(id);
+    if (!section) return;
+    section.enabled = enabled !== undefined ? enabled : !section.enabled;
+    this.notify({ type: 'TOGGLE_SECTION', sectionId: id });
+  }
+
+  moveSection(id, direction) {
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    const target = direction === 'up' ? idx - 1 : idx + 1;
+    if (target < 0 || target >= this.state.sections.length) return;
+    const [item] = this.state.sections.splice(idx, 1);
+    this.state.sections.splice(target, 0, item);
+    this.notify({ type: 'MOVE_SECTION' });
   }
 
   reorderSections(fromIndex, toIndex) {
-    if (fromIndex === toIndex) return;
-    if (fromIndex < 0 || fromIndex >= this.state.sections.length) return;
-    if (toIndex < 0 || toIndex >= this.state.sections.length) return;
-
+    if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0) return;
+    if (fromIndex >= this.state.sections.length || toIndex >= this.state.sections.length) return;
     const [item] = this.state.sections.splice(fromIndex, 1);
     this.state.sections.splice(toIndex, 0, item);
-    this.notify({ type: 'REORDER_SECTIONS', force: true });
+    this.notify({ type: 'REORDER_SECTIONS' });
+  }
+
+  addSectionFromType(type, customTitle, insertIndex = null) {
+    const existing = type !== SECTION_TYPES.CUSTOM ? this.state.sections.find(s => s.type === type) : null;
+    if (existing) {
+      existing.enabled = true;
+      this.state.activeSectionId = existing.id;
+      this.notify({ type: 'ADD_SECTION', sectionId: existing.id });
+      return existing.id;
+    }
+    const section = createSection(type, customTitle);
+    if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= this.state.sections.length) {
+      this.state.sections.splice(insertIndex, 0, section);
+    } else {
+      this.state.sections.push(section);
+    }
+    this.state.activeSectionId = section.id;
+    this.notify({ type: 'ADD_SECTION', sectionId: section.id });
+    return section.id;
+  }
+
+  duplicateSection(id) {
+    const section = this.findSection(id);
+    if (!section) return null;
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    const clone = JSON.parse(JSON.stringify(section));
+    clone.id = createSection(section.type).id;
+    clone.title = `${section.title} (Copy)`;
+    this.state.sections.splice(idx + 1, 0, clone);
+    this.notify({ type: 'DUPLICATE_SECTION' });
+    return clone.id;
+  }
+
+  removeSection(id) {
+    const idx = this.state.sections.findIndex(s => s.id === id);
+    if (idx === -1) return;
+    const [removed] = this.state.sections.splice(idx, 1);
+    this._undoStack.push({ section: removed, index: idx });
+    if (this._undoStack.length > 10) this._undoStack.shift();
+    this.notify({ type: 'REMOVE_SECTION' });
+  }
+
+  undoRemoveSection() {
+    const last = this._undoStack.pop();
+    if (!last) return;
+    const target = Math.min(last.index, this.state.sections.length);
+    this.state.sections.splice(target, 0, last.section);
+    this.notify({ type: 'UNDO_REMOVE' });
   }
 
   addCustomSection(title = 'Custom Section') {
     return this.addSectionFromType(SECTION_TYPES.CUSTOM, title);
   }
 
-  addSectionFromType(type, customTitle, insertIndex = null) {
-    // Check if single-instance section already exists but is disabled
-    const existing = this.state.sections.find(s => s.type === type && type !== SECTION_TYPES.CUSTOM);
-    if (existing) {
-      existing.enabled = true;
-      if (customTitle) {
-        existing.title = customTitle;
-        if (existing.data && existing.data.heading) existing.data.heading = customTitle;
-      }
-      if (typeof insertIndex === 'number' && insertIndex >= 0) {
-        const curIdx = this.state.sections.findIndex(s => s.id === existing.id);
-        if (curIdx !== -1) {
-          const [removed] = this.state.sections.splice(curIdx, 1);
-          const target = Math.min(insertIndex, this.state.sections.length);
-          this.state.sections.splice(target, 0, removed);
-        }
-      }
-      this.state.activeSectionId = existing.id;
-      this.notify({ type: 'ADD_SECTION', sectionId: existing.id, force: true });
-      return existing.id;
-    }
-
-    const newSection = createSection(type, customTitle);
-    if (typeof insertIndex === 'number' && insertIndex >= 0 && insertIndex <= this.state.sections.length) {
-      this.state.sections.splice(insertIndex, 0, newSection);
-    } else {
-      this.state.sections.push(newSection);
-    }
-    this.state.activeSectionId = newSection.id;
-    this.notify({ type: 'ADD_SECTION', sectionId: newSection.id, force: true });
-    return newSection.id;
-  }
-
-  duplicateSection(sectionId) {
-    const index = this.state.sections.findIndex(s => s.id === sectionId);
-    if (index === -1) return null;
-
-    const orig = this.state.sections[index];
-    const cloned = JSON.parse(JSON.stringify(orig));
-    cloned.id = `sec-${cloned.type}-${Date.now().toString(36)}`;
-    cloned.title = `${orig.title} (Copy)`;
-    if (cloned.data && cloned.data.heading) {
-      cloned.data.heading = `${cloned.data.heading} (Copy)`;
-    }
-    cloned.enabled = true;
-
-    this.state.sections.splice(index + 1, 0, cloned);
-    this.state.activeSectionId = cloned.id;
-    this.notify({ type: 'DUPLICATE_SECTION', sectionId: cloned.id, force: true });
-    return cloned.id;
-  }
-
-  renameSection(sectionId, newTitle) {
-    const sec = this.state.sections.find(s => s.id === sectionId);
-    if (sec && newTitle && newTitle.trim()) {
-      sec.title = newTitle.trim();
-      if (sec.data && typeof sec.data.heading === 'string') {
-        sec.data.heading = newTitle.trim();
-      }
-      this.notify({ type: 'RENAME_SECTION', sectionId, newTitle: sec.title });
-    }
-  }
-
-  removeSection(sectionId) {
-    const idx = this.state.sections.findIndex(s => s.id === sectionId);
-    if (idx !== -1) {
-      const [removed] = this.state.sections.splice(idx, 1);
-      // Keep small undo stack (max 10) for toast-undo, no confirm() friction
-      this._undoStack.push({ section: removed, index: idx });
-      if (this._undoStack.length > 10) this._undoStack.shift();
-      if (this.state.activeSectionId === sectionId) {
-        this.state.activeSectionId = this.state.sections[0]?.id || null;
-      }
-      this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
-      return removed;
-    }
-    return null;
-  }
-
-  undoRemoveSection() {
-    const entry = this._undoStack.pop();
-    if (!entry) return null;
-    const target = Math.min(entry.index, this.state.sections.length);
-    this.state.sections.splice(target, 0, entry.section);
-    this.state.activeSectionId = entry.section.id;
-    this.notify({ type: 'UNDO_REMOVE', sectionId: entry.section.id, force: true });
-    return entry.section.id;
-  }
-
   loadTemplate(templateId) {
     const tpl = TEMPLATES.find(t => t.id === templateId);
-    if (tpl) {
-      this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
-      this.state.activeSectionId = this.state.sections[0]?.id || null;
-      this.notify({ type: 'LOAD_TEMPLATE', templateId, force: true });
-    }
+    if (!tpl) return;
+    this.state.sections = JSON.parse(JSON.stringify(tpl.sections));
+    this.state.activeSectionId = this.state.sections[0]?.id;
+    this.notify({ type: 'LOAD_TEMPLATE' });
   }
 
   resetToDefault() {
     this.state.sections = JSON.parse(JSON.stringify(INITIAL_SECTIONS));
-    this.state.activeSectionId = INITIAL_SECTIONS[0].id;
-    this.notify({ type: 'RESET_DEFAULT', force: true });
+    this.state.activeSectionId = this.state.sections[0]?.id;
+    this.notify({ type: 'RESET' });
   }
 
-  // Update multiple sections (e.g. from wizard or deep scanner)
-  batchUpdate(updaterFn) {
-    updaterFn(this.state.sections);
-    this.notify({ type: 'BATCH_UPDATE', force: true });
-  }
-
-  // Apply complete deep repository analysis across all relevant sections
-  applyRepoAnalysis(analysis) {
-    if (!analysis) return;
-
-    this.batchUpdate(sections => {
-      // 1. Hero
-      const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
-      if (hero) {
-        hero.enabled = true;
-        hero.data.projectName = analysis.repo || hero.data.projectName;
-        hero.data.tagline = analysis.description || hero.data.tagline;
-        hero.data.repoOwner = analysis.owner || hero.data.repoOwner;
-        hero.data.repoName = analysis.repo || hero.data.repoName;
-      }
-
-      // 2. Badges
-      const badges = sections.find(s => s.type === SECTION_TYPES.BADGES);
-      if (badges) {
-        badges.enabled = true;
-        badges.data.showStars = true;
-        badges.data.showForks = true;
-        badges.data.showIssues = true;
-        badges.data.showLicense = !!analysis.license;
-        badges.data.showRelease = true;
-        badges.data.showLastCommit = true;
-
-        if (Array.isArray(analysis.workflowBadges) && analysis.workflowBadges.length > 0) {
-          badges.data.customBadges = analysis.workflowBadges.map(wb => ({
-            label: 'CI',
-            message: 'Passing',
-            color: 'brightgreen',
-            logo: 'githubactions'
-          }));
-        }
-      }
-
-      // 3. About
-      const about = sections.find(s => s.type === SECTION_TYPES.ABOUT);
-      if (about) {
-        about.enabled = true;
-        const desc = analysis.description ? `${analysis.description}\n\n` : '';
-        const topics = Array.isArray(analysis.topics) && analysis.topics.length > 0
-          ? `**Key topics**: ${analysis.topics.map(t => `\`${t}\``).join(', ')}.\n\n`
-          : '';
-        about.data.content = `${desc}${topics}Engineered for high performance, reliability, and clean developer workflows.`;
-      }
-
-      // 4. Tech Stack
-      const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-      if (tech) {
-        tech.enabled = true;
-        if (Array.isArray(analysis.matchedTechIds) && analysis.matchedTechIds.length > 0) {
-          tech.data.technologies = Array.from(new Set(analysis.matchedTechIds));
-        }
-      }
-
-      // 5. Features
-      const features = sections.find(s => s.type === SECTION_TYPES.FEATURES);
-      if (features) {
-        features.enabled = true;
-        if (Array.isArray(analysis.features) && analysis.features.length > 0) {
-          features.data.items = analysis.features;
-        }
-      }
-
-      // 6. Project Structure
-      const structure = sections.find(s => s.type === SECTION_TYPES.PROJECT_STRUCTURE);
-      if (structure) {
-        if (analysis.projectTree && analysis.projectTree.trim().length > 0) {
-          structure.enabled = true;
-          structure.data.tree = analysis.projectTree;
-        } else {
-          structure.enabled = false;
-        }
-      }
-
-      // 7. Installation
-      const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
-      if (install) {
-        install.enabled = true;
-        if (analysis.prerequisites) {
-          install.data.prerequisites = analysis.prerequisites;
-        }
-        if (Array.isArray(analysis.installSteps) && analysis.installSteps.length > 0) {
-          install.data.steps = analysis.installSteps;
-        }
-        if (analysis.packageManager) {
-          install.data.packageManager = analysis.packageManager;
-        }
-      }
-
-      // 8. Environment Variables
-      const env = sections.find(s => s.type === SECTION_TYPES.ENV_VARS);
-      if (env) {
-        if (Array.isArray(analysis.envVars) && analysis.envVars.length > 0) {
-          env.enabled = true;
-          env.data.variables = analysis.envVars;
-        } else {
-          env.enabled = false;
-        }
-      }
-
-      // 9. License
-      const license = sections.find(s => s.type === SECTION_TYPES.LICENSE);
-      if (license) {
-        license.enabled = true;
-        if (analysis.license && analysis.license !== 'NOASSERTION') {
-          license.data.type = analysis.license;
-        }
-        if (analysis.owner) {
-          license.data.holder = analysis.owner;
-        }
-      }
-
-      // 10. Author
-      const author = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
-      if (author) {
-        author.enabled = true;
-        if (analysis.owner) {
-          author.data.name = analysis.owner;
-          author.data.github = analysis.owner;
-        }
-      }
-
-      // 11. Hero OG banner prefill (only if no custom banner yet)
-      if (hero && analysis.ogImage && !hero.data.logoUrl) {
-        hero.data.logoUrl = analysis.ogImage;
-        hero.data.showLogo = false; // keep off by default, user enables with 1 click
-        hero.data.logoLinkUrl = analysis.homepage || '';
-      }
-
-      // 12. Badges: contributors + release enrichment
-      if (badges) {
-        if (analysis.topContributors?.length > 0) badges.data.showContributors = true;
-        if (analysis.latestRelease) badges.data.showRelease = true;
-      }
-
-      // 13. Stats visuals (opt-in, enable if repo has traction)
-      const stats = sections.find(s => s.type === SECTION_TYPES.STATS);
-      if (stats && (analysis.stars > 0 || (analysis.topContributors?.length || 0) > 0)) {
-        stats.enabled = false; // stay opt-in, but prefill user
-        stats.data.githubUser = analysis.owner || '';
-      }
-    });
-
-    if (this.state.sections[0]) {
-      this.state.activeSectionId = this.state.sections[0].id;
+  applyRepoAnalysis(info) {
+    const hero = this.state.sections.find(s => s.type === SECTION_TYPES.HERO);
+    if (hero) {
+      hero.data.repoOwner = info.owner;
+      hero.data.repoName = info.repo;
+      hero.data.projectName = hero.data.projectName === 'My Project' ? info.repo : hero.data.projectName;
+      if (info.description) hero.data.tagline = info.description;
     }
-    this.notify({ type: 'APPLY_REPO_ANALYSIS', force: true });
+    const about = this.state.sections.find(s => s.type === SECTION_TYPES.ABOUT);
+    if (about && info.description) about.data.content = info.description;
+
+    if (info.matchedTechIds?.length) {
+      const tech = this.state.sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+      if (tech) tech.data.technologies = Array.from(new Set([...(tech.data.technologies || []), ...info.matchedTechIds]));
+    }
+    if (info.installSteps?.length) {
+      const install = this.state.sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
+      if (install) install.data.steps = info.installSteps;
+    }
+    if (info.license) {
+      const lic = this.state.sections.find(s => s.type === SECTION_TYPES.LICENSE);
+      if (lic) lic.data.type = info.license;
+    }
+    this.notify({ type: 'APPLY_REPO_ANALYSIS' });
   }
-}const store = new ReadmifyStore();
+}
+const store = new ReadmifyStore();
 
-/* ==================== MODULE: components/photoUploader.js ==================== */
+/* ==================== MODULE: components/sectionFormList.js ==================== */
 
-const BANNER_PRESETS = [
-  {
-    id: 'minimal-grid',
-    title: 'Minimal Dark Grid',
-    category: 'Minimal',
-    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'cyber-circuit',
-    title: 'Cyber Circuit Glow',
-    category: 'Cyberpunk',
-    url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'cosmic-mesh',
-    title: 'Deep Cosmic Gradient',
-    category: 'Gradients',
-    url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'modern-abstract',
-    title: 'Modern Purple Wave',
-    category: 'Abstract',
-    url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'terminal-code',
-    title: 'Developer Terminal',
-    category: 'Code',
-    url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'blueprint',
-    title: 'System Architecture',
-    category: 'Tech',
-    url: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&auto=format&fit=crop&q=80'
-  }
-];
-
-// Active Studio State
-let studioState = {
-  activeTab: 'presets', // 'presets' | 'studio'
-  targetField: 'hero',
-  originalImage: null, // HTMLImageElement
-  cropRatio: '3:1',    // '3:1' | '16:9' | '4:3' | '1:1' | 'free'
-  cropBox: { x: 0, y: 0, w: 100, h: 100 }, // percentage of image
-  targetWidth: 1200,
-  targetHeight: 400,
-  lockAspect: true,
-  scalePct: 100,
-  outputQuality: 0.88,
-  outputFormat: 'image/jpeg',
-  exportDataUrl: '',
-  // Presentation styling
-  mdWidth: '100%',
-  mdAlign: 'center',
-  mdRadius: '8px',
-  linkUrl: '',
-  caption: 'Project Preview',
-  // Mockup frame & visual filters
-  mockupFrame: 'none', // 'none' | 'browser' | 'terminal'
-  brightness: 100,
-  contrast: 100,
-  saturation: 100,
-  blur: 0,
-  rotation: 0, // 0, 90, 180, 270
-  flipH: false
+const SECTION_LABELS = {
+  [SECTION_TYPES.HERO]: 'Header & Title', [SECTION_TYPES.BADGES]: 'Badges',
+  [SECTION_TYPES.ABOUT]: 'About', [SECTION_TYPES.TOC]: 'Table of Contents',
+  [SECTION_TYPES.TECH_STACK]: 'Built With', [SECTION_TYPES.FEATURES]: 'Features',
+  [SECTION_TYPES.DEMO]: 'Demo / Preview', [SECTION_TYPES.INSTALLATION]: 'Installation',
+  [SECTION_TYPES.USAGE]: 'Usage', [SECTION_TYPES.ENV_VARS]: 'Environment Variables',
+  [SECTION_TYPES.API_REFERENCE]: 'API Reference', [SECTION_TYPES.MERMAID]: 'Diagram (Mermaid)',
+  [SECTION_TYPES.FAQ]: 'FAQ', [SECTION_TYPES.ROADMAP]: 'Roadmap',
+  [SECTION_TYPES.CONTRIBUTING]: 'Contributing', [SECTION_TYPES.LICENSE]: 'License',
+  [SECTION_TYPES.AUTHOR]: 'Author', [SECTION_TYPES.STATS]: 'Stats', [SECTION_TYPES.CUSTOM]: 'Custom Section'
 };
-function renderPhotoModal(targetField = 'hero') {
-  studioState.targetField = targetField;
 
-  let modal = document.getElementById('photo-hub-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'photo-hub-modal';
-    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden';
-    document.body.appendChild(modal);
-  }
+let expandedIds = new Set();
+let dragFromIndex = null;
 
-  modal.classList.remove('hidden');
-  renderStudioModalContent(modal);
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
-
-function renderStudioModalContent(modal) {
-  modal.innerHTML = `
-    <div class="bg-card border border-border rounded-lg w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-      <!-- Modal Header -->
-      <div class="px-5 py-3.5 border-b border-border flex items-center justify-between bg-card flex-shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-md bg-muted border border-border flex items-center justify-center text-sm font-semibold text-foreground">
-            🖼️
-          </div>
-          <div>
-            <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
-              <span>Image Studio & Cropper</span>
-              <span class="text-[10px] px-1.5 py-0.2 rounded border border-border bg-muted text-muted-foreground font-normal">Crop • Resize • Style</span>
-            </h3>
-            <p class="text-[11px] text-muted-foreground">Interactive visual cropper, dimension resizer, and curated banners</p>
-          </div>
-        </div>
-        <button id="close-studio-btn" class="p-1 text-muted-foreground hover:text-foreground text-xs">✕</button>
-      </div>
-
-      <!-- Tab Buttons -->
-      <div class="px-5 py-2.5 border-b border-border bg-background/50 flex items-center justify-between flex-shrink-0">
-        <div class="flex gap-2">
-          <button id="studio-tab-presets" class="px-3 py-1 text-xs font-medium rounded-md transition ${studioState.activeTab === 'presets' ? 'bg-primary text-primary-foreground shadow-xs font-semibold' : 'bg-muted text-muted-foreground hover:text-foreground'}">
-            Curated Banners
-          </button>
-          <button id="studio-tab-custom" class="px-3 py-1 text-xs font-medium rounded-md transition ${studioState.activeTab === 'studio' ? 'bg-primary text-primary-foreground shadow-xs font-semibold' : 'bg-muted text-muted-foreground hover:text-foreground'}">
-            Image Cropper & Resizer ${studioState.originalImage ? '●' : ''}
-          </button>
-        </div>
-
-        <div class="text-[11px] text-muted-foreground">
-          Target: <strong class="text-foreground uppercase text-[10px] font-mono px-1 py-0.5 rounded bg-muted">${studioState.targetField}</strong>
-        </div>
-      </div>
-
-      <!-- Main Body -->
-      <div class="p-5 overflow-y-auto flex-1 bg-background">
-        ${studioState.activeTab === 'presets' ? renderPresetsTabHtml() : renderStudioTabHtml()}
-      </div>
-
-      <!-- Footer Bar -->
-      <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between flex-shrink-0">
-        <span class="text-[11px] text-muted-foreground">Zero quality loss • Compressed for fast GitHub loading</span>
-        <button id="close-studio-btn-2" class="btn-secondary text-xs px-3.5 py-1.5">
-          Close
-        </button>
-      </div>
-    </div>
-  `;
-
-  attachStudioListeners(modal);
-}
-
-function renderPresetsTabHtml() {
-  return `
-    <div class="space-y-4">
-      <div class="flex items-center justify-between">
-        <p class="text-xs text-muted-foreground">Select a high-resolution developer banner to instantly apply:</p>
-        <button id="studio-jump-to-custom-btn" class="text-xs text-foreground hover:underline flex items-center gap-1 font-medium">
-          <span>📤</span> Upload or crop your own image →
-        </button>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        ${BANNER_PRESETS.map(preset => `
-          <div class="preset-card group relative border border-border hover:border-foreground/50 rounded-lg overflow-hidden bg-card cursor-pointer transition select-none" data-url="${preset.url}">
-            <div class="h-28 w-full bg-cover bg-center transition group-hover:scale-105 duration-200" style="background-image: url('${preset.url}')"></div>
-            <div class="p-2.5 flex items-center justify-between bg-card">
-              <span class="text-xs font-medium text-foreground">${preset.title}</span>
-              <span class="text-[10px] text-muted-foreground group-hover:text-foreground transition font-medium">Use →</span>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function renderStudioTabHtml() {
-  if (!studioState.originalImage) {
-    return `
-      <div class="space-y-4">
-        <!-- Upload Drop Zone -->
-        <div id="studio-drop-zone" class="border-2 border-dashed border-border hover:border-foreground/40 rounded-lg p-10 text-center bg-card/40 cursor-pointer transition flex flex-col items-center justify-center gap-2.5">
-          <span class="text-3xl">📸</span>
-          <div class="space-y-1">
-            <p class="text-xs font-semibold text-foreground">Click to browse or drop an image file here</p>
-            <p class="text-[11px] text-muted-foreground">Supports PNG, JPG, WebP, GIF, SVG</p>
-          </div>
-          <input type="file" id="studio-file-input" accept="image/*" class="hidden" />
-        </div>
-
-        <!-- URL Input Alternative -->
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-2">
-          <label class="block text-xs font-medium text-foreground">Or paste an online image URL</label>
-          <div class="flex gap-2">
-            <input type="text" id="studio-url-input" placeholder="https://example.com/screenshot.png" class="form-input text-xs flex-1" />
-            <button id="studio-load-url-btn" class="btn-primary text-xs px-3.5 py-1.5 whitespace-nowrap">
-              Load into Studio
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // Active Editor Workspace
-  return `
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-      <!-- Left Column: Interactive Canvas Cropper & Enhancements -->
-      <div class="lg:col-span-2 space-y-3">
-        <!-- Crop Aspect Ratio Selector -->
-        <div class="flex items-center justify-between bg-card p-2 rounded-lg border border-border text-xs">
-          <span class="font-medium text-muted-foreground text-[11px]">Aspect Ratio:</span>
-          <div class="flex items-center gap-1">
-            ${[
-              { id: '3:1', label: '3:1 (Banner)' },
-              { id: '16:9', label: '16:9 (Demo)' },
-              { id: '4:3', label: '4:3 (Preview)' },
-              { id: '1:1', label: '1:1 (Square)' },
-              { id: 'free', label: 'Freeform' }
-            ].map(r => `
-              <button class="crop-ratio-btn px-2 py-0.5 rounded text-[11px] font-medium transition ${
-                studioState.cropRatio === r.id 
-                  ? 'bg-foreground text-background font-semibold shadow-xs' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-              }" data-ratio="${r.id}">
-                ${r.label}
-              </button>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- Visual Canvas Wrapper -->
-        <div class="relative bg-zinc-950 border border-border rounded-lg p-2 overflow-hidden flex items-center justify-center min-h-[260px] max-h-[340px]">
-          <canvas id="studio-crop-canvas" class="max-h-[320px] max-w-full rounded object-contain cursor-crosshair"></canvas>
-        </div>
-
-        <!-- Mockup Window Frame & Transforms Controls -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-card border border-border rounded-lg text-xs">
-          <div>
-            <span class="font-medium text-muted-foreground text-[11px] block mb-1.5">Mockup Window Frame:</span>
-            <div class="flex items-center gap-1">
-              <button class="mockup-frame-btn px-2.5 py-1 rounded text-xs transition ${studioState.mockupFrame === 'none' ? 'bg-foreground text-background font-semibold shadow-xs' : 'bg-muted text-muted-foreground hover:text-foreground'}" data-frame="none">
-                None (Raw)
-              </button>
-              <button class="mockup-frame-btn px-2.5 py-1 rounded text-xs transition ${studioState.mockupFrame === 'browser' ? 'bg-foreground text-background font-semibold shadow-xs' : 'bg-muted text-muted-foreground hover:text-foreground'}" data-frame="browser">
-                🌐 macOS Window
-              </button>
-              <button class="mockup-frame-btn px-2.5 py-1 rounded text-xs transition ${studioState.mockupFrame === 'terminal' ? 'bg-foreground text-background font-semibold shadow-xs' : 'bg-muted text-muted-foreground hover:text-foreground'}" data-frame="terminal">
-                💻 Terminal
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <span class="font-medium text-muted-foreground text-[11px] block mb-1.5">Rotate & Flip:</span>
-            <div class="flex items-center gap-1.5">
-              <button id="studio-rotate-left-btn" class="btn-secondary px-2 py-1 text-xs" title="Rotate 90° Counter-Clockwise">
-                ⟲ -90°
-              </button>
-              <button id="studio-rotate-right-btn" class="btn-secondary px-2 py-1 text-xs" title="Rotate 90° Clockwise">
-                ⟳ +90°
-              </button>
-              <button id="studio-flip-h-btn" class="btn-secondary px-2.5 py-1 text-xs ${studioState.flipH ? 'bg-accent font-semibold text-foreground' : ''}" title="Flip Horizontal">
-                ⇆ Flip
-              </button>
-              <button id="studio-reset-transform-btn" class="text-[10.5px] text-muted-foreground hover:text-foreground px-1 py-1" title="Reset Rotation & Flip">
-                ↺ Reset
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Filter Sliders -->
-        <div class="p-3 bg-card border border-border rounded-lg space-y-2 text-xs">
-          <div class="flex items-center justify-between">
-            <span class="font-medium text-foreground text-xs flex items-center gap-1">
-              <span>🎨</span> Image Filters & Adjustments
-            </span>
-            <button id="studio-reset-filters-btn" class="text-[10px] text-muted-foreground hover:text-foreground">
-              Reset Filters
-            </button>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
-            <div>
-              <div class="flex justify-between text-[10px] mb-1">
-                <span class="text-muted-foreground">Brightness</span>
-                <span id="brightness-label" class="font-mono">${studioState.brightness}%</span>
-              </div>
-              <input type="range" id="studio-brightness-slider" min="50" max="150" value="${studioState.brightness}" class="w-full accent-foreground cursor-pointer" />
-            </div>
-
-            <div>
-              <div class="flex justify-between text-[10px] mb-1">
-                <span class="text-muted-foreground">Contrast</span>
-                <span id="contrast-label" class="font-mono">${studioState.contrast}%</span>
-              </div>
-              <input type="range" id="studio-contrast-slider" min="50" max="150" value="${studioState.contrast}" class="w-full accent-foreground cursor-pointer" />
-            </div>
-
-            <div>
-              <div class="flex justify-between text-[10px] mb-1">
-                <span class="text-muted-foreground">Saturation</span>
-                <span id="saturation-label" class="font-mono">${studioState.saturation}%</span>
-              </div>
-              <input type="range" id="studio-saturation-slider" min="0" max="200" value="${studioState.saturation}" class="w-full accent-foreground cursor-pointer" />
-            </div>
-
-            <div>
-              <div class="flex justify-between text-[10px] mb-1">
-                <span class="text-muted-foreground">Blur</span>
-                <span id="blur-label" class="font-mono">${studioState.blur}px</span>
-              </div>
-              <input type="range" id="studio-blur-slider" min="0" max="8" step="1" value="${studioState.blur}" class="w-full accent-foreground cursor-pointer" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Scale & Quality Sliders -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-card border border-border rounded-lg text-xs">
-          <div>
-            <div class="flex justify-between text-[11px] mb-1">
-              <span class="text-muted-foreground">Output Scale:</span>
-              <span id="scale-label" class="font-mono text-foreground">${studioState.scalePct}%</span>
-            </div>
-            <input type="range" id="studio-scale-slider" min="25" max="200" step="5" value="${studioState.scalePct}" class="w-full accent-foreground cursor-pointer" />
-          </div>
-
-          <div>
-            <div class="flex justify-between text-[11px] mb-1">
-              <span class="text-muted-foreground">JPEG Quality:</span>
-              <span id="quality-label" class="font-mono text-foreground">${Math.round(studioState.outputQuality * 100)}%</span>
-            </div>
-            <input type="range" id="studio-quality-slider" min="50" max="100" step="2" value="${Math.round(studioState.outputQuality * 100)}" class="w-full accent-foreground cursor-pointer" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Column: Settings, Preview & Apply Actions -->
-      <div class="space-y-4">
-        <!-- Live Cropped Result Preview -->
-        <div class="p-3 bg-card border border-border rounded-lg space-y-2">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-medium text-foreground">Output Preview</span>
-            <span id="output-dims-badge" class="text-[10px] font-mono text-muted-foreground">${studioState.targetWidth}×${studioState.targetHeight}</span>
-          </div>
-          <div class="bg-background rounded border border-border/80 p-2 flex items-center justify-center overflow-hidden min-h-[120px] max-h-[160px]">
-            <img id="studio-result-preview" src="${studioState.exportDataUrl}" class="max-h-full max-w-full object-contain rounded" style="border-radius: ${studioState.mdRadius};" />
-          </div>
-        </div>
-
-        <!-- Markdown Layout Controls -->
-        <div class="p-3 bg-card border border-border rounded-lg space-y-2.5 text-xs">
-          <span class="font-medium text-foreground text-xs block">Placement & Presentation</span>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Display Width</label>
-            <select id="studio-md-width" class="form-input text-xs">
-              <option value="100%" ${studioState.mdWidth === '100%' ? 'selected' : ''}>100% (Full Width)</option>
-              <option value="80%" ${studioState.mdWidth === '80%' ? 'selected' : ''}>80% (Standard)</option>
-              <option value="600" ${studioState.mdWidth === '600' ? 'selected' : ''}>600px (Medium)</option>
-              <option value="400" ${studioState.mdWidth === '400' ? 'selected' : ''}>400px (Small)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Alignment</label>
-            <select id="studio-md-align" class="form-input text-xs">
-              <option value="center" ${studioState.mdAlign === 'center' ? 'selected' : ''}>Center</option>
-              <option value="left" ${studioState.mdAlign === 'left' ? 'selected' : ''}>Left</option>
-              <option value="right" ${studioState.mdAlign === 'right' ? 'selected' : ''}>Right</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Corner Radius</label>
-            <select id="studio-md-radius" class="form-input text-xs">
-              <option value="8px" ${studioState.mdRadius === '8px' ? 'selected' : ''}>Rounded (8px)</option>
-              <option value="16px" ${studioState.mdRadius === '16px' ? 'selected' : ''}>Pill / Extra Rounded (16px)</option>
-              <option value="0px" ${studioState.mdRadius === '0px' ? 'selected' : ''}>Sharp (0px)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Clickable Link URL (optional)</label>
-            <input type="text" id="studio-link-url" value="${studioState.linkUrl || ''}" placeholder="https://my-app.com" class="form-input text-xs" />
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Caption / Alt Text</label>
-            <input type="text" id="studio-caption" value="${studioState.caption || ''}" placeholder="Project Preview Screenshot" class="form-input text-xs" />
-          </div>
-        </div>
-
-        <!-- Apply CTA Buttons -->
-        <div class="space-y-2 pt-1">
-          <button id="studio-apply-hero-btn" class="w-full btn-primary text-xs py-2 justify-center shadow-xs">
-            ✨ Set as Project Banner / Logo
-          </button>
-          <button id="studio-apply-demo-btn" class="w-full btn-secondary text-xs py-1.5 justify-center">
-            📸 Set as Demo / Preview Image
-          </button>
-          <button id="studio-download-img-btn" class="w-full btn-secondary text-xs py-1.5 justify-center flex items-center gap-1.5">
-            <span>💾</span> Download Image File (.png)
-          </button>
-          <button id="studio-copy-tag-btn" class="w-full text-xs text-muted-foreground hover:text-foreground py-1 text-center hover:underline">
-            📋 Copy HTML &lt;img&gt; Tag
-          </button>
-          <button id="studio-change-img-btn" class="w-full text-[11px] text-zinc-500 hover:text-rose-400 py-0.5 text-center transition">
-            Change Image File
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function attachStudioListeners(modal) {
-  modal.querySelector('#close-studio-btn')?.addEventListener('click', () => modal.classList.add('hidden'));
-  modal.querySelector('#close-studio-btn-2')?.addEventListener('click', () => modal.classList.add('hidden'));
-
-  // Tab switching
-  modal.querySelector('#studio-tab-presets')?.addEventListener('click', () => {
-    studioState.activeTab = 'presets';
-    renderStudioModalContent(modal);
-  });
-  modal.querySelector('#studio-tab-custom')?.addEventListener('click', () => {
-    studioState.activeTab = 'studio';
-    renderStudioModalContent(modal);
-    if (studioState.originalImage) initCanvasCrop();
-  });
-  modal.querySelector('#studio-jump-to-custom-btn')?.addEventListener('click', () => {
-    studioState.activeTab = 'studio';
-    renderStudioModalContent(modal);
-    if (studioState.originalImage) initCanvasCrop();
-  });
-
-  // Preset click
-  modal.querySelectorAll('.preset-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const url = card.dataset.url;
-      applyImageToTarget(url, studioState.targetField, {
-        width: '100%',
-        align: 'center',
-        radius: '8px'
-      });
-      modal.classList.add('hidden');
-      showToast('Banner applied successfully!', 'success');
-    });
-  });
-
-  // Drop zone & file input
-  const dropZone = modal.querySelector('#studio-drop-zone');
-  const fileInput = modal.querySelector('#studio-file-input');
-
-  dropZone?.addEventListener('click', () => fileInput?.click());
-  dropZone?.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropZone.classList.add('border-foreground/60');
-  });
-  dropZone?.addEventListener('dragleave', () => {
-    dropZone.classList.remove('border-foreground/60');
-  });
-  dropZone?.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.classList.remove('border-foreground/60');
-    if (e.dataTransfer.files?.length > 0) {
-      loadImageFromFile(e.dataTransfer.files[0], modal);
-    }
-  });
-
-  fileInput?.addEventListener('change', (e) => {
-    if (e.target.files?.length > 0) {
-      loadImageFromFile(e.target.files[0], modal);
-    }
-  });
-
-  // Load URL
-  modal.querySelector('#studio-load-url-btn')?.addEventListener('click', () => {
-    const url = modal.querySelector('#studio-url-input')?.value?.trim();
-    if (!url) {
-      showToast('Please enter an image URL', 'error');
-      return;
-    }
-    loadImageFromUrl(url, modal);
-  });
-
-  // If in studio view with image loaded, bind controls
-  if (studioState.activeTab === 'studio' && studioState.originalImage) {
-    // Ratio buttons
-    modal.querySelectorAll('.crop-ratio-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        studioState.cropRatio = btn.dataset.ratio;
-        setCropBoxFromRatio(studioState.cropRatio);
-        updateCroppedOutput();
-        renderStudioModalContent(modal);
-        initCanvasCrop();
-      });
-    });
-
-    // Mockup frame buttons
-    modal.querySelectorAll('.mockup-frame-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        studioState.mockupFrame = btn.dataset.frame;
-        modal.querySelectorAll('.mockup-frame-btn').forEach(b => {
-          if (b.dataset.frame === studioState.mockupFrame) {
-            b.className = 'mockup-frame-btn px-2.5 py-1 rounded text-xs transition bg-foreground text-background font-semibold shadow-xs';
-          } else {
-            b.className = 'mockup-frame-btn px-2.5 py-1 rounded text-xs transition bg-muted text-muted-foreground hover:text-foreground';
-          }
-        });
-        updateCroppedOutput();
-      });
-    });
-
-    // Transforms (Rotate & Flip)
-    modal.querySelector('#studio-rotate-left-btn')?.addEventListener('click', () => {
-      studioState.rotation = (studioState.rotation + 270) % 360;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-rotate-right-btn')?.addEventListener('click', () => {
-      studioState.rotation = (studioState.rotation + 90) % 360;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-flip-h-btn')?.addEventListener('click', (e) => {
-      studioState.flipH = !studioState.flipH;
-      e.currentTarget.classList.toggle('bg-accent', studioState.flipH);
-      e.currentTarget.classList.toggle('font-semibold', studioState.flipH);
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-reset-transform-btn')?.addEventListener('click', () => {
-      studioState.rotation = 0;
-      studioState.flipH = false;
-      const flipBtn = modal.querySelector('#studio-flip-h-btn');
-      if (flipBtn) flipBtn.classList.remove('bg-accent', 'font-semibold');
-      updateCroppedOutput();
-    });
-
-    // Filter Sliders
-    modal.querySelector('#studio-brightness-slider')?.addEventListener('input', (e) => {
-      studioState.brightness = parseInt(e.target.value, 10);
-      const lbl = modal.querySelector('#brightness-label');
-      if (lbl) lbl.innerText = `${studioState.brightness}%`;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-contrast-slider')?.addEventListener('input', (e) => {
-      studioState.contrast = parseInt(e.target.value, 10);
-      const lbl = modal.querySelector('#contrast-label');
-      if (lbl) lbl.innerText = `${studioState.contrast}%`;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-saturation-slider')?.addEventListener('input', (e) => {
-      studioState.saturation = parseInt(e.target.value, 10);
-      const lbl = modal.querySelector('#saturation-label');
-      if (lbl) lbl.innerText = `${studioState.saturation}%`;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-blur-slider')?.addEventListener('input', (e) => {
-      studioState.blur = parseInt(e.target.value, 10);
-      const lbl = modal.querySelector('#blur-label');
-      if (lbl) lbl.innerText = `${studioState.blur}px`;
-      updateCroppedOutput();
-    });
-    modal.querySelector('#studio-reset-filters-btn')?.addEventListener('click', () => {
-      studioState.brightness = 100;
-      studioState.contrast = 100;
-      studioState.saturation = 100;
-      studioState.blur = 0;
-      const bSl = modal.querySelector('#studio-brightness-slider');
-      if (bSl) bSl.value = 100;
-      const bLb = modal.querySelector('#brightness-label');
-      if (bLb) bLb.innerText = '100%';
-      const cSl = modal.querySelector('#studio-contrast-slider');
-      if (cSl) cSl.value = 100;
-      const cLb = modal.querySelector('#contrast-label');
-      if (cLb) cLb.innerText = '100%';
-      const sSl = modal.querySelector('#studio-saturation-slider');
-      if (sSl) sSl.value = 100;
-      const sLb = modal.querySelector('#saturation-label');
-      if (sLb) sLb.innerText = '100%';
-      const blSl = modal.querySelector('#studio-blur-slider');
-      if (blSl) blSl.value = 0;
-      const blLb = modal.querySelector('#blur-label');
-      if (blLb) blLb.innerText = '0px';
-      updateCroppedOutput();
-    });
-
-    // Scale slider
-    modal.querySelector('#studio-scale-slider')?.addEventListener('input', (e) => {
-      studioState.scalePct = parseInt(e.target.value, 10);
-      modal.querySelector('#scale-label').innerText = `${studioState.scalePct}%`;
-      updateCroppedOutput();
-    });
-
-    // Quality slider
-    modal.querySelector('#studio-quality-slider')?.addEventListener('input', (e) => {
-      studioState.outputQuality = parseInt(e.target.value, 10) / 100;
-      modal.querySelector('#quality-label').innerText = `${Math.round(studioState.outputQuality * 100)}%`;
-      updateCroppedOutput();
-    });
-
-    // Presentation dropdowns
-    modal.querySelector('#studio-md-width')?.addEventListener('change', (e) => {
-      studioState.mdWidth = e.target.value;
-    });
-    modal.querySelector('#studio-md-align')?.addEventListener('change', (e) => {
-      studioState.mdAlign = e.target.value;
-    });
-    modal.querySelector('#studio-md-radius')?.addEventListener('change', (e) => {
-      studioState.mdRadius = e.target.value;
-      const resImg = modal.querySelector('#studio-result-preview');
-      if (resImg) resImg.style.borderRadius = studioState.mdRadius;
-    });
-    modal.querySelector('#studio-link-url')?.addEventListener('input', (e) => {
-      studioState.linkUrl = e.target.value;
-    });
-    modal.querySelector('#studio-caption')?.addEventListener('input', (e) => {
-      studioState.caption = e.target.value;
-    });
-
-    // Apply buttons
-    modal.querySelector('#studio-apply-hero-btn')?.addEventListener('click', () => {
-      if (studioState.exportDataUrl) {
-        applyImageToTarget(studioState.exportDataUrl, 'hero', {
-          width: studioState.mdWidth,
-          align: studioState.mdAlign,
-          radius: studioState.mdRadius,
-          linkUrl: studioState.linkUrl,
-          caption: studioState.caption
-        });
-        modal.classList.add('hidden');
-        showToast('Processed image applied as Project Banner!', 'success');
-      }
-    });
-
-    modal.querySelector('#studio-apply-demo-btn')?.addEventListener('click', () => {
-      if (studioState.exportDataUrl) {
-        applyImageToTarget(studioState.exportDataUrl, 'demo', {
-          width: studioState.mdWidth,
-          align: studioState.mdAlign,
-          radius: studioState.mdRadius,
-          linkUrl: studioState.linkUrl,
-          caption: studioState.caption
-        });
-        modal.classList.add('hidden');
-        showToast('Processed image applied as Demo Preview!', 'success');
-      }
-    });
-
-    // 1-Click Download Image Button
-    modal.querySelector('#studio-download-img-btn')?.addEventListener('click', () => {
-      if (studioState.exportDataUrl) {
-        const a = document.createElement('a');
-        a.href = studioState.exportDataUrl;
-        a.download = `readmify-${studioState.targetField || 'image'}-${Date.now()}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        showToast('Image downloaded successfully!', 'success');
-      }
-    });
-
-    modal.querySelector('#studio-copy-tag-btn')?.addEventListener('click', () => {
-      if (studioState.exportDataUrl) {
-        const align = studioState.mdAlign;
-        const width = studioState.mdWidth;
-        const radius = studioState.mdRadius;
-        const alt = studioState.caption || 'Project Image';
-        const rawImg = `<img src="${studioState.exportDataUrl}" alt="${alt}" width="${width}" style="border-radius: ${radius}; max-width: 100%;" />`;
-        const wrapped = studioState.linkUrl ? `<a href="${studioState.linkUrl}">\n  ${rawImg}\n</a>` : rawImg;
-        const tag = `<div align="${align}">\n  ${wrapped}\n</div>`;
-        copyToClipboard(tag, 'HTML Image tag copied to clipboard!');
-      }
-    });
-
-    modal.querySelector('#studio-change-img-btn')?.addEventListener('click', () => {
-      studioState.originalImage = null;
-      renderStudioModalContent(modal);
-    });
-
-    initCanvasCrop();
-  }
-}
-
-function loadImageFromFile(file, modal) {
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = new Image();
-    img.onload = () => {
-      studioState.originalImage = img;
-      studioState.activeTab = 'studio';
-      studioState.rotation = 0;
-      studioState.flipH = false;
-      studioState.brightness = 100;
-      studioState.contrast = 100;
-      studioState.saturation = 100;
-      studioState.blur = 0;
-      studioState.mockupFrame = 'none';
-      setCropBoxFromRatio(studioState.cropRatio);
-      updateCroppedOutput();
-      renderStudioModalContent(modal);
-      initCanvasCrop();
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-
-function loadImageFromUrl(url, modal) {
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = () => {
-    studioState.originalImage = img;
-    studioState.activeTab = 'studio';
-    studioState.rotation = 0;
-    studioState.flipH = false;
-    studioState.brightness = 100;
-    studioState.contrast = 100;
-    studioState.saturation = 100;
-    studioState.blur = 0;
-    studioState.mockupFrame = 'none';
-    setCropBoxFromRatio(studioState.cropRatio);
-    updateCroppedOutput();
-    renderStudioModalContent(modal);
-    initCanvasCrop();
-  };
-  img.onerror = () => {
-    showToast('Failed to load image from URL (CORS restricted or invalid URL)', 'error');
-  };
-  img.src = url;
-}
-
-function setCropBoxFromRatio(ratio) {
-  if (!studioState.originalImage) return;
-  const img = studioState.originalImage;
-  const imgAspect = img.width / img.height;
-
-  let targetAspect = imgAspect;
-  if (ratio === '3:1') targetAspect = 3 / 1;
-  else if (ratio === '16:9') targetAspect = 16 / 9;
-  else if (ratio === '4:3') targetAspect = 4 / 3;
-  else if (ratio === '1:1') targetAspect = 1 / 1;
-
-  if (ratio === 'free') {
-    studioState.cropBox = { x: 0.05, y: 0.05, w: 0.9, h: 0.9 };
-    return;
-  }
-
-  if (imgAspect > targetAspect) {
-    // Image is wider than crop box
-    const h = 0.9;
-    const cropPixelHeight = img.height * h;
-    const cropPixelWidth = cropPixelHeight * targetAspect;
-    const w = Math.min(0.95, cropPixelWidth / img.width);
-    const x = (1 - w) / 2;
-    const y = (1 - h) / 2;
-    studioState.cropBox = { x, y, w, h };
-  } else {
-    // Image is taller than crop box
-    const w = 0.9;
-    const cropPixelWidth = img.width * w;
-    const cropPixelHeight = cropPixelWidth / targetAspect;
-    const h = Math.min(0.95, cropPixelHeight / img.height);
-    const x = (1 - w) / 2;
-    const y = (1 - h) / 2;
-    studioState.cropBox = { x, y, w, h };
-  }
-}
-
-function initCanvasCrop() {
-  const canvas = document.getElementById('studio-crop-canvas');
-  if (!canvas || !studioState.originalImage) return;
-
-  const ctx = canvas.getContext('2d');
-  const img = studioState.originalImage;
-
-  // Fit canvas to display
-  const maxDisplayW = 550;
-  const maxDisplayH = 340;
-  const scale = Math.min(maxDisplayW / img.width, maxDisplayH / img.height, 1);
-  canvas.width = img.width * scale;
-  canvas.height = img.height * scale;
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-    // Dim overlay outside crop box
-    const { x, y, w, h } = studioState.cropBox;
-    const bx = x * canvas.width;
-    const by = y * canvas.height;
-    const bw = w * canvas.width;
-    const bh = h * canvas.height;
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    // Top
-    ctx.fillRect(0, 0, canvas.width, by);
-    // Bottom
-    ctx.fillRect(0, by + bh, canvas.width, canvas.height - (by + bh));
-    // Left
-    ctx.fillRect(0, by, bx, bh);
-    // Right
-    ctx.fillRect(bx + bw, by, canvas.width - (bx + bw), bh);
-
-    // Crop box outline
-    ctx.strokeStyle = '#fafafa';
-    ctx.lineWidth = 1.5;
-    ctx.strokeRect(bx, by, bw, bh);
-
-    // Grid rule of thirds lines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-    ctx.lineWidth = 0.75;
-    ctx.beginPath();
-    ctx.moveTo(bx + bw / 3, by);
-    ctx.lineTo(bx + bw / 3, by + bh);
-    ctx.moveTo(bx + (2 * bw) / 3, by);
-    ctx.lineTo(bx + (2 * bw) / 3, by + bh);
-    ctx.moveTo(bx, by + bh / 3);
-    ctx.lineTo(bx + bw, by + bh / 3);
-    ctx.moveTo(bx, by + (2 * bh) / 3);
-    ctx.lineTo(bx + bw, by + (2 * bh) / 3);
-    ctx.stroke();
-
-    // Corner handles
-    ctx.fillStyle = '#fafafa';
-    const handleSize = 6;
-    ctx.fillRect(bx - handleSize / 2, by - handleSize / 2, handleSize, handleSize);
-    ctx.fillRect(bx + bw - handleSize / 2, by - handleSize / 2, handleSize, handleSize);
-    ctx.fillRect(bx - handleSize / 2, by + bh - handleSize / 2, handleSize, handleSize);
-    ctx.fillRect(bx + bw - handleSize / 2, by + bh - handleSize / 2, handleSize, handleSize);
-  }
-
-  draw();
-
-  // Mouse drag interaction
-  let isDragging = false;
-  let dragMode = 'move'; // 'move' or 'resize'
-  let startX = 0;
-  let startY = 0;
-  let origBox = null;
-
-  canvas.onmousedown = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) / canvas.width;
-    const my = (e.clientY - rect.top) / canvas.height;
-
-    const { x, y, w, h } = studioState.cropBox;
-    const isInside = mx >= x && mx <= x + w && my >= y && my <= y + h;
-
-    if (isInside) {
-      isDragging = true;
-      startX = mx;
-      startY = my;
-      origBox = { ...studioState.cropBox };
-      dragMode = 'move';
-    }
-  };
-
-  window.onmousemove = (e) => {
-    if (!isDragging || !canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const mx = (e.clientX - rect.left) / canvas.width;
-    const my = (e.clientY - rect.top) / canvas.height;
-
-    const dx = mx - startX;
-    const dy = my - startY;
-
-    if (dragMode === 'move') {
-      let newX = Math.max(0, Math.min(1 - origBox.w, origBox.x + dx));
-      let newY = Math.max(0, Math.min(1 - origBox.h, origBox.y + dy));
-      studioState.cropBox.x = newX;
-      studioState.cropBox.y = newY;
-      draw();
-      updateCroppedOutput();
-    }
-  };
-
-  window.onmouseup = () => {
-    if (isDragging) {
-      isDragging = false;
-      updateCroppedOutput();
-    }
-  };
-}
-
-function updateCroppedOutput() {
-  if (!studioState.originalImage) return;
-
-  const img = studioState.originalImage;
-  const { x, y, w, h } = studioState.cropBox;
-
-  const cropPxX = Math.round(x * img.width);
-  const cropPxY = Math.round(y * img.height);
-  const cropPxW = Math.round(w * img.width);
-  const cropPxH = Math.round(h * img.height);
-
-  const scale = studioState.scalePct / 100;
-  const baseW = Math.max(50, Math.round(cropPxW * scale));
-  const baseH = Math.max(50, Math.round(cropPxH * scale));
-
-  const isRotated90or270 = studioState.rotation === 90 || studioState.rotation === 270;
-  const rotatedW = isRotated90or270 ? baseH : baseW;
-  const rotatedH = isRotated90or270 ? baseW : baseH;
-
-  // Step 1: Render transformed and filtered cropped image
-  const contentCanvas = document.createElement('canvas');
-  contentCanvas.width = rotatedW;
-  contentCanvas.height = rotatedH;
-  const contentCtx = contentCanvas.getContext('2d');
-
-  // Build filter string
-  const filterParts = [];
-  if (studioState.brightness !== 100) filterParts.push(`brightness(${studioState.brightness}%)`);
-  if (studioState.contrast !== 100) filterParts.push(`contrast(${studioState.contrast}%)`);
-  if (studioState.saturation !== 100) filterParts.push(`saturate(${studioState.saturation}%)`);
-  if (studioState.blur > 0) filterParts.push(`blur(${studioState.blur}px)`);
-  contentCtx.filter = filterParts.length > 0 ? filterParts.join(' ') : 'none';
-
-  // Apply rotation and flip
-  contentCtx.save();
-  contentCtx.translate(rotatedW / 2, rotatedH / 2);
-  contentCtx.rotate((studioState.rotation * Math.PI) / 180);
-  if (studioState.flipH) {
-    contentCtx.scale(-1, 1);
-  }
-  contentCtx.drawImage(img, cropPxX, cropPxY, cropPxW, cropPxH, -baseW / 2, -baseH / 2, baseW, baseH);
-  contentCtx.restore();
-
-  // Step 2: Render Mockup Window Frame (if selected)
-  let finalCanvas;
-  if (studioState.mockupFrame === 'browser') {
-    const titleBarH = 38;
-    const borderR = 10;
-    finalCanvas = document.createElement('canvas');
-    finalCanvas.width = rotatedW;
-    finalCanvas.height = rotatedH + titleBarH;
-    const ctx = finalCanvas.getContext('2d');
-
-    // Titlebar background
-    ctx.fillStyle = '#1e1e24';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(0, 0, finalCanvas.width, finalCanvas.height, borderR);
-    } else {
-      ctx.rect(0, 0, finalCanvas.width, finalCanvas.height);
-    }
-    ctx.fill();
-
-    // macOS traffic lights
-    const dotY = 19;
-    ctx.fillStyle = '#ff5f56';
-    ctx.beginPath(); ctx.arc(18, dotY, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#ffbd2e';
-    ctx.beginPath(); ctx.arc(38, dotY, 6, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#27c93f';
-    ctx.beginPath(); ctx.arc(58, dotY, 6, 0, Math.PI * 2); ctx.fill();
-
-    // Faux address bar
-    const addrW = Math.min(320, Math.max(160, rotatedW - 140));
-    const addrX = (rotatedW - addrW) / 2;
-    ctx.fillStyle = '#2b2b36';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(addrX, 8, addrW, 22, 6);
-    } else {
-      ctx.rect(addrX, 8, addrW, 22);
-    }
-    ctx.fill();
-
-    ctx.fillStyle = '#9ca3af';
-    ctx.font = '10px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('🔒 https://app.preview', addrX + addrW / 2, 19);
-
-    // Draw content image
-    ctx.drawImage(contentCanvas, 0, titleBarH);
-  } else if (studioState.mockupFrame === 'terminal') {
-    const titleBarH = 34;
-    const borderR = 8;
-    finalCanvas = document.createElement('canvas');
-    finalCanvas.width = rotatedW;
-    finalCanvas.height = rotatedH + titleBarH;
-    const ctx = finalCanvas.getContext('2d');
-
-    // Terminal header
-    ctx.fillStyle = '#18181b';
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(0, 0, finalCanvas.width, finalCanvas.height, borderR);
-    } else {
-      ctx.rect(0, 0, finalCanvas.width, finalCanvas.height);
-    }
-    ctx.fill();
-
-    // Traffic light dots
-    const dotY = 17;
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath(); ctx.arc(16, dotY, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#eab308';
-    ctx.beginPath(); ctx.arc(32, dotY, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#22c55e';
-    ctx.beginPath(); ctx.arc(48, dotY, 5, 0, Math.PI * 2); ctx.fill();
-
-    // Terminal title
-    ctx.fillStyle = '#a1a1aa';
-    ctx.font = '11px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('bash — 80×24', rotatedW / 2, 17);
-
-    // Draw content image
-    ctx.drawImage(contentCanvas, 0, titleBarH);
-  } else {
-    finalCanvas = contentCanvas;
-  }
-
-  studioState.targetWidth = finalCanvas.width;
-  studioState.targetHeight = finalCanvas.height;
-
-  const exportFormat = studioState.mockupFrame !== 'none' ? 'image/png' : studioState.outputFormat;
-  const dataUrl = finalCanvas.toDataURL(exportFormat, studioState.outputQuality);
-  studioState.exportDataUrl = dataUrl;
-
-  // Update DOM elements if present
-  const resImg = document.getElementById('studio-result-preview');
-  if (resImg) resImg.src = dataUrl;
-  const dimsBadge = document.getElementById('output-dims-badge');
-  if (dimsBadge) dimsBadge.innerText = `${finalCanvas.width}×${finalCanvas.height} px`;
-}
-
-function applyImageToTarget(url, targetField, styleOptions = {}) {
-  const { width = '100%', align = 'center', radius = '8px', linkUrl = '', caption = '' } = styleOptions;
-
-  if (targetField === 'demo') {
-    const demoSec = store.getState().sections.find(s => s.type === SECTION_TYPES.DEMO);
-    if (demoSec) {
-      store.updateSectionData(demoSec.id, {
-        imageUrl: url,
-        width,
-        align,
-        radius,
-        liveUrl: linkUrl || demoSec.data?.liveUrl || '',
-        linkUrl: linkUrl || demoSec.data?.linkUrl || '',
-        caption: caption || demoSec.data?.caption || 'Project Preview'
-      });
-      store.toggleSection(demoSec.id, true);
-    }
-  } else {
-    const heroSec = store.getState().sections.find(s => s.type === SECTION_TYPES.HERO);
-    if (heroSec) {
-      store.updateSectionData(heroSec.id, {
-        logoUrl: url,
-        showLogo: true,
-        logoWidth: width,
-        logoAlign: align,
-        logoRadius: radius,
-        logoLinkUrl: linkUrl || heroSec.data?.logoLinkUrl || ''
-      });
-    }
-  }
-}
-
-/* ==================== MODULE: components/sectionLibrary.js ==================== */
-
-let catalogCategory = 'all';
-let catalogSearchQuery = '';
-function getSectionSvg(type) {
-  const icons = {
-    [SECTION_TYPES.HERO]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>',
-    [SECTION_TYPES.BADGES]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-    [SECTION_TYPES.ABOUT]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>',
-    [SECTION_TYPES.TECH_STACK]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>',
-    [SECTION_TYPES.FEATURES]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
-    [SECTION_TYPES.PROJECT_STRUCTURE]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>',
-    [SECTION_TYPES.DEMO]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
-    [SECTION_TYPES.BENCHMARKS]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>',
-    [SECTION_TYPES.INSTALLATION]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>',
-    [SECTION_TYPES.ENV_VARS]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="14" y2="14"/><line x1="4" x2="20" y1="7" y2="7"/><circle cx="8" cy="7" r="2"/><circle cx="16" cy="14" r="2"/><circle cx="10" cy="21" r="2"/></svg>',
-    [SECTION_TYPES.USAGE]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
-    [SECTION_TYPES.API_REFERENCE]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>',
-    [SECTION_TYPES.FAQ]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>',
-    [SECTION_TYPES.ROADMAP]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>',
-    [SECTION_TYPES.CONTRIBUTING]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    [SECTION_TYPES.SPONSORS]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
-    [SECTION_TYPES.CHANGELOG]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-    [SECTION_TYPES.LICENSE]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>',
-    [SECTION_TYPES.AUTHOR]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
-    [SECTION_TYPES.CUSTOM]: '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>'
-  };
-  return icons[type] || '<svg class="w-4 h-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/></svg>';
-}
-const SECTION_CATALOG = [
-  // --- CORE & INTRO ---
-  {
-    type: SECTION_TYPES.HERO,
-    title: 'Header & Title',
-    category: 'core',
-    desc: 'Project title, compelling tagline, custom banner/logo, and alignment.',
-    tags: ['title', 'banner', 'hero', 'logo', 'header']
-  },
-  {
-    type: SECTION_TYPES.BADGES,
-    title: 'Repo Badges & Stats',
-    category: 'core',
-    desc: 'Automated GitHub stars, forks, license, release, and CI passing status badges.',
-    tags: ['badges', 'shields', 'stars', 'forks', 'license', 'ci']
-  },
-  {
-    type: SECTION_TYPES.ABOUT,
-    title: 'About The Project',
-    category: 'core',
-    desc: 'Clear, engaging problem-solution overview explaining why your project exists.',
-    tags: ['about', 'overview', 'summary', 'intro']
-  },
-  {
-    type: SECTION_TYPES.TECH_STACK,
-    title: 'Built With (Tech Stack)',
-    category: 'core',
-    desc: 'Display languages, frameworks, databases, and tools with SkillIcons or Shields badges.',
-    tags: ['tech', 'stack', 'languages', 'frameworks', 'icons']
-  },
-
-  // --- FEATURES & ARCHITECTURE ---
-  {
-    type: SECTION_TYPES.FEATURES,
-    title: 'Key Features',
-    category: 'features',
-    desc: 'Showcase your standout capabilities and core benefits with icons and descriptions.',
-    tags: ['features', 'highlights', 'benefits', 'capabilities']
-  },
-  {
-    type: SECTION_TYPES.PROJECT_STRUCTURE,
-    title: 'Project Structure',
-    category: 'features',
-    desc: 'Visual ASCII directory tree showing code architecture and key files.',
-    tags: ['structure', 'tree', 'architecture', 'folders', 'files']
-  },
-  {
-    type: SECTION_TYPES.DEMO,
-    title: 'Preview & Screenshots',
-    category: 'features',
-    desc: 'High-impact walkthrough GIF, application preview, or live demo link with custom sizing.',
-    tags: ['demo', 'preview', 'screenshot', 'gif', 'image', 'video']
-  },
-  {
-    type: SECTION_TYPES.BENCHMARKS,
-    title: 'Benchmarks & Performance',
-    category: 'features',
-    desc: 'Metrics table comparing throughput, memory, or speed against competitors.',
-    tags: ['benchmarks', 'performance', 'speed', 'metrics', 'comparison']
-  },
-
-  // --- SETUP & USAGE ---
-  {
-    type: SECTION_TYPES.INSTALLATION,
-    title: 'Getting Started & Installation',
-    category: 'setup',
-    desc: 'System prerequisites and copy-paste terminal steps to clone, install, and run.',
-    tags: ['install', 'setup', 'getting-started', 'npm', 'clone']
-  },
-  {
-    type: SECTION_TYPES.ENV_VARS,
-    title: 'Environment Variables',
-    category: 'setup',
-    desc: 'Formatted table detailing required keys, descriptions, and default values.',
-    tags: ['env', 'environment', 'variables', 'config', 'secrets']
-  },
-  {
-    type: SECTION_TYPES.USAGE,
-    title: 'Usage & Examples',
-    category: 'setup',
-    desc: 'Code snippets, API calls, or CLI commands demonstrating how to use the project.',
-    tags: ['usage', 'examples', 'code', 'snippet', 'cli']
-  },
-  {
-    type: SECTION_TYPES.API_REFERENCE,
-    title: 'API Reference',
-    category: 'setup',
-    desc: 'Clean REST or GraphQL endpoint table with methods, paths, and auth requirements.',
-    tags: ['api', 'endpoints', 'rest', 'graphql', 'reference', 'routes']
-  },
-
-  // --- COMMUNITY & GOVERNANCE ---
-  {
-    type: SECTION_TYPES.FAQ,
-    title: 'FAQ & Troubleshooting',
-    category: 'community',
-    desc: 'Collapsible accordion question-and-answer pairs for common issues and questions.',
-    tags: ['faq', 'questions', 'troubleshooting', 'help', 'details']
-  },
-  {
-    type: SECTION_TYPES.ROADMAP,
-    title: 'Roadmap',
-    category: 'community',
-    desc: 'Interactive checklist of planned milestones, upcoming features, and current status.',
-    tags: ['roadmap', 'todo', 'milestones', 'plans']
-  },
-  {
-    type: SECTION_TYPES.CONTRIBUTING,
-    title: 'Contributing Guide',
-    category: 'community',
-    desc: 'Fork-and-PR workflow instructions with automated contributor avatar wall.',
-    tags: ['contributing', 'prs', 'fork', 'open-source', 'community']
-  },
-  {
-    type: SECTION_TYPES.SPONSORS,
-    title: 'Sponsors & Support',
-    category: 'community',
-    desc: 'Support cards for Buy Me A Coffee, GitHub Sponsors, and Patreon.',
-    tags: ['sponsors', 'donate', 'coffee', 'patreon', 'funding']
-  },
-  {
-    type: SECTION_TYPES.CHANGELOG,
-    title: 'Changelog',
-    category: 'community',
-    desc: 'Version history, dates, and bullet points of new features, fixes, and changes.',
-    tags: ['changelog', 'releases', 'versions', 'history', 'updates']
-  },
-  {
-    type: SECTION_TYPES.LICENSE,
-    title: 'License',
-    category: 'community',
-    desc: 'Software distribution license notice (MIT, Apache, GPL, etc.) and copyright holder.',
-    tags: ['license', 'mit', 'apache', 'copyright']
-  },
-  {
-    type: SECTION_TYPES.AUTHOR,
-    title: 'Author & Contact',
-    category: 'community',
-    desc: 'Author bio, email, GitHub badge, Twitter/X, and LinkedIn social links.',
-    tags: ['author', 'creator', 'contact', 'socials', 'email']
-  },
-  {
-    type: SECTION_TYPES.STATS,
-    title: 'GitHub Visuals & Stats',
-    category: 'features',
-    desc: 'Activity graph, contributor wall, star history, streak — all opt-in online visuals.',
-    tags: ['stats', 'graphs', 'activity', 'contributors', 'stars', 'visuals']
-  },
-  {
-    type: SECTION_TYPES.CUSTOM,
-    title: 'Custom Section',
-    category: 'community',
-    desc: 'A flexible, blank markdown canvas for architecture diagrams, notes, or anything else.',
-    tags: ['custom', 'markdown', 'freeform', 'blank', 'notes']
-  }
-];
-
-let targetInsertIndex = null;
-function openSectionLibrary(insertIndex = null) {
-  targetInsertIndex = typeof insertIndex === 'number' ? insertIndex : null;
-  let modal = document.getElementById('section-library-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'section-library-modal';
-    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden';
-    document.body.appendChild(modal);
-  }
-
-  catalogCategory = 'all';
-  catalogSearchQuery = '';
-  renderLibraryModal();
-  modal.classList.remove('hidden');
-}
-function closeSectionLibrary() {
-  targetInsertIndex = null;
-  const modal = document.getElementById('section-library-modal');
-  if (modal) modal.classList.add('hidden');
-}
-
-function renderLibraryModal() {
-  const modal = document.getElementById('section-library-modal');
-  if (!modal) return;
-
-  const currentSections = store.getState().sections;
-
-  // Filter items
-  const filtered = SECTION_CATALOG.filter(item => {
-    const matchesCategory = catalogCategory === 'all' || item.category === catalogCategory;
-    const q = catalogSearchQuery.toLowerCase();
-    const matchesSearch = !q || 
-      item.title.toLowerCase().includes(q) || 
-      item.desc.toLowerCase().includes(q) || 
-      item.tags.some(t => t.toLowerCase().includes(q));
-    return matchesCategory && matchesSearch;
-  });
-
-  modal.innerHTML = `
-    <div class="bg-card border border-border rounded-lg w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-      <!-- Modal Header -->
-      <div class="px-5 py-3.5 border-b border-border flex items-center justify-between bg-card flex-shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-md bg-muted border border-border flex items-center justify-center text-foreground font-semibold text-sm">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          </div>
-          <div>
-            <h3 class="text-sm font-semibold text-foreground">Section Library</h3>
-            <p class="text-[11px] text-muted-foreground">Pick from 16+ curated section templates to add to your README</p>
-          </div>
-        </div>
-        <button id="close-lib-btn" class="p-1 text-muted-foreground hover:text-foreground text-xs">✕</button>
-      </div>
-
-      <!-- Search & Category Filters -->
-      <div class="px-5 py-3 border-b border-border bg-background/50 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between flex-shrink-0">
-        <div class="relative flex-1">
-          <span class="absolute left-2.5 top-2 text-muted-foreground text-xs pointer-events-none">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" x2="16.65" y1="21" y2="16.65"/></svg>
-          </span>
-          <input 
-            type="text" 
-            id="lib-search-input" 
-            value="${catalogSearchQuery}"
-            placeholder="Search sections: FAQ, Benchmarks, API, Structure..." 
-            class="form-input text-xs pl-8 pr-3 h-8 w-full" 
-          />
-        </div>
-
-        <div class="flex items-center gap-1 overflow-x-auto pb-0.5 sm:pb-0">
-          ${[
-            { id: 'all', label: 'All' },
-            { id: 'core', label: 'Core' },
-            { id: 'features', label: 'Features' },
-            { id: 'setup', label: 'Setup' },
-            { id: 'community', label: 'Community' }
-          ].map(c => `
-            <button class="lib-cat-btn px-2.5 py-1 text-[11px] font-medium rounded-md transition ${
-              catalogCategory === c.id 
-                ? 'bg-primary text-primary-foreground font-semibold shadow-xs' 
-                : 'text-muted-foreground hover:text-foreground hover:bg-muted'
-            }" data-cat="${c.id}">
-              ${c.label}
-            </button>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- Section Cards Grid -->
-      <div class="p-5 overflow-y-auto flex-1 bg-background">
-        ${filtered.length === 0 ? `
-          <div class="py-12 text-center text-muted-foreground text-xs space-y-1">
-            <p class="text-sm">No matching sections found for "${catalogSearchQuery}".</p>
-            <button id="lib-clear-search-btn" class="text-xs text-foreground underline pt-1 cursor-pointer">Clear search filter</button>
-          </div>
-        ` : `
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            ${filtered.map(item => {
-              const existingSec = currentSections.find(s => s.type === item.type);
-              const isEnabled = existingSec && existingSec.enabled;
-              const isMultiple = item.type === SECTION_TYPES.CUSTOM;
-
-              return `
-                <div class="group p-3.5 bg-card border border-border hover:border-foreground/40 rounded-lg flex flex-col justify-between transition space-y-3 select-none" draggable="true" data-section-type="${item.type}" title="Drag onto canvas dividers to insert">
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded bg-muted/60 flex items-center justify-center">
-                          ${getSectionSvg(item.type)}
-                        </div>
-                        <h4 class="text-xs font-semibold text-foreground group-hover:text-foreground transition">${item.title}</h4>
-                      </div>
-                      ${isEnabled && !isMultiple ? `
-                        <span class="text-[10px] px-1.5 py-0.5 rounded-full border border-border bg-muted/60 text-muted-foreground">In README</span>
-                      ` : ''}
-                    </div>
-                    <p class="text-[11px] text-muted-foreground leading-relaxed">${item.desc}</p>
-                  </div>
-
-                  <div class="pt-1 flex items-center justify-between border-t border-border/50">
-                    <span class="text-[10px] text-zinc-500 uppercase tracking-wider font-mono">${item.category}</span>
-                    ${isEnabled && !isMultiple ? `
-                      <button class="lib-action-btn text-xs font-medium text-foreground hover:underline" data-type="${item.type}" data-title="${item.title}" data-mode="jump">
-                        Edit Section →
-                      </button>
-                    ` : `
-                      <button class="lib-action-btn btn-primary text-xs px-2.5 py-1 shadow-xs flex items-center gap-1" data-type="${item.type}" data-title="${item.title}" data-mode="add">
-                        <span>+</span> Add to README
-                      </button>
-                    `}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `}
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between flex-shrink-0">
-        <span class="text-[11px] text-muted-foreground">Tip: You can reorder, rename, or duplicate any section in your workspace.</span>
-        <button id="close-lib-btn-2" class="btn-secondary text-xs px-3.5 py-1.5">
-          Close
-        </button>
-      </div>
-    </div>
-  `;
-
-  modal.querySelector('#close-lib-btn')?.addEventListener('click', closeSectionLibrary);
-  modal.querySelector('#close-lib-btn-2')?.addEventListener('click', closeSectionLibrary);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeSectionLibrary();
-  });
-
-  // Search input (debounced to avoid re-render jank + focus loss)
-  const searchInput = modal.querySelector('#lib-search-input');
-  let searchTimer = null;
-  searchInput?.addEventListener('input', (e) => {
-    const val = e.target.value;
-    const pos = e.target.selectionStart || val.length;
-    if (searchTimer) clearTimeout(searchTimer);
-    searchTimer = setTimeout(() => {
-      catalogSearchQuery = val;
-      // Lightweight list-only update: re-render then restore focus
-      renderLibraryModal();
-      const updatedInput = modal.querySelector('#lib-search-input');
-      if (updatedInput) {
-        updatedInput.focus();
-        try { updatedInput.setSelectionRange(pos, pos); } catch (err) {}
-      }
-    }, 180);
-  });
-
-  modal.querySelector('#lib-clear-search-btn')?.addEventListener('click', () => {
-    catalogSearchQuery = '';
-    renderLibraryModal();
-  });
-
-  // Categories
-  modal.querySelectorAll('.lib-cat-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      catalogCategory = btn.dataset.cat;
-      renderLibraryModal();
-    });
-  });
-
-  // Drag library cards onto canvas (native HTML5)
-  modal.querySelectorAll('[data-section-type]').forEach(card => {
-    card.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/readmify-section-type', card.dataset.sectionType);
-      e.dataTransfer.effectAllowed = 'copy';
-    });
-  });
-
-  // Action buttons (Add or Jump)
-  modal.querySelectorAll('.lib-action-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const type = btn.dataset.type;
-      const title = btn.dataset.title;
-      const mode = btn.dataset.mode;
-
-      if (mode === 'jump') {
-        const sec = store.getState().sections.find(s => s.type === type);
-        if (sec) {
-          store.setActiveSection(sec.id);
-          closeSectionLibrary();
-          showToast(`Jumped to "${sec.title}"`, 'info');
-        }
-      } else {
-        const newId = store.addSectionFromType(type, title, targetInsertIndex);
-        closeSectionLibrary();
-        fireConfetti();
-        showToast(`Added "${title}" to your README!`, 'success');
-      }
-    });
-  });
-}
-
-/* ==================== MODULE: components/techPicker.js ==================== */
-
-let currentCategory = 'all';
-let searchQuery = '';function renderTechPickerModal() {
-  let modal = document.getElementById('tech-picker-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'tech-picker-modal';
-    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden';
-    modal.innerHTML = `
-      <div class="bg-card border border-border rounded-lg w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-        <!-- Modal Header -->
-        <div class="px-5 py-3.5 border-b border-border flex items-center justify-between bg-card">
-          <div>
-            <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
-              <span>🎨</span> Select Tech Stack & Badges
-            </h3>
-            <p class="text-[11px] text-muted-foreground mt-0.5">Choose from 130+ technologies with official brand logos & colors</p>
-          </div>
-          <button id="close-tech-picker-btn" class="p-1 text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition text-xs">
-            ✕
-          </button>
-        </div>
-
-        <!-- Filter & Search Controls -->
-        <div class="p-3 border-b border-border bg-background/50 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
-          <div class="relative flex-1">
-            <input 
-              type="text" 
-              id="tech-search-input" 
-              placeholder="Filter technologies (e.g. React, Python, Docker)..." 
-              class="form-input text-xs py-1.5"
-            />
-          </div>
-
-          <div class="flex items-center gap-2">
-            <label class="text-[11px] text-muted-foreground whitespace-nowrap">Style:</label>
-            <select id="tech-badge-style-select" class="form-input text-xs py-1 px-2 h-8 w-auto">
-              <option value="for-the-badge">for-the-badge (Bold)</option>
-              <option value="flat">flat (Clean)</option>
-              <option value="flat-square">flat-square (Modern)</option>
-              <option value="plastic">plastic (Classic)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Category Pills -->
-        <div class="px-5 py-2 border-b border-border flex gap-1.5 overflow-x-auto bg-card/50 no-scrollbar">
-          ${TECH_CATEGORIES.map(cat => `
-            <button 
-              class="tech-cat-btn px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-all ${cat.id === 'all' ? 'bg-primary text-primary-foreground shadow-xs' : 'bg-muted text-muted-foreground hover:text-foreground hover:bg-accent'}" 
-              data-category="${cat.id}">
-              ${cat.name}
-            </button>
-          `).join('')}
-        </div>
-
-        <!-- Tech Grid -->
-        <div id="tech-items-grid" class="flex-1 p-5 overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 bg-background">
-          <!-- Populated dynamically -->
-        </div>
-
-        <!-- Modal Footer -->
-        <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between">
-          <div class="text-xs text-muted-foreground">
-            <span id="tech-selected-count" class="font-medium text-foreground">0</span> technologies selected
-          </div>
-          <button id="apply-tech-picker-btn" class="btn-primary text-xs px-3.5 py-1.5">
-            Apply Selection
-          </button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-
-    modal.querySelector('#close-tech-picker-btn')?.addEventListener('click', closeTechPicker);
-    modal.querySelector('#apply-tech-picker-btn')?.addEventListener('click', closeTechPicker);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeTechPicker();
-    });
-
-    const searchInput = modal.querySelector('#tech-search-input');
-    searchInput.addEventListener('input', (e) => {
-      searchQuery = e.target.value.toLowerCase().trim();
-      updateTechGrid();
-    });
-
-    const styleSelect = modal.querySelector('#tech-badge-style-select');
-    styleSelect.addEventListener('change', (e) => {
-      const techSec = store.getState().sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-      if (techSec) {
-        store.updateSectionData(techSec.id, { style: e.target.value });
-        updateTechGrid();
-      }
-    });
-
-    modal.querySelectorAll('.tech-cat-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        modal.querySelectorAll('.tech-cat-btn').forEach(b => {
-          b.className = 'tech-cat-btn px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-all bg-muted text-muted-foreground hover:text-foreground hover:bg-accent';
-        });
-        btn.className = 'tech-cat-btn px-2.5 py-1 text-xs font-medium rounded-md whitespace-nowrap transition-all bg-primary text-primary-foreground shadow-xs';
-        currentCategory = btn.dataset.category;
-        updateTechGrid();
-      });
-    });
-  }
-
-  updateTechGrid();
-  modal.classList.remove('hidden');
-}function closeTechPicker() {
-  const modal = document.getElementById('tech-picker-modal');
-  if (modal) {
-    modal.classList.add('hidden');
-  }
-}
-
-function updateTechGrid() {
-  const grid = document.getElementById('tech-items-grid');
-  if (!grid) return;
-
-  const techSec = store.getState().sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-  const selectedTechs = new Set(techSec?.data?.technologies || []);
-  const style = techSec?.data?.style || 'for-the-badge';
-
-  const styleSelect = document.getElementById('tech-badge-style-select');
-  if (styleSelect && techSec?.data?.style) {
-    styleSelect.value = techSec.data.style;
-  }
-
-  const selectedCountEl = document.getElementById('tech-selected-count');
-  if (selectedCountEl) {
-    selectedCountEl.textContent = selectedTechs.size;
-  }
-
-  const filtered = TECH_CATALOG.filter(item => {
-    const matchCategory = currentCategory === 'all' || item.category === currentCategory;
-    const matchSearch = !searchQuery || item.name.toLowerCase().includes(searchQuery) || item.id.includes(searchQuery);
-    return matchCategory && matchSearch;
-  });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div class="col-span-full py-10 text-center text-muted-foreground text-xs">
-        No technologies found matching "${searchQuery}"
-      </div>
-    `;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(item => {
-    const isSelected = selectedTechs.has(item.id);
-    const badgeUrl = getBadgeUrl(item, style);
-    const noSkill = !item.skillSlug ? `<span class="text-[9px] text-amber-400/80" title="No SkillIcons — use Shields layout">no-icon</span>` : '';
-
-    return `
-      <div
-        class="tech-card p-2.5 rounded-md border transition-all cursor-pointer flex flex-col justify-between gap-2 select-none ${
-          isSelected
-            ? 'bg-muted border-foreground/60 shadow-xs ring-1 ring-ring'
-            : 'bg-card border-border hover:border-zinc-700 hover:bg-muted/50'
-        }"
-        data-tech-id="${item.id}"
-        draggable="true"
-        title="Click to toggle · drag onto canvas tiles"
-      >
-        <div class="flex items-center justify-between gap-1">
-          <span class="text-xs font-medium text-foreground truncate">${item.name}</span>
-          <span class="flex items-center gap-1">${noSkill}<span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
-            isSelected ? 'bg-primary text-primary-foreground font-bold' : 'border border-border text-transparent'
-          }">✓</span></span>
-        </div>
-        <div class="h-5 flex items-center overflow-hidden">
-          <img src="${badgeUrl}" alt="${item.name}" class="h-4 object-contain pointer-events-none" loading="lazy" />
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  grid.querySelectorAll('.tech-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const techId = card.dataset.techId;
-      toggleTechItem(techId);
-    });
-    card.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/readmify-tech-id', card.dataset.techId);
-      e.dataTransfer.setData('text/readmify-tech-from', 'picker');
-      e.dataTransfer.effectAllowed = 'copy';
-      card.classList.add('dragging');
-    });
-    card.addEventListener('dragend', () => card.classList.remove('dragging'));
-  });
-}
-
-function toggleTechItem(techId) {
-  const techSec = store.getState().sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-  if (!techSec) return;
-
-  const currentList = [...(techSec.data.technologies || [])];
-  const idx = currentList.indexOf(techId);
-
-  if (idx !== -1) {
-    currentList.splice(idx, 1);
-  } else {
-    currentList.push(techId);
-  }
-
-  store.updateSectionData(techSec.id, { technologies: currentList });
-  updateTechGrid();
-}
-
-/* ==================== MODULE: components/sectionEditor.js ==================== */
-
-let currentRenderedSectionId = null;function renderSectionEditor(container, meta = {}) {
-  if (!container) return;
-
+function renderSectionFormList(container, meta = {}) {
   const state = store.getState();
-  const section = state.sections.find(s => s.id === state.activeSectionId);
 
-  if (!section) {
-    currentRenderedSectionId = null;
-    container.innerHTML = `
-      <div class="p-12 text-center text-muted-foreground text-xs space-y-3">
-        <div class="w-10 h-10 mx-auto rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
-        <div class="space-y-1">
-          <p class="font-medium text-foreground">No Section Selected</p>
-          <p>Select a section from the bar above, or add a new section from the library.</p>
-        </div>
-        <button id="empty-add-sec-btn" class="btn-primary text-xs px-3.5 py-1.5 shadow-sm inline-flex items-center gap-1.5 cursor-pointer">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-          <span>Open Section Library</span>
-        </button>
-      </div>
-    `;
-    container.querySelector('#empty-add-sec-btn')?.addEventListener('click', openSectionLibrary);
-    return;
-  }
+  // Only a live text edit needs its DOM left alone (rebuilding would drop the
+  // cursor); every other change (add/remove/duplicate/reorder/toggle/select)
+  // must always redraw so it's visible immediately.
+  const isTextEdit = meta.type === 'UPDATE_SECTION_DATA' || meta.type === 'RENAME_SECTION';
+  const active = document.activeElement;
+  const isTypingField = active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA') && container.contains(active);
+  if (isTextEdit && isTypingField) return;
 
-  const { type, data, title, id, enabled } = section;
-
-  // Prevent input focus loss: if user is typing inside an input/textarea of this section, do NOT rebuild innerHTML
-  const activeEl = document.activeElement;
-  const isTyping = activeEl && container.contains(activeEl) && (
-    (activeEl.tagName === 'INPUT' && activeEl.type !== 'checkbox' && activeEl.type !== 'radio' && activeEl.type !== 'button' && activeEl.type !== 'submit') ||
-    activeEl.tagName === 'TEXTAREA'
-  );
-
-  if (currentRenderedSectionId === id && isTyping && !meta.force) {
-    if (type === SECTION_TYPES.LICENSE) {
-      const licPre = container.querySelector('#license-preview-pre');
-      if (licPre) {
-        const activeLic = getLicenseById(data.type || 'MIT');
-        licPre.textContent = activeLic.generateText(data.year, data.holder, data.projectName);
-      }
-    }
-    return;
-  }
-  currentRenderedSectionId = id;
-
-  const currentIndex = state.sections.findIndex(s => s.id === id);
-  const totalSections = state.sections.length;
-
-  container.innerHTML = `
-    <div class="p-5 max-w-3xl mx-auto space-y-5">
-      <!-- Section Action Header Bar -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-border">
-        <!-- Title & Rename -->
-        <div class="space-y-1">
-          <div class="flex items-center gap-2">
-            <input 
-              type="text" 
-              id="section-title-rename-input" 
-              value="${title}" 
-              class="text-sm font-semibold text-foreground bg-transparent hover:bg-card focus:bg-card border border-transparent hover:border-border focus:border-border rounded px-2 py-0.5 transition outline-none" 
-              title="Click to rename this section"
-            />
-            <span class="px-2 py-0.5 text-[10px] font-medium rounded-full ${enabled ? 'bg-muted text-foreground border border-border' : 'bg-muted/40 text-muted-foreground'}">
-              ${enabled ? 'Active' : 'Disabled'}
-            </span>
-          </div>
-          <p class="text-[11px] text-muted-foreground">Customize options, markdown layout, and content</p>
-        </div>
-
-        <!-- Section Action Buttons Toolbar -->
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <button id="sec-move-up-btn" class="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded text-xs transition ${currentIndex === 0 ? 'opacity-30 pointer-events-none' : ''}" title="Move Section Up">
-            ▲
-          </button>
-          <button id="sec-move-down-btn" class="p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded text-xs transition ${currentIndex === totalSections - 1 ? 'opacity-30 pointer-events-none' : ''}" title="Move Section Down">
-            ▼
-          </button>
-          <button id="sec-duplicate-btn" class="px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-muted rounded border border-border transition flex items-center gap-1" title="Duplicate this section">
-            <span>📑</span> Duplicate
-          </button>
-          <label class="relative inline-flex items-center cursor-pointer ml-1" title="Toggle section visibility">
-            <input type="checkbox" id="toggle-section-enabled" class="sr-only peer" ${enabled ? 'checked' : ''}>
-            <div class="w-8 h-4 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-zinc-900 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-zinc-400 after:border-zinc-700 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-foreground peer-checked:after:bg-zinc-950"></div>
-          </label>
-          <button id="sec-delete-btn" class="p-1 text-rose-400 hover:text-rose-300 hover:bg-rose-950/20 rounded transition ml-1" title="Delete section">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Form Fields Body -->
-      <div id="section-form-fields" class="space-y-4">
-        ${renderFormFieldsByType(type, data, state)}
-      </div>
-    </div>
-  `;
-
-  // Rename Section Input
-  const renameInput = container.querySelector('#section-title-rename-input');
-  renameInput?.addEventListener('input', (e) => {
-    store.renameSection(id, e.target.value);
-  });
-  renameInput?.addEventListener('change', (e) => {
-    showToast(`Renamed section to "${e.target.value}"`, 'info');
-  });
-
-  // Toolbar Listeners
-  container.querySelector('#sec-move-up-btn')?.addEventListener('click', () => {
-    store.moveSection(id, 'up');
-  });
-  container.querySelector('#sec-move-down-btn')?.addEventListener('click', () => {
-    store.moveSection(id, 'down');
-  });
-  container.querySelector('#sec-duplicate-btn')?.addEventListener('click', () => {
-    const newId = store.duplicateSection(id);
-    if (newId) showToast('Section duplicated!', 'success');
-  });
-  container.querySelector('#toggle-section-enabled')?.addEventListener('change', (e) => {
-    store.toggleSection(id, e.target.checked);
-  });
-  container.querySelector('#sec-delete-btn')?.addEventListener('click', () => {
-    if (confirm(`Delete the section "${title}"?`)) {
-      store.removeSection(id);
-      showToast(`Removed "${title}"`, 'info');
-    }
-  });
-
-  attachFieldListeners(container, id, type, data);
+  container.innerHTML = state.sections.map((section, idx) => renderCard(section, idx, state.activeSectionId)).join('');
+  attachListeners(container);
 }
 
-function renderFormFieldsByType(type, data, state) {
+function renderCard(section, index, activeSectionId) {
+  const collapsed = !expandedIds.has(section.id) && section.id !== activeSectionId;
+  const label = SECTION_LABELS[section.type] || section.title;
+  return `
+    <div class="section-card ${section.enabled ? '' : 'section-card-disabled'}" data-card-id="${section.id}" data-index="${index}">
+      <div class="section-card-header" data-id="${section.id}">
+        <span class="drag-grip" draggable="true" title="Drag to reorder">⠿</span>
+        <button type="button" class="card-collapse-btn" title="${collapsed ? 'Expand' : 'Collapse'}">${collapsed ? '▸' : '▾'}</button>
+        <input type="text" class="card-title-input" data-id="${section.id}" value="${esc(section.title)}" title="${esc(label)} section" />
+        <label class="card-enable-toggle" title="Show in README">
+          <input type="checkbox" class="card-enable-cb" data-id="${section.id}" ${section.enabled ? 'checked' : ''} />
+        </label>
+        <button type="button" class="card-icon-btn card-duplicate-btn" data-id="${section.id}" title="Duplicate">⧉</button>
+        <button type="button" class="card-icon-btn card-delete-btn" data-id="${section.id}" title="Delete">✕</button>
+      </div>
+      ${collapsed ? '' : `<div class="section-card-body">${renderFieldsForType(section)}</div>`}
+    </div>
+  `;
+}
+
+function renderFieldsForType(section) {
+  const { type, data, id } = section;
   switch (type) {
     case SECTION_TYPES.HERO:
       return `
-        <!-- GitHub Deep Repo Scanner Banner -->
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-2.5">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <span>⚡</span> Deep Repository Scanner
-            </span>
-            <span class="text-[10px] text-muted-foreground">Scans tree, manifests & environment</span>
+        ${imageDropzone(id, 'logoUrl', data.logoUrl, 'Project banner / logo')}
+        <label class="field-check"><input type="checkbox" data-field="showLogo" ${data.showLogo ? 'checked' : ''} /> Show banner in README</label>
+        <label class="field-label">Project name</label>
+        <input type="text" class="field-input" data-field="projectName" value="${esc(data.projectName)}" />
+        <label class="field-label">Tagline</label>
+        <textarea class="field-input" data-field="tagline" rows="2">${esc(data.tagline)}</textarea>
+        <div class="field-row">
+          <div><label class="field-label">Alignment</label>
+            <select class="field-input" data-field="align">
+              ${['center', 'left', 'right'].map(a => `<option value="${a}" ${data.align === a ? 'selected' : ''}>${a}</option>`).join('')}
+            </select>
           </div>
-          <div class="flex gap-2">
-            <input type="text" id="github-autodetect-input" value="${data.repoOwner && data.repoName ? data.repoOwner + '/' + data.repoName : ''}" placeholder="Paste repo URL or owner/repo (e.g. facebook/react)" class="form-input text-xs flex-1" />
-            <button id="trigger-autodetect-btn" class="btn-primary text-xs px-3.5 py-1.5 whitespace-nowrap flex items-center gap-1">
-              <span>⚡</span> Deep Scan
-            </button>
-          </div>
-          <p class="text-[11px] text-muted-foreground">Deeply inspects file tree, dependencies, package managers, scripts, environment variables, and CI/CD pipelines to build your entire README.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Project Name</label>
-            <input type="text" data-field="projectName" value="${data.projectName || ''}" class="form-input text-xs" placeholder="e.g. Readmify" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Alignment</label>
-            <select data-field="align" class="form-input text-xs">
-              <option value="center" ${data.align === 'center' ? 'selected' : ''}>Centered (Modern)</option>
-              <option value="left" ${data.align === 'left' ? 'selected' : ''}>Left-aligned (Classic)</option>
+          <div><label class="field-label">Banner width</label>
+            <select class="field-input" data-field="logoWidth">
+              ${['100%', '80%', '600', '400'].map(w => `<option value="${w}" ${data.logoWidth === w ? 'selected' : ''}>${w}</option>`).join('')}
             </select>
           </div>
         </div>
-
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Tagline / Short Description</label>
-          <input type="text" data-field="tagline" value="${data.tagline || ''}" class="form-input text-xs" placeholder="e.g. Craft stunning READMEs in minutes" />
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Owner / Org</label>
-            <input type="text" data-field="repoOwner" value="${data.repoOwner || ''}" class="form-input text-xs" placeholder="e.g. yourusername" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Repository Name</label>
-            <input type="text" data-field="repoName" value="${data.repoName || ''}" class="form-input text-xs" placeholder="e.g. your-repo" />
-          </div>
-        </div>
-
-        <!-- Banner / Photo Section with Image Studio -->
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <span>🖼️</span> Project Banner & Logo
-            </label>
-            <button id="open-banner-hub-btn" class="btn-secondary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs">
-              <span>✂️</span> Open Image Studio (Crop & Resize)
-            </button>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <input type="checkbox" id="hero-show-logo-cb" data-field="showLogo" ${data.showLogo ? 'checked' : ''} class="rounded border-border text-foreground" />
-            <label for="hero-show-logo-cb" class="text-xs text-foreground cursor-pointer">Display banner / logo in README</label>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Image URL or Base64 Data</label>
-            <input type="text" data-field="logoUrl" value="${data.logoUrl || ''}" placeholder="https://raw.githubusercontent.com/.../banner.png" class="form-input text-xs" />
-          </div>
-
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Render Width</label>
-              <select data-field="logoWidth" class="form-input text-xs">
-                <option value="100%" ${data.logoWidth === '100%' ? 'selected' : ''}>100% (Full Width)</option>
-                <option value="80%" ${data.logoWidth === '80%' ? 'selected' : ''}>80% (Medium Large)</option>
-                <option value="600" ${data.logoWidth === '600' ? 'selected' : ''}>600px (Medium)</option>
-                <option value="400" ${data.logoWidth === '400' ? 'selected' : ''}>400px (Compact)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Corner Radius</label>
-              <select data-field="logoRadius" class="form-input text-xs">
-                <option value="8px" ${data.logoRadius === '8px' ? 'selected' : ''}>Rounded (8px)</option>
-                <option value="16px" ${data.logoRadius === '16px' ? 'selected' : ''}>Pill / Soft (16px)</option>
-                <option value="0px" ${data.logoRadius === '0px' ? 'selected' : ''}>Sharp (0px)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.DEMO:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Preview & Screenshots'}" class="form-input text-xs" />
-        </div>
-
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <span>📸</span> Screenshot / Demo Preview
-            </label>
-            <button id="open-demo-studio-btn" class="btn-secondary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs">
-              <span>✂️</span> Crop & Resize in Image Studio
-            </button>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Image or GIF URL</label>
-            <input type="text" data-field="imageUrl" value="${data.imageUrl || ''}" class="form-input text-xs" placeholder="https://raw.githubusercontent.com/.../demo.gif" />
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Display Width</label>
-              <select data-field="width" class="form-input text-xs">
-                <option value="100%" ${data.width === '100%' ? 'selected' : ''}>100% (Full)</option>
-                <option value="80%" ${data.width === '80%' ? 'selected' : ''}>80% (Medium)</option>
-                <option value="600" ${data.width === '600' ? 'selected' : ''}>600px</option>
-                <option value="400" ${data.width === '400' ? 'selected' : ''}>400px</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Alignment</label>
-              <select data-field="align" class="form-input text-xs">
-                <option value="center" ${data.align === 'center' ? 'selected' : ''}>Center</option>
-                <option value="left" ${data.align === 'left' ? 'selected' : ''}>Left</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Corner Radius</label>
-              <select data-field="radius" class="form-input text-xs">
-                <option value="8px" ${data.radius === '8px' ? 'selected' : ''}>Rounded (8px)</option>
-                <option value="16px" ${data.radius === '16px' ? 'selected' : ''}>Soft (16px)</option>
-                <option value="0px" ${data.radius === '0px' ? 'selected' : ''}>Sharp (0px)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Caption</label>
-            <input type="text" data-field="caption" value="${data.caption || ''}" class="form-input text-xs" placeholder="App Walkthrough Preview" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Live Demo URL</label>
-            <input type="text" data-field="liveUrl" value="${data.liveUrl || ''}" class="form-input text-xs" placeholder="https://myapp.vercel.app" />
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.FAQ:
-      const questions = data.questions || [];
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Frequently Asked Questions'}" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Questions & Answers (${questions.length})</label>
-            <button id="add-faq-btn" class="btn-primary text-xs px-2.5 py-1">
-              + Add Question
-            </button>
-          </div>
-
-          <div id="faq-items-list" class="space-y-3">
-            ${questions.map((item, idx) => `
-              <div class="p-3 bg-card border border-border rounded-lg space-y-2 relative group" data-idx="${idx}">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono text-muted-foreground uppercase">Question #${idx + 1}</span>
-                  <button class="delete-faq-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}" title="Delete Question">✕</button>
-                </div>
-                <input type="text" class="faq-q-input form-input text-xs font-medium" placeholder="Question..." value="${item.q || ''}" data-idx="${idx}" />
-                <textarea class="faq-a-input form-input text-xs" rows="2" placeholder="Answer..." data-idx="${idx}">${item.a || ''}</textarea>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.BENCHMARKS:
-      const rows = data.rows || [];
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Benchmarks'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Test Conditions / Subtitle</label>
-          <input type="text" data-field="subtitle" value="${data.subtitle || ''}" placeholder="e.g. Tested on Apple M2, Node v20" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Benchmark Metric Rows (${rows.length})</label>
-            <button id="add-benchmark-btn" class="btn-primary text-xs px-2.5 py-1">
-              + Add Metric
-            </button>
-          </div>
-
-          <div id="benchmark-items-list" class="space-y-2">
-            ${rows.map((row, idx) => `
-              <div class="p-2.5 bg-card border border-border rounded-lg grid grid-cols-4 gap-2 items-center text-xs relative" data-idx="${idx}">
-                <input type="text" class="bench-task-input form-input text-xs" placeholder="Task Name" value="${row.task || ''}" data-idx="${idx}" />
-                <input type="text" class="bench-base-input form-input text-xs" placeholder="Baseline" value="${row.baseline || ''}" data-idx="${idx}" />
-                <input type="text" class="bench-curr-input form-input text-xs font-semibold" placeholder="Current / Project" value="${row.current || ''}" data-idx="${idx}" />
-                <div class="flex items-center gap-1">
-                  <input type="text" class="bench-diff-input form-input text-xs text-emerald-400" placeholder="Improvement" value="${row.diff || ''}" data-idx="${idx}" />
-                  <button class="delete-bench-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.SPONSORS:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Support & Sponsors'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Support Message</label>
-          <textarea data-field="message" rows="2" class="form-input text-xs">${data.message || ''}</textarea>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Buy Me A Coffee Username</label>
-            <input type="text" data-field="buyMeACoffee" value="${data.buyMeACoffee || ''}" class="form-input text-xs" placeholder="username" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Sponsors Username</label>
-            <input type="text" data-field="githubSponsor" value="${data.githubSponsor || ''}" class="form-input text-xs" placeholder="username" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Patreon Handle</label>
-            <input type="text" data-field="patreon" value="${data.patreon || ''}" class="form-input text-xs" placeholder="handle" />
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.API_REFERENCE:
-      const endpoints = data.endpoints || [];
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'API Reference'}" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">API Endpoints (${endpoints.length})</label>
-            <button id="add-endpoint-btn" class="btn-primary text-xs px-2.5 py-1">
-              + Add Endpoint
-            </button>
-          </div>
-
-          <div id="api-endpoints-list" class="space-y-2">
-            ${endpoints.map((ep, idx) => `
-              <div class="p-2.5 bg-card border border-border rounded-lg grid grid-cols-1 sm:grid-cols-4 gap-2 items-center text-xs" data-idx="${idx}">
-                <select class="ep-method-select form-input text-xs font-bold" data-idx="${idx}">
-                  <option value="GET" ${ep.method === 'GET' ? 'selected' : ''}>GET</option>
-                  <option value="POST" ${ep.method === 'POST' ? 'selected' : ''}>POST</option>
-                  <option value="PUT" ${ep.method === 'PUT' ? 'selected' : ''}>PUT</option>
-                  <option value="DELETE" ${ep.method === 'DELETE' ? 'selected' : ''}>DELETE</option>
-                  <option value="PATCH" ${ep.method === 'PATCH' ? 'selected' : ''}>PATCH</option>
-                </select>
-                <input type="text" class="ep-path-input form-input text-xs font-mono" placeholder="/api/v1/resource" value="${ep.path || ''}" data-idx="${idx}" />
-                <input type="text" class="ep-desc-input form-input text-xs" placeholder="Description" value="${ep.desc || ''}" data-idx="${idx}" />
-                <div class="flex items-center gap-1">
-                  <input type="text" class="ep-auth-input form-input text-xs" placeholder="Auth (e.g. Bearer)" value="${ep.auth || 'None'}" data-idx="${idx}" />
-                  <button class="delete-ep-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.CHANGELOG:
-      const releases = data.releases || [];
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Changelog'}" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Release Versions (${releases.length})</label>
-            <button id="add-release-btn" class="btn-primary text-xs px-2.5 py-1">
-              + Add Release
-            </button>
-          </div>
-
-          <div id="releases-list" class="space-y-3">
-            ${releases.map((rel, idx) => `
-              <div class="p-3 bg-card border border-border rounded-lg space-y-2 relative" data-idx="${idx}">
-                <div class="flex items-center justify-between">
-                  <div class="flex gap-2 flex-1 mr-2">
-                    <input type="text" class="rel-version-input form-input text-xs font-bold w-28" placeholder="v1.0.0" value="${rel.version || ''}" data-idx="${idx}" />
-                    <input type="text" class="rel-date-input form-input text-xs w-36" placeholder="YYYY-MM-DD" value="${rel.date || ''}" data-idx="${idx}" />
-                  </div>
-                  <button class="delete-rel-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-                <textarea class="rel-changes-input form-input text-xs" rows="2" placeholder="List changes (one per line)..." data-idx="${idx}">${(rel.changes || []).join('\n')}</textarea>
-              </div>
-            `).join('')}
-          </div>
+        <div class="field-row">
+          <div><label class="field-label">GitHub owner</label><input type="text" class="field-input" data-field="repoOwner" value="${esc(data.repoOwner)}" /></div>
+          <div><label class="field-label">Repo name</label><input type="text" class="field-input" data-field="repoName" value="${esc(data.repoName)}" /></div>
         </div>
       `;
 
     case SECTION_TYPES.BADGES:
-      const bStyle = data.style || 'for-the-badge';
-      const bAlign = data.align || 'center';
-      const bFormat = data.format || 'html';
-      const heroSec = store.getState().sections.find(s => s.type === SECTION_TYPES.HERO);
-      const defaultOwner = heroSec?.data?.repoOwner || '';
-      const defaultRepo = heroSec?.data?.repoName || '';
-
       return `
-        <!-- Repo Target Bar -->
-        <div class="p-3 bg-card border border-border rounded-lg space-y-2">
-          <label class="block text-xs font-semibold text-foreground">Target GitHub Repository</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-0.5">Owner / User / Org</label>
-              <input type="text" data-field="repoOwner" value="${data.repoOwner || defaultOwner}" class="form-input text-xs" placeholder="e.g. MinaSaadallah" />
-            </div>
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-0.5">Repository Name</label>
-              <input type="text" data-field="repoName" value="${data.repoName || defaultRepo}" class="form-input text-xs" placeholder="e.g. Coverage-Checker" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Style, Alignment & Format Controls -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Badge Style</label>
-            <select data-field="style" class="form-input text-xs">
-              <option value="for-the-badge" ${bStyle === 'for-the-badge' ? 'selected' : ''}>for-the-badge (Bold)</option>
-              <option value="flat" ${bStyle === 'flat' ? 'selected' : ''}>flat (Standard)</option>
-              <option value="flat-square" ${bStyle === 'flat-square' ? 'selected' : ''}>flat-square (Minimal)</option>
-              <option value="plastic" ${bStyle === 'plastic' ? 'selected' : ''}>plastic (Rounded)</option>
-              <option value="social" ${bStyle === 'social' ? 'selected' : ''}>social (GitHub Style)</option>
+        <div class="field-row">
+          <div><label class="field-label">Style</label>
+            <select class="field-input" data-field="style">
+              ${['for-the-badge', 'flat', 'flat-square', 'plastic', 'social'].map(s => `<option value="${s}" ${data.style === s ? 'selected' : ''}>${s}</option>`).join('')}
             </select>
           </div>
-
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Alignment</label>
-            <select data-field="align" class="form-input text-xs">
-              <option value="center" ${bAlign === 'center' ? 'selected' : ''}>Center (Standard)</option>
-              <option value="left" ${bAlign === 'left' ? 'selected' : ''}>Left</option>
-              <option value="right" ${bAlign === 'right' ? 'selected' : ''}>Right</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Output Format</label>
-            <select data-field="format" class="form-input text-xs">
-              <option value="html" ${bFormat === 'html' ? 'selected' : ''}>HTML Tags &lt;a&gt;&lt;img&gt; (Reliable)</option>
-              <option value="markdown" ${bFormat === 'markdown' ? 'selected' : ''}>Markdown Links [![alt](url)](link)</option>
+          <div><label class="field-label">Alignment</label>
+            <select class="field-input" data-field="align">
+              ${['center', 'left', 'right'].map(a => `<option value="${a}" ${data.align === a ? 'selected' : ''}>${a}</option>`).join('')}
             </select>
           </div>
         </div>
-
-        <!-- 12 Dynamic GitHub Badges Toggles -->
-        <div class="space-y-1.5">
-          <label class="block text-xs font-semibold text-foreground">Dynamic GitHub Badges</label>
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 bg-card border border-border rounded-lg text-xs">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showStars" ${data.showStars ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>⭐ GitHub Stars</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showForks" ${data.showForks ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🍴 GitHub Forks</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showIssues" ${data.showIssues ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🐛 Open Issues</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showPRs" ${data.showPRs ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🔀 Pull Requests</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showLicense" ${data.showLicense ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>📜 License Badge</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showRelease" ${data.showRelease ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🏷️ Latest Release</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showLastCommit" ${data.showLastCommit ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🕒 Last Commit</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showCodeSize" ${data.showCodeSize ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>📦 Code Size</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showContributors" ${data.showContributors ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>👥 Contributors</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showActionsCI" ${data.showActionsCI ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🟢 CI Workflow</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showTopLang" ${data.showTopLang ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>🌐 Top Language</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" data-field="showWatchers" ${data.showWatchers ? 'checked' : ''} class="rounded border-border text-foreground" />
-              <span>👁️ Watchers</span>
-            </label>
-          </div>
+        <div class="field-checks-grid">
+          ${['showStars:Stars', 'showForks:Forks', 'showIssues:Issues', 'showLicense:License', 'showLastCommit:Last commit', 'showRelease:Release', 'showContributors:Contributors', 'showActionsCI:CI status']
+            .map(pair => { const [f, l] = pair.split(':'); return `<label class="field-check"><input type="checkbox" data-field="${f}" ${data[f] ? 'checked' : ''} /> ${l}</label>`; }).join('')}
         </div>
-
-        ${data.showActionsCI ? `
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Actions Workflow File</label>
-            <input type="text" data-field="ciWorkflowFile" value="${data.ciWorkflowFile || 'ci.yml'}" class="form-input text-xs" placeholder="e.g. ci.yml or build.yml" />
-          </div>
-        ` : ''}
+        <label class="field-label">npm package (optional)</label>
+        <div class="field-row-inline">
+          <input type="text" class="field-input" id="npm-pkg-input-${id}" placeholder="e.g. react" value="${esc(data.npmPackageName)}" />
+          <button type="button" class="btn-secondary npm-detect-btn" data-id="${id}">Detect</button>
+        </div>
+        <div class="field-checks-grid">
+          <label class="field-check"><input type="checkbox" data-field="showNpmVersion" ${data.showNpmVersion ? 'checked' : ''} /> npm version badge</label>
+          <label class="field-check"><input type="checkbox" data-field="showNpmDownloads" ${data.showNpmDownloads ? 'checked' : ''} /> npm downloads badge</label>
+        </div>
+        ${renderListEditor(id, 'customBadges', data.customBadges || [], [
+          { key: 'label', placeholder: 'Label' }, { key: 'message', placeholder: 'Message' }, { key: 'color', placeholder: 'Color (e.g. blue)' }, { key: 'link', placeholder: 'Link (optional)' }
+        ], 'Custom badge')}
       `;
 
     case SECTION_TYPES.ABOUT:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'About The Project'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Project Overview / Description</label>
-          <textarea data-field="content" rows="6" class="form-input font-sans text-xs leading-relaxed" placeholder="Describe your project...">${data.content || ''}</textarea>
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Content</label>
+        <textarea class="field-input" data-field="content" rows="4">${esc(data.content)}</textarea>
       `;
 
-    case SECTION_TYPES.TECH_STACK:
-      const selectedTechs = data.technologies || [];
-      const curLayout = data.layout || 'categorized';
-      const curSize = data.iconSize || 'medium';
-      const curAlign = data.align || 'center';
-
+    case SECTION_TYPES.TOC:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Built With'}" class="form-input text-xs" />
-        </div>
-
-        <!-- Layout Engine Selector -->
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Display Layout Engine</label>
-          <select data-field="layout" class="form-input text-xs">
-            <option value="categorized" ${curLayout === 'categorized' ? 'selected' : ''}>🏢 Categorized Tech Stack Grid (Frontend, Backend, Database)</option>
-            <option value="devicon-grid" ${curLayout === 'devicon-grid' ? 'selected' : ''}>⚡ Devicon / SimpleIcons Grid (with Clickable Doc Links)</option>
-            <option value="skillicons" ${curLayout === 'skillicons' ? 'selected' : ''}>🎨 SkillIcons Modern Ribbon Strip</option>
-            <option value="shields" ${curLayout === 'shields' ? 'selected' : ''}>🛡️ Shields.io Brand Badges</option>
-            <option value="matrix-table" ${curLayout === 'matrix-table' ? 'selected' : ''}>📊 Architecture Comparison Table</option>
-          </select>
-        </div>
-
-        <!-- Size, Placement & Alignment Controls -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Icon Size</label>
-            <select data-field="iconSize" class="form-input text-xs">
-              <option value="small" ${curSize === 'small' ? 'selected' : ''}>Small (28px)</option>
-              <option value="medium" ${curSize === 'medium' ? 'selected' : ''}>Medium (40px)</option>
-              <option value="large" ${curSize === 'large' ? 'selected' : ''}>Large (52px)</option>
-              <option value="xlarge" ${curSize === 'xlarge' ? 'selected' : ''}>Extra Large (64px)</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Alignment</label>
-            <select data-field="align" class="form-input text-xs">
-              <option value="center" ${curAlign === 'center' ? 'selected' : ''}>Center</option>
-              <option value="left" ${curAlign === 'left' ? 'selected' : ''}>Left</option>
-              <option value="right" ${curAlign === 'right' ? 'selected' : ''}>Right</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Badge Style</label>
-            <select data-field="style" class="form-input text-xs">
-              <option value="for-the-badge" ${data.style === 'for-the-badge' ? 'selected' : ''}>for-the-badge (Bold)</option>
-              <option value="flat" ${data.style === 'flat' ? 'selected' : ''}>flat (Clean)</option>
-              <option value="flat-square" ${data.style === 'flat-square' ? 'selected' : ''}>flat-square (Minimal)</option>
-            </select>
-          </div>
-        </div>
-
-        ${curLayout === 'skillicons' ? `
-          <div class="grid grid-cols-2 gap-3 p-3 bg-card border border-border rounded-lg">
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">SkillIcons Theme</label>
-              <select data-field="skilliconsTheme" class="form-input text-xs">
-                <option value="dark" ${data.skilliconsTheme === 'dark' ? 'selected' : ''}>Dark Theme</option>
-                <option value="light" ${data.skilliconsTheme === 'light' ? 'selected' : ''}>Light Theme</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[11px] text-muted-foreground mb-1">Icons Per Line</label>
-              <input type="number" data-field="skilliconsPerline" min="4" max="20" value="${data.skilliconsPerline || 10}" class="form-input text-xs" />
-            </div>
-          </div>
-        ` : ''}
-
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Selected Technologies (${selectedTechs.length})</label>
-            <button id="open-tech-picker-btn" class="btn-primary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs">
-              <span>⚡</span> Manage Tech Stack
-            </button>
-          </div>
-
-          <div class="p-3 bg-card border border-border rounded-md flex flex-wrap gap-1.5 min-h-[60px]">
-            ${selectedTechs.length === 0 ? `
-              <span class="text-xs text-muted-foreground">No technologies selected. Click "Manage Tech Stack" to add badges.</span>
-            ` : selectedTechs.map(id => {
-              const item = TECH_CATALOG.find(t => t.id === id);
-              return `
-                <span class="text-[11px] px-2 py-0.5 rounded-full border border-border bg-muted text-foreground flex items-center gap-1 font-medium">
-                  ${item?.name || id}
-                  <button class="remove-tech-chip-btn text-muted-foreground hover:text-foreground ml-1" data-id="${id}">✕</button>
-                </span>
-              `;
-            }).join('')}
-          </div>
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <p class="field-hint">Auto-generated from every other visible section's heading. No editing needed here.</p>
       `;
+
+    case SECTION_TYPES.TECH_STACK: {
+      const selected = (data.technologies || []).map(techId => techById(techId)).filter(Boolean);
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <div class="field-row">
+          <div><label class="field-label">Layout</label>
+            <select class="field-input" data-field="layout">
+              <option value="badges" ${data.layout === 'badges' ? 'selected' : ''}>Badges</option>
+              <option value="table" ${data.layout === 'table' ? 'selected' : ''}>Table</option>
+            </select>
+          </div>
+          <div><label class="field-label">Alignment</label>
+            <select class="field-input" data-field="align">
+              ${['center', 'left', 'right'].map(a => `<option value="${a}" ${data.align === a ? 'selected' : ''}>${a}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <label class="field-label">Technologies (${selected.length})</label>
+        <div class="tech-chip-row">
+          ${selected.map(t => `<span class="tech-chip">${esc(t.name)}<button type="button" class="tech-chip-remove" data-id="${id}" data-tech="${t.id}">✕</button></span>`).join('')}
+        </div>
+        <button type="button" class="btn-secondary tech-picker-open-btn" data-id="${id}">+ Pick technologies</button>
+        <div class="tech-picker-inline hidden" id="tech-picker-${id}"></div>
+      `;
+    }
 
     case SECTION_TYPES.FEATURES:
-      const items = data.items || [];
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Key Features'}" class="form-input text-xs" />
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${renderListEditor(id, 'items', data.items || [], [
+          { key: 'title', placeholder: 'Feature title' }, { key: 'desc', placeholder: 'Description', textarea: true }
+        ], 'Feature')}
+      `;
 
-        <div class="space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Feature List (${items.length})</label>
-            <button id="add-feature-btn" class="btn-primary text-xs px-2 py-1">
-              + Add Feature
-            </button>
+    case SECTION_TYPES.DEMO:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${imageDropzone(id, 'imageUrl', data.imageUrl, 'Screenshot / GIF')}
+        <div class="field-row">
+          <div><label class="field-label">Width</label>
+            <select class="field-input" data-field="width">
+              ${['100%', '80%', '600', '400'].map(w => `<option value="${w}" ${data.width === w ? 'selected' : ''}>${w}</option>`).join('')}
+            </select>
           </div>
-
-          <div id="feature-items-list" class="space-y-2">
-            ${items.map((item, idx) => `
-              <div class="p-2.5 bg-card border border-border rounded-lg space-y-2 relative" data-idx="${idx}">
-                <div class="flex items-center gap-2">
-                  <input type="text" class="feat-icon-input form-input text-xs w-12 text-center" value="${item.icon || '⚡'}" data-idx="${idx}" />
-                  <input type="text" class="feat-title-input form-input text-xs font-medium flex-1" value="${item.title || ''}" placeholder="Feature title" data-idx="${idx}" />
-                  <button class="delete-feature-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-                <textarea class="feat-desc-input form-input text-xs" rows="2" placeholder="Feature description..." data-idx="${idx}">${item.desc || ''}</textarea>
-              </div>
-            `).join('')}
+          <div><label class="field-label">Alignment</label>
+            <select class="field-input" data-field="align">
+              ${['center', 'left', 'right'].map(a => `<option value="${a}" ${data.align === a ? 'selected' : ''}>${a}</option>`).join('')}
+            </select>
           </div>
         </div>
+        <label class="field-label">Caption</label>
+        <input type="text" class="field-input" data-field="caption" value="${esc(data.caption)}" />
+        <label class="field-label">Live demo URL</label>
+        <input type="text" class="field-input" data-field="liveUrl" value="${esc(data.liveUrl)}" placeholder="https://myapp.example.com" />
       `;
 
     case SECTION_TYPES.INSTALLATION:
-      const steps = data.steps || [];
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Getting Started'}" class="form-input text-xs" />
-        </div>
-
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Prerequisites</label>
-          <input type="text" data-field="prerequisites" value="${data.prerequisites || ''}" placeholder="Node.js 18+ and Git installed" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Installation Steps (${steps.length})</label>
-            <button id="add-install-step-btn" class="btn-primary text-xs px-2 py-1">
-              + Add Step
-            </button>
-          </div>
-
-          <div id="install-steps-list" class="space-y-2">
-            ${steps.map((s, idx) => `
-              <div class="p-2.5 bg-card border border-border rounded-lg space-y-2 relative" data-idx="${idx}">
-                <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-mono text-muted-foreground">Step ${idx + 1}</span>
-                  <button class="delete-step-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-                <input type="text" class="step-title-input form-input text-xs font-medium" value="${s.title || ''}" placeholder="Step description" data-idx="${idx}" />
-                <textarea class="step-cmd-input form-input font-mono text-xs" rows="2" placeholder="Terminal command..." data-idx="${idx}">${s.cmd || ''}</textarea>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.PROJECT_STRUCTURE:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Project Structure'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <label class="block text-xs font-medium text-foreground">Directory Tree (ASCII)</label>
-            <span class="text-[10px] text-muted-foreground">Auto-generated via Deep Scan</span>
-          </div>
-          <textarea data-field="tree" rows="12" class="form-input font-mono text-xs leading-relaxed" placeholder=".\n├── src/\n│   └── index.ts\n└── README.md">${data.tree || ''}</textarea>
-        </div>
-      `;
-
-    case SECTION_TYPES.ENV_VARS:
-      const variables = data.variables || [];
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Environment Variables'}" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Variables (${variables.length})</label>
-            <button id="add-env-var-btn" class="btn-primary text-xs px-2 py-1">
-              + Add Variable
-            </button>
-          </div>
-
-          <div id="env-vars-list" class="space-y-2">
-            ${variables.map((v, idx) => `
-              <div class="p-2.5 bg-card border border-border rounded-lg grid grid-cols-1 sm:grid-cols-4 gap-2 items-center text-xs" data-idx="${idx}">
-                <input type="text" class="env-key-input form-input font-mono text-xs" placeholder="KEY_NAME" value="${v.key || ''}" data-idx="${idx}" />
-                <input type="text" class="env-desc-input form-input text-xs sm:col-span-2" placeholder="Description" value="${v.desc || ''}" data-idx="${idx}" />
-                <div class="flex items-center gap-1">
-                  <input type="text" class="env-default-input form-input text-xs" placeholder="Default" value="${v.default || ''}" data-idx="${idx}" />
-                  <button class="delete-env-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Prerequisites</label>
+        <textarea class="field-input" data-field="prerequisites" rows="2">${esc(data.prerequisites)}</textarea>
+        ${renderListEditor(id, 'steps', data.steps || [], [
+          { key: 'title', placeholder: 'Step title' }, { key: 'cmd', placeholder: 'Command', textarea: true, mono: true }
+        ], 'Step')}
       `;
 
     case SECTION_TYPES.USAGE:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Usage'}" class="form-input text-xs" />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Syntax Language</label>
-            <input type="text" data-field="codeLang" value="${data.codeLang || 'bash'}" class="form-input text-xs" placeholder="bash, ts, python..." />
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Example Code</label>
-          <textarea data-field="code" rows="5" class="form-input font-mono text-xs leading-relaxed" placeholder="# Example usage command...">${data.code || ''}</textarea>
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Important Note / Tip</label>
-          <input type="text" data-field="note" value="${data.note || ''}" class="form-input text-xs" placeholder="Tip or note..." />
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Language</label>
+        <input type="text" class="field-input" data-field="codeLang" value="${esc(data.codeLang)}" placeholder="bash, javascript, python..." />
+        <label class="field-label">Code</label>
+        <textarea class="field-input field-mono" data-field="code" rows="4">${esc(data.code)}</textarea>
+        <label class="field-label">Note (optional)</label>
+        <textarea class="field-input" data-field="note" rows="2">${esc(data.note)}</textarea>
+      `;
+
+    case SECTION_TYPES.ENV_VARS:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${renderListEditor(id, 'variables', data.variables || [], [
+          { key: 'key', placeholder: 'KEY_NAME', mono: true }, { key: 'desc', placeholder: 'Description' }, { key: 'default', placeholder: 'Default value' }, { key: 'required', placeholder: '', checkbox: true, checkboxLabel: 'Required' }
+        ], 'Variable')}
+      `;
+
+    case SECTION_TYPES.API_REFERENCE:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${renderListEditor(id, 'endpoints', data.endpoints || [], [
+          { key: 'method', placeholder: 'GET' }, { key: 'path', placeholder: '/api/items', mono: true }, { key: 'desc', placeholder: 'Description' }
+        ], 'Endpoint')}
+      `;
+
+    case SECTION_TYPES.MERMAID:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Mermaid diagram source</label>
+        <textarea class="field-input field-mono" data-field="diagram" rows="6">${esc(data.diagram)}</textarea>
+        <p class="field-hint">GitHub renders Mermaid diagrams natively from a plain code block — no images, no extra service.</p>
+      `;
+
+    case SECTION_TYPES.FAQ:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${renderListEditor(id, 'questions', data.questions || [], [
+          { key: 'q', placeholder: 'Question' }, { key: 'a', placeholder: 'Answer', textarea: true }
+        ], 'Question')}
       `;
 
     case SECTION_TYPES.ROADMAP:
-      const tasks = data.tasks || [];
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Roadmap'}" class="form-input text-xs" />
-        </div>
-
-        <div class="space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Roadmap Items (${tasks.length})</label>
-            <button id="add-task-btn" class="btn-primary text-xs px-2 py-1">
-              + Add Item
-            </button>
-          </div>
-
-          <div id="tasks-list" class="space-y-1.5">
-            ${tasks.map((t, idx) => `
-              <div class="flex items-center gap-2 p-2 bg-card border border-border rounded-md text-xs" data-idx="${idx}">
-                <input type="checkbox" class="task-check rounded border-border" ${t.completed ? 'checked' : ''} data-idx="${idx}" />
-                <input type="text" class="task-text-input form-input text-xs flex-1" value="${t.text || ''}" placeholder="Task description..." data-idx="${idx}" />
-                <button class="delete-task-btn text-rose-400 hover:text-rose-300 text-xs px-1" data-idx="${idx}">✕</button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        ${renderListEditor(id, 'tasks', data.tasks || [], [
+          { key: 'completed', placeholder: '', checkbox: true, checkboxLabel: 'Done' }, { key: 'text', placeholder: 'Task description' }
+        ], 'Task')}
       `;
 
     case SECTION_TYPES.CONTRIBUTING:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Contributing'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Welcome Message</label>
-          <textarea data-field="guidelines" rows="3" class="form-input text-xs">${data.guidelines || ''}</textarea>
-        </div>
-        <div class="p-3 bg-card border border-border rounded-md text-xs text-muted-foreground flex items-center gap-2">
-          <span>👥</span>
-          <span>Includes automated live contributor avatars from <strong class="text-foreground">contrib.rocks</strong></span>
-        </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Guidelines</label>
+        <textarea class="field-input" data-field="guidelines" rows="3">${esc(data.guidelines)}</textarea>
       `;
 
-    case SECTION_TYPES.LICENSE: {
-      const activeLic = getLicenseById(data.type || 'MIT');
-      const curYear = data.year || new Date().getFullYear().toString();
-      const curHolder = data.holder || 'Your Name';
-      const curProj = data.projectName || '';
-      const curPres = data.presentation || 'badge-minimal';
-      const legalTextPreview = activeLic.generateText(curYear, curHolder, curProj);
-
+    case SECTION_TYPES.LICENSE:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'License'}" class="form-input text-xs" />
-        </div>
-
-        <!-- License Chooser Cards Grid -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-              <span>⚖️</span> Select License (${LICENSE_CATALOG.length} Legal Standards)
-            </label>
-            <span class="text-[10px] text-muted-foreground">Click to select legal license</span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 max-h-[300px] overflow-y-auto p-1 border border-border rounded-lg bg-card/40">
-            ${LICENSE_CATALOG.map(lic => {
-              const isSelected = lic.id === activeLic.id;
-              return `
-                <div 
-                  class="license-select-card p-3 rounded-md border text-left cursor-pointer transition flex flex-col justify-between select-none ${
-                    isSelected 
-                      ? 'border-foreground bg-accent shadow-xs ring-1 ring-foreground/20' 
-                      : 'border-border bg-card hover:border-foreground/40 hover:bg-muted/40'
-                  }"
-                  data-license-id="${lic.id}"
-                >
-                  <div class="space-y-1">
-                    <div class="flex items-center justify-between">
-                      <span class="text-xs font-bold text-foreground font-mono">${lic.id}</span>
-                      ${isSelected ? '<span class="text-[10px] font-semibold text-foreground">✓ Active</span>' : ''}
-                    </div>
-                    <p class="text-[11px] font-medium text-foreground line-clamp-1">${lic.name}</p>
-                    <p class="text-[10px] text-muted-foreground line-clamp-2 leading-tight">${lic.shortDesc}</p>
-                  </div>
-
-                  <div class="mt-2.5 pt-2 border-t border-border/60 flex flex-wrap gap-1">
-                    ${lic.permissions.slice(0, 2).map(p => `
-                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium">✓ ${p}</span>
-                    `).join('')}
-                    ${lic.limitations.slice(0, 1).map(l => `
-                      <span class="text-[9px] px-1.5 py-0.2 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400 font-medium">✕ ${l}</span>
-                    `).join('')}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        </div>
-
-        <!-- Selected License Details & Metadata -->
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-3">
-          <div class="flex items-center justify-between border-b border-border/60 pb-2">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-foreground">${activeLic.name} (${activeLic.spdxId})</span>
-              <a href="${activeLic.url}" target="_blank" rel="noopener noreferrer" class="text-[10px] text-muted-foreground hover:text-foreground hover:underline">Official SPDX Spec ↗</a>
-            </div>
-            <img src="${activeLic.badgeUrl}" alt="${activeLic.id}" class="h-4" />
-          </div>
-
-          <!-- Permissions, Limitations & Conditions Matrix -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
-            <div class="p-2.5 rounded bg-background border border-border space-y-1">
-              <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider block">Permissions</span>
-              <ul class="text-[11px] text-muted-foreground space-y-0.5">
-                ${activeLic.permissions.map(p => `<li>✓ ${p}</li>`).join('')}
-              </ul>
-            </div>
-            <div class="p-2.5 rounded bg-background border border-border space-y-1">
-              <span class="text-[10px] font-semibold text-rose-600 dark:text-rose-400 uppercase tracking-wider block">Limitations</span>
-              <ul class="text-[11px] text-muted-foreground space-y-0.5">
-                ${activeLic.limitations.map(l => `<li>✕ ${l}</li>`).join('')}
-              </ul>
-            </div>
-            <div class="p-2.5 rounded bg-background border border-border space-y-1">
-              <span class="text-[10px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider block">Conditions</span>
-              <ul class="text-[11px] text-muted-foreground space-y-0.5">
-                ${activeLic.conditions.length > 0 ? activeLic.conditions.map(c => `<li>ℹ ${c}</li>`).join('') : '<li class="text-zinc-500">None required</li>'}
-              </ul>
-            </div>
-          </div>
-
-          <!-- Metadata Fields -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
-            <div>
-              <label class="block text-xs font-medium text-foreground mb-1">Copyright Year</label>
-              <input type="text" data-field="year" value="${curYear}" class="form-input text-xs" placeholder="${new Date().getFullYear()}" />
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-foreground mb-1">Copyright Holder</label>
-              <input type="text" data-field="holder" value="${curHolder}" class="form-input text-xs" placeholder="Full Name or Organization" />
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-foreground mb-1">Project Name (for header)</label>
-              <input type="text" data-field="projectName" value="${curProj}" class="form-input text-xs" placeholder="Project Name" />
-            </div>
-          </div>
-
-          <!-- Presentation Style Selector -->
-          <div class="pt-1">
-            <label class="block text-xs font-medium text-foreground mb-1">README Presentation Format</label>
-            <select data-field="presentation" class="form-input text-xs">
-              <option value="badge-minimal" ${curPres === 'badge-minimal' ? 'selected' : ''}>Minimal: Shields.io Badge & Link to LICENSE</option>
-              <option value="collapsible-details" ${curPres === 'collapsible-details' ? 'selected' : ''}>Interactive: Badge + Collapsible Full Legal Text (&lt;details&gt;)</option>
-              <option value="summary-table" ${curPres === 'summary-table' ? 'selected' : ''}>Comprehensive: Badge + Permissions &amp; Limitations Table</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- 1-Click Download & Legal Text Actions -->
-        <div class="p-3.5 bg-card border border-border rounded-lg space-y-3">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <span class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <span>📄</span> Export Standalone Root LICENSE File
-              </span>
-              <p class="text-[11px] text-muted-foreground">Download the exact legal text file to place directly into your project's root folder</p>
-            </div>
-            <div class="flex items-center gap-2">
-              <button id="copy-license-text-btn" class="btn-secondary text-xs px-3 py-1.5 whitespace-nowrap flex items-center gap-1">
-                <span>📋</span> Copy Legal Text
-              </button>
-              <button id="download-license-file-btn" class="btn-primary text-xs px-3 py-1.5 whitespace-nowrap flex items-center gap-1">
-                <span>💾</span> Download LICENSE File
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] text-muted-foreground mb-1">Live Generated Legal Agreement Preview:</label>
-            <pre id="license-preview-pre" class="bg-background border border-border rounded p-3 font-mono text-[10.5px] leading-relaxed text-muted-foreground max-h-40 overflow-y-auto select-all whitespace-pre-wrap">${legalTextPreview}</pre>
-          </div>
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">License</label>
+        <select class="field-input" data-field="type">
+          ${LICENSE_CATALOG.map(l => `<option value="${l.id}" ${data.type === l.id ? 'selected' : ''}>${l.name}</option>`).join('')}
+        </select>
+        <div class="field-row">
+          <div><label class="field-label">Copyright holder</label><input type="text" class="field-input" data-field="holder" value="${esc(data.holder)}" /></div>
+          <div><label class="field-label">Year</label><input type="text" class="field-input" data-field="year" value="${esc(data.year)}" /></div>
         </div>
       `;
-    }
 
     case SECTION_TYPES.AUTHOR:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Author & Contact'}" class="form-input text-xs" />
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Name</label>
+        <input type="text" class="field-input" data-field="name" value="${esc(data.name)}" />
+        <div class="field-row">
+          <div><label class="field-label">GitHub username</label><input type="text" class="field-input" data-field="github" value="${esc(data.github)}" /></div>
+          <div><label class="field-label">Twitter/X username</label><input type="text" class="field-input" data-field="twitter" value="${esc(data.twitter)}" /></div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Author Name</label>
-            <input type="text" data-field="name" value="${data.name || ''}" class="form-input text-xs" placeholder="Alex Developer" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Username</label>
-            <input type="text" data-field="github" value="${data.github || ''}" class="form-input text-xs" placeholder="alexdev" />
-          </div>
+        <div class="field-row">
+          <div><label class="field-label">LinkedIn username</label><input type="text" class="field-input" data-field="linkedin" value="${esc(data.linkedin)}" /></div>
+          <div><label class="field-label">Email</label><input type="text" class="field-input" data-field="email" value="${esc(data.email)}" /></div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Twitter / X Handle</label>
-            <input type="text" data-field="twitter" value="${data.twitter || ''}" class="form-input text-xs" placeholder="alex_dev" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">LinkedIn Handle</label>
-            <input type="text" data-field="linkedin" value="${data.linkedin || ''}" class="form-input text-xs" placeholder="alex-developer" />
-          </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Email Address</label>
-            <input type="email" data-field="email" value="${data.email || ''}" class="form-input text-xs" placeholder="alex@example.com" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Buy Me a Coffee</label>
-            <input type="text" data-field="buyMeACoffee" value="${data.buyMeACoffee || ''}" class="form-input text-xs" placeholder="alexdev" />
-          </div>
+      `;
+
+    case SECTION_TYPES.STATS:
+      return `
+        <label class="field-label">Heading</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">GitHub username</label>
+        <input type="text" class="field-input" data-field="githubUser" value="${esc(data.githubUser)}" />
+        <div class="field-checks-grid">
+          <label class="field-check"><input type="checkbox" data-field="showTopLangs" ${data.showTopLangs ? 'checked' : ''} /> Top languages</label>
+          <label class="field-check"><input type="checkbox" data-field="showStreak" ${data.showStreak ? 'checked' : ''} /> Contribution streak</label>
+          <label class="field-check"><input type="checkbox" data-field="showStarHistory" ${data.showStarHistory ? 'checked' : ''} /> Star history</label>
         </div>
       `;
 
     case SECTION_TYPES.CUSTOM:
       return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Custom Section'}" class="form-input text-xs" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Custom Markdown Content</label>
-          <textarea data-field="markdown" rows="8" class="form-input font-mono text-xs leading-relaxed" placeholder="Custom markdown...">${data.markdown || ''}</textarea>
-        </div>
+        <label class="field-label">Heading (optional)</label>
+        <input type="text" class="field-input" data-field="heading" value="${esc(data.heading)}" />
+        <label class="field-label">Custom Markdown</label>
+        <textarea class="field-input field-mono" data-field="markdown" rows="6">${esc(data.markdown)}</textarea>
       `;
 
     default:
-      return '<p class="text-xs text-muted-foreground">No editable fields.</p>';
+      return '<p class="field-hint">No editable fields.</p>';
   }
 }
 
-function attachFieldListeners(container, sectionId, type, currentData) {
-  const getSecData = () => store.getState().sections.find(s => s.id === sectionId)?.data || currentData || {};
+function imageDropzone(sectionId, field, url, label) {
+  if (url) {
+    return `
+      <div class="image-dropzone image-dropzone-filled" data-id="${sectionId}" data-field="${field}">
+        <img src="${url}" alt="${esc(label)}" class="image-dropzone-preview" />
+        <div class="image-dropzone-actions">
+          <button type="button" class="btn-secondary image-replace-btn" data-id="${sectionId}" data-field="${field}">Replace</button>
+          <button type="button" class="btn-secondary image-remove-btn" data-id="${sectionId}" data-field="${field}">Remove</button>
+        </div>
+        <input type="file" class="image-file-input hidden" accept="image/*" data-id="${sectionId}" data-field="${field}" />
+      </div>
+    `;
+  }
+  return `
+    <div class="image-dropzone" data-id="${sectionId}" data-field="${field}">
+      <p class="field-hint">${esc(label)} — drag &amp; drop an image, or</p>
+      <div class="image-dropzone-actions">
+        <button type="button" class="btn-secondary image-choose-btn" data-id="${sectionId}" data-field="${field}">Choose file</button>
+        <button type="button" class="btn-secondary image-url-btn" data-id="${sectionId}" data-field="${field}">Paste URL</button>
+      </div>
+      <input type="file" class="image-file-input hidden" accept="image/*" data-id="${sectionId}" data-field="${field}" />
+    </div>
+  `;
+}
 
-  // Generic [data-field] inputs
-  container.querySelectorAll('[data-field]').forEach(el => {
-    const field = el.dataset.field;
-    const isCheckbox = el.type === 'checkbox';
+function renderListEditor(sectionId, listField, items, columns, itemLabel) {
+  return `
+    <div class="list-editor" data-id="${sectionId}" data-list-field="${listField}">
+      ${items.map((item, idx) => `
+        <div class="list-editor-row" data-idx="${idx}">
+          ${columns.map(col => {
+            if (col.checkbox) return `<label class="field-check list-editor-check"><input type="checkbox" class="list-editor-input" data-key="${col.key}" ${item[col.key] ? 'checked' : ''} /> ${col.checkboxLabel || ''}</label>`;
+            if (col.textarea) return `<textarea class="field-input list-editor-input ${col.mono ? 'field-mono' : ''}" data-key="${col.key}" rows="2" placeholder="${esc(col.placeholder)}">${esc(item[col.key])}</textarea>`;
+            return `<input type="text" class="field-input list-editor-input ${col.mono ? 'field-mono' : ''}" data-key="${col.key}" placeholder="${esc(col.placeholder)}" value="${esc(item[col.key])}" />`;
+          }).join('')}
+          <button type="button" class="card-icon-btn list-editor-remove" data-idx="${idx}" title="Remove">✕</button>
+        </div>
+      `).join('')}
+      <button type="button" class="btn-secondary list-editor-add">+ Add ${itemLabel}</button>
+    </div>
+  `;
+}
 
-    el.addEventListener(isCheckbox ? 'change' : 'input', () => {
-      const val = isCheckbox ? el.checked : el.value;
-      store.updateSectionData(sectionId, { [field]: val });
+function attachListeners(container) {
+  // Generic [data-field] inputs -> store.updateSectionData
+  container.querySelectorAll('.section-card').forEach(card => {
+    const sectionId = card.dataset.cardId;
+
+    card.querySelectorAll('[data-field]').forEach(el => {
+      const field = el.dataset.field;
+      const eventName = el.type === 'checkbox' ? 'change' : 'input';
+      el.addEventListener(eventName, () => {
+        const val = el.type === 'checkbox' ? el.checked : el.value;
+        store.updateSectionData(sectionId, { [field]: val });
+      });
     });
-  });
 
-  // Hero Deep Scan Trigger
-  const triggerAutoDetectBtn = container.querySelector('#trigger-autodetect-btn');
-  const autoDetectInput = container.querySelector('#github-autodetect-input');
-  if (triggerAutoDetectBtn && autoDetectInput) {
-    triggerAutoDetectBtn.addEventListener('click', async () => {
-      const parsed = parseGitHubRepoInput(autoDetectInput.value);
-      if (!parsed) {
-        showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
-        return;
+    // List editors (features/steps/env vars/endpoints/faq/roadmap/custom badges)
+    card.querySelectorAll('.list-editor').forEach(editor => {
+      const listField = editor.dataset.listField;
+      const getItems = () => JSON.parse(JSON.stringify(store.findSection(sectionId)?.data?.[listField] || []));
+
+      editor.querySelectorAll('.list-editor-row').forEach(row => {
+        const idx = parseInt(row.dataset.idx, 10);
+        row.querySelectorAll('.list-editor-input').forEach(input => {
+          const key = input.dataset.key;
+          const eventName = input.type === 'checkbox' ? 'change' : 'input';
+          input.addEventListener(eventName, () => {
+            const items = getItems();
+            if (!items[idx]) return;
+            items[idx][key] = input.type === 'checkbox' ? input.checked : input.value;
+            store.updateSectionData(sectionId, { [listField]: items });
+          });
+        });
+      });
+
+      editor.querySelectorAll('.list-editor-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx, 10);
+          const items = getItems();
+          items.splice(idx, 1);
+          store.updateSectionData(sectionId, { [listField]: items });
+        });
+      });
+
+      editor.querySelector('.list-editor-add')?.addEventListener('click', () => {
+        const items = getItems();
+        const blank = {};
+        // infer shape from first existing item, or leave empty object for known types
+        items.push(blank);
+        store.updateSectionData(sectionId, { [listField]: items });
+      });
+    });
+
+    // Image dropzones
+    card.querySelectorAll('.image-dropzone').forEach(zone => {
+      const field = zone.dataset.field;
+      const fileInput = zone.querySelector('.image-file-input');
+
+      const applyFile = (file) => {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = (e) => store.updateSectionData(sectionId, { [field]: e.target.result, ...(field === 'logoUrl' ? { showLogo: true } : {}) });
+        reader.readAsDataURL(file);
+      };
+
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        applyFile(e.dataTransfer.files?.[0]);
+      });
+
+      zone.querySelector('.image-choose-btn')?.addEventListener('click', () => fileInput?.click());
+      zone.querySelector('.image-replace-btn')?.addEventListener('click', () => fileInput?.click());
+      fileInput?.addEventListener('change', (e) => applyFile(e.target.files?.[0]));
+
+      zone.querySelector('.image-url-btn')?.addEventListener('click', () => {
+        const url = prompt('Paste an image URL:', '');
+        if (url && url.trim()) store.updateSectionData(sectionId, { [field]: url.trim(), ...(field === 'logoUrl' ? { showLogo: true } : {}) });
+      });
+
+      zone.querySelector('.image-remove-btn')?.addEventListener('click', () => {
+        store.updateSectionData(sectionId, { [field]: '', ...(field === 'logoUrl' ? { showLogo: false } : {}) });
+      });
+    });
+
+    // Tech picker toggle (inline panel, built lazily)
+    card.querySelector('.tech-picker-open-btn')?.addEventListener('click', () => {
+      const panel = card.querySelector(`#tech-picker-${sectionId}`);
+      if (!panel) return;
+      const hidden = panel.classList.toggle('hidden');
+      if (!hidden && !panel.dataset.built) {
+        panel.dataset.built = 'true';
+        panel.innerHTML = renderTechPickerPanel(sectionId);
+        attachTechPickerListeners(panel, sectionId);
       }
+    });
 
-      triggerAutoDetectBtn.innerHTML = '<span>⏳</span> Scanning...';
-      triggerAutoDetectBtn.disabled = true;
+    card.querySelectorAll('.tech-chip-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const section = store.findSection(sectionId);
+        const updated = (section.data.technologies || []).filter(t => t !== btn.dataset.tech);
+        store.updateSectionData(sectionId, { technologies: updated });
+      });
+    });
 
+    // npm Detect
+    card.querySelector('.npm-detect-btn')?.addEventListener('click', async (e) => {
+      const btn = e.target;
+      const input = card.querySelector(`#npm-pkg-input-${sectionId}`);
+      const name = input?.value?.trim();
+      if (!name) { showToast('Enter a package name first', 'error'); return; }
+      btn.disabled = true;
+      btn.textContent = '...';
       try {
-        const info = await fetchGitHubRepoFullDetails(parsed.owner, parsed.repo, progress => {
-          triggerAutoDetectBtn.innerHTML = `<span>⏳</span> ${progress.message.slice(0, 18)}...`;
-        });
-
-        store.applyRepoAnalysis(info);
-        fireConfetti();
-        showToast(`Deep scan complete! ${info.repo} (${info.matchedTechIds.length} tech badges detected)`, 'success');
+        const pkg = await enrichNpmPackage(name);
+        store.updateSectionData(sectionId, { npmPackageName: pkg.name, showNpmVersion: true, showNpmDownloads: true });
+        showToast(`Found ${pkg.name}@${pkg.version}`, 'success');
       } catch (err) {
-        showToast(err.message || 'Failed to scan repository', 'error');
+        showToast(err.message || 'Package not found', 'error');
       } finally {
-        triggerAutoDetectBtn.innerHTML = '<span>⚡</span> Deep Scan';
-        triggerAutoDetectBtn.disabled = false;
+        btn.disabled = false;
+        btn.textContent = 'Detect';
       }
     });
-  }
-
-  // Banner / Image Studio triggers
-  container.querySelector('#open-banner-hub-btn')?.addEventListener('click', () => {
-    renderPhotoModal('hero');
-  });
-  container.querySelector('#open-demo-studio-btn')?.addEventListener('click', () => {
-    renderPhotoModal('demo');
   });
 
-  // Tech Picker trigger
-  container.querySelector('#open-tech-picker-btn')?.addEventListener('click', () => {
-    renderTechPickerModal();
-  });
-
-  // Remove single tech badge chip
-  container.querySelectorAll('.remove-tech-chip-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const removeId = btn.dataset.id;
-      const data = getSecData();
-      const currentList = data.technologies || [];
-      const updated = currentList.filter(id => id !== removeId);
-      store.updateSectionData(sectionId, { technologies: updated });
+  // Card chrome: collapse, rename, enable toggle, duplicate, delete
+  // Click anywhere on a card's header bar to expand/collapse it — except the
+  // controls that need their own click behavior (rename, enable, duplicate,
+  // delete, drag handle).
+  container.querySelectorAll('.section-card-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.card-title-input, .card-enable-toggle, .card-duplicate-btn, .card-delete-btn, .drag-grip')) return;
+      const id = header.dataset.id;
+      if (expandedIds.has(id)) expandedIds.delete(id); else expandedIds.add(id);
+      renderSectionFormList(container);
     });
   });
 
-  // Feature items handlers
-  const featureList = container.querySelector('#feature-items-list');
-  container.querySelector('#add-feature-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const items = [...(data.items || [])];
-    items.push({ icon: '✨', title: 'New Feature', desc: 'Description of your new feature.' });
-    store.updateSectionData(sectionId, { items });
+  container.querySelectorAll('.card-title-input').forEach(input => {
+    input.addEventListener('input', () => store.renameSection(input.dataset.id, input.value));
   });
 
-  featureList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const items = JSON.parse(JSON.stringify(data.items || []));
-    if (!items[idx]) return;
-
-    if (e.target.classList.contains('feat-icon-input')) items[idx].icon = e.target.value;
-    if (e.target.classList.contains('feat-title-input')) items[idx].title = e.target.value;
-    if (e.target.classList.contains('feat-desc-input')) items[idx].desc = e.target.value;
-
-    store.updateSectionData(sectionId, { items });
+  container.querySelectorAll('.card-enable-cb').forEach(cb => {
+    cb.addEventListener('change', () => store.toggleSection(cb.dataset.id, cb.checked));
   });
 
-  featureList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-feature-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const items = (data.items || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { items });
-    }
+  container.querySelectorAll('.card-duplicate-btn').forEach(btn => {
+    btn.addEventListener('click', () => store.duplicateSection(btn.dataset.id));
   });
 
-  // Installation steps handlers
-  const stepsList = container.querySelector('#install-steps-list');
-  container.querySelector('#add-install-step-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const steps = [...(data.steps || [])];
-    steps.push({ title: 'New step', cmd: 'echo "Step command"' });
-    store.updateSectionData(sectionId, { steps });
-  });
-
-  stepsList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const steps = JSON.parse(JSON.stringify(data.steps || []));
-    if (!steps[idx]) return;
-
-    if (e.target.classList.contains('step-title-input')) steps[idx].title = e.target.value;
-    if (e.target.classList.contains('step-cmd-input')) steps[idx].cmd = e.target.value;
-
-    store.updateSectionData(sectionId, { steps });
-  });
-
-  stepsList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-step-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const steps = (data.steps || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { steps });
-    }
-  });
-
-  // Environment variables handlers
-  const envList = container.querySelector('#env-vars-list');
-  container.querySelector('#add-env-var-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const variables = [...(data.variables || [])];
-    variables.push({ key: 'NEW_VAR', desc: 'Description of variable', default: '-', required: false });
-    store.updateSectionData(sectionId, { variables });
-  });
-
-  envList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const variables = JSON.parse(JSON.stringify(data.variables || []));
-    if (!variables[idx]) return;
-
-    if (e.target.classList.contains('env-key-input')) variables[idx].key = e.target.value;
-    if (e.target.classList.contains('env-desc-input')) variables[idx].desc = e.target.value;
-    if (e.target.classList.contains('env-default-input')) variables[idx].default = e.target.value;
-
-    store.updateSectionData(sectionId, { variables });
-  });
-
-  envList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-env-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const variables = (data.variables || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { variables });
-    }
-  });
-
-  // Roadmap tasks handlers
-  const tasksList = container.querySelector('#tasks-list');
-  container.querySelector('#add-task-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const tasks = [...(data.tasks || [])];
-    tasks.push({ text: 'New milestone', completed: false });
-    store.updateSectionData(sectionId, { tasks });
-  });
-
-  tasksList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const tasks = JSON.parse(JSON.stringify(data.tasks || []));
-    if (!tasks[idx]) return;
-
-    if (e.target.classList.contains('task-text-input')) tasks[idx].text = e.target.value;
-    store.updateSectionData(sectionId, { tasks });
-  });
-
-  tasksList?.addEventListener('change', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const tasks = JSON.parse(JSON.stringify(data.tasks || []));
-    if (!tasks[idx]) return;
-
-    if (e.target.classList.contains('task-check')) tasks[idx].completed = e.target.checked;
-    store.updateSectionData(sectionId, { tasks });
-  });
-
-  tasksList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-task-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const tasks = (data.tasks || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { tasks });
-    }
-  });
-
-  // FAQ Handlers
-  const faqList = container.querySelector('#faq-items-list');
-  container.querySelector('#add-faq-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const questions = [...(data.questions || [])];
-    questions.push({ q: 'New question?', a: 'Answer to the question.' });
-    store.updateSectionData(sectionId, { questions });
-  });
-
-  faqList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const questions = JSON.parse(JSON.stringify(data.questions || []));
-    if (!questions[idx]) return;
-
-    if (e.target.classList.contains('faq-q-input')) questions[idx].q = e.target.value;
-    if (e.target.classList.contains('faq-a-input')) questions[idx].a = e.target.value;
-
-    store.updateSectionData(sectionId, { questions });
-  });
-
-  faqList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-faq-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const questions = (data.questions || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { questions });
-    }
-  });
-
-  // Benchmarks Handlers
-  const benchList = container.querySelector('#benchmark-items-list');
-  container.querySelector('#add-benchmark-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const rows = [...(data.rows || [])];
-    rows.push({ task: 'Task Name', baseline: '100ms', current: '20ms', diff: '5x faster' });
-    store.updateSectionData(sectionId, { rows });
-  });
-
-  benchList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const rows = JSON.parse(JSON.stringify(data.rows || []));
-    if (!rows[idx]) return;
-
-    if (e.target.classList.contains('bench-task-input')) rows[idx].task = e.target.value;
-    if (e.target.classList.contains('bench-base-input')) rows[idx].baseline = e.target.value;
-    if (e.target.classList.contains('bench-curr-input')) rows[idx].current = e.target.value;
-    if (e.target.classList.contains('bench-diff-input')) rows[idx].diff = e.target.value;
-
-    store.updateSectionData(sectionId, { rows });
-  });
-
-  benchList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-bench-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const rows = (data.rows || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { rows });
-    }
-  });
-
-  // API Reference Handlers
-  const apiList = container.querySelector('#api-endpoints-list');
-  container.querySelector('#add-endpoint-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const endpoints = [...(data.endpoints || [])];
-    endpoints.push({ method: 'GET', path: '/api/v1/new', desc: 'Endpoint description', auth: 'None' });
-    store.updateSectionData(sectionId, { endpoints });
-  });
-
-  apiList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const endpoints = JSON.parse(JSON.stringify(data.endpoints || []));
-    if (!endpoints[idx]) return;
-
-    if (e.target.classList.contains('ep-path-input')) endpoints[idx].path = e.target.value;
-    if (e.target.classList.contains('ep-desc-input')) endpoints[idx].desc = e.target.value;
-    if (e.target.classList.contains('ep-auth-input')) endpoints[idx].auth = e.target.value;
-
-    store.updateSectionData(sectionId, { endpoints });
-  });
-
-  apiList?.addEventListener('change', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const endpoints = JSON.parse(JSON.stringify(data.endpoints || []));
-    if (!endpoints[idx]) return;
-
-    if (e.target.classList.contains('ep-method-select')) endpoints[idx].method = e.target.value;
-    store.updateSectionData(sectionId, { endpoints });
-  });
-
-  apiList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-ep-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const endpoints = (data.endpoints || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { endpoints });
-    }
-  });
-
-  // Changelog Releases Handlers
-  const relList = container.querySelector('#releases-list');
-  container.querySelector('#add-release-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const releases = [...(data.releases || [])];
-    releases.push({ version: 'v1.1.0', date: new Date().toISOString().slice(0, 10), changes: ['New feature added'] });
-    store.updateSectionData(sectionId, { releases });
-  });
-
-  relList?.addEventListener('input', (e) => {
-    const idx = parseInt(e.target.dataset.idx, 10);
-    const data = getSecData();
-    const releases = JSON.parse(JSON.stringify(data.releases || []));
-    if (!releases[idx]) return;
-
-    if (e.target.classList.contains('rel-version-input')) releases[idx].version = e.target.value;
-    if (e.target.classList.contains('rel-date-input')) releases[idx].date = e.target.value;
-    if (e.target.classList.contains('rel-changes-input')) {
-      releases[idx].changes = e.target.value.split('\n').filter(c => c.trim().length > 0);
-    }
-
-    store.updateSectionData(sectionId, { releases });
-  });
-
-  relList?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.delete-rel-btn');
-    if (btn) {
-      const idx = parseInt(btn.dataset.idx, 10);
-      const data = getSecData();
-      const releases = (data.releases || []).filter((_, i) => i !== idx);
-      store.updateSectionData(sectionId, { releases });
-    }
-  });
-
-  // License Studio Handlers
-  container.querySelectorAll('.license-select-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const licId = card.dataset.licenseId;
-      store.updateSectionData(sectionId, { type: licId });
+  container.querySelectorAll('.card-delete-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (confirm('Delete this section?')) store.removeSection(btn.dataset.id);
     });
   });
 
-  container.querySelector('#download-license-file-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const lic = getLicenseById(data.type || 'MIT');
-    const year = data.year || new Date().getFullYear().toString();
-    const holder = data.holder || 'Your Name';
-    const proj = data.projectName || '';
-    const text = lic.generateText(year, holder, proj);
-    downloadReadmeFile(text, 'LICENSE');
-    fireConfetti();
-    showToast(`Downloaded LICENSE (${lic.id})! Place in your repo root.`, 'success');
+  setupDragReorder(container);
+}
+
+function setupDragReorder(container) {
+  container.querySelectorAll('.drag-grip').forEach(grip => {
+    grip.addEventListener('dragstart', (e) => {
+      const card = grip.closest('.section-card');
+      dragFromIndex = parseInt(card.dataset.index, 10);
+      e.dataTransfer.effectAllowed = 'move';
+      card.classList.add('dragging');
+    });
+    grip.addEventListener('dragend', () => {
+      grip.closest('.section-card')?.classList.remove('dragging');
+      dragFromIndex = null;
+    });
   });
 
-  container.querySelector('#copy-license-text-btn')?.addEventListener('click', () => {
-    const data = getSecData();
-    const lic = getLicenseById(data.type || 'MIT');
-    const year = data.year || new Date().getFullYear().toString();
-    const holder = data.holder || 'Your Name';
-    const proj = data.projectName || '';
-    const text = lic.generateText(year, holder, proj);
-    copyToClipboard(text, `Copied ${lic.name} agreement to clipboard!`);
+  container.querySelectorAll('.section-card').forEach(card => {
+    card.addEventListener('dragover', (e) => {
+      if (dragFromIndex === null) return;
+      e.preventDefault();
+      card.classList.add('drop-target');
+    });
+    card.addEventListener('dragleave', () => card.classList.remove('drop-target'));
+    card.addEventListener('drop', (e) => {
+      e.preventDefault();
+      card.classList.remove('drop-target');
+      if (dragFromIndex === null) return;
+      const toIndex = parseInt(card.dataset.index, 10);
+      store.reorderSections(dragFromIndex, toIndex);
+      dragFromIndex = null;
+    });
   });
 }
 
-/* ==================== MODULE: components/interactiveCanvas.js ==================== */
-
-let activeBadgePopoverSectionId = null;
-
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-// Minimalist SVG icons
-const SVG_ICONS = {
-  plus: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="M12 5v14"/></svg>',
-  up: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>',
-  down: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>',
-  gear: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
-  copy: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
-  trash: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
-  upload: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>',
-  link: '<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
-  shield: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-  download: '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
-  image: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>'
-};
-
-function renderInteractiveCanvas(container, state, meta = {}) {
-  if (!container) return;
-
-  // Don't re-render entire canvas if user is actively typing in an input/textarea/contenteditable
-  const activeEl = document.activeElement;
-  const isTyping = activeEl && container.contains(activeEl) && (
-    (activeEl.tagName === 'INPUT' && activeEl.type !== 'checkbox' && activeEl.type !== 'radio' && activeEl.type !== 'button' && activeEl.type !== 'submit') ||
-    activeEl.tagName === 'TEXTAREA' ||
-    activeEl.getAttribute('contenteditable') === 'true'
-  );
-
-  if (isTyping && !meta.force) {
-    return;
-  }
-
-  const { sections, activeSectionId } = state;
-  const enabledSections = sections.filter(s => s.enabled);
-
-  if (enabledSections.length === 0) {
-    container.innerHTML = `
-      <div class="p-16 text-center text-muted-foreground space-y-4">
-        <div class="w-12 h-12 mx-auto rounded-xl bg-muted flex items-center justify-center text-muted-foreground">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </div>
-        <div class="space-y-1">
-          <h3 class="text-base font-semibold text-foreground">Your README is Empty</h3>
-          <p class="text-xs">Add sections from the library or use the Quick Guide scanner to get started.</p>
-        </div>
-        <div class="pt-2">
-          <button id="canvas-empty-add-btn" class="btn-primary text-xs px-4 py-2 shadow-sm flex items-center gap-1.5 mx-auto cursor-pointer">
-            ${SVG_ICONS.plus}
-            <span>Open Section Library</span>
-          </button>
-        </div>
-      </div>
-    `;
-    container.querySelector('#canvas-empty-add-btn')?.addEventListener('click', () => openSectionLibrary());
-    return;
-  }
-
-  let html = `
-    <div class="canvas-document markdown-body github-dark relative min-h-[600px] select-text">
-  `;
-
-  sections.forEach((sec, idx) => {
-    if (!sec.enabled) return;
-
-    const isFirst = idx === 0;
-    const isLast = idx === sections.length - 1;
-
-    // Top In-between Section Add Divider (also a drop target for drag reorder + library cards)
-    html += `
-      <div class="add-section-divider group/divider py-2 flex items-center justify-center relative select-none min-h-[20px]" data-drop-index="${idx}">
-        <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
-        <button
-          class="insert-section-btn absolute opacity-0 group-hover/divider:opacity-100 transition-all px-2.5 py-0.5 text-[10px] font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1 cursor-pointer"
-          data-insert-index="${idx}"
-          title="Insert section here (or drop a dragged section / library card)"
-        >
-          ${SVG_ICONS.plus}
-          <span>Add Section</span>
-        </button>
-      </div>
-    `;
-
-    // Section Block (draggable via grip handle)
-    html += `
-      <section
-        class="interactive-section-block group relative rounded-lg border border-transparent hover:border-zinc-700/80 p-3 sm:p-4 transition-all ${
-          sec.id === activeSectionId ? 'canvas-section-focused' : ''
-        }"
-        data-section-id="${sec.id}"
-        draggable="false"
-      >
-        <!-- Floating Section Action Toolbar (Top Right on Hover) -->
-        <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
-          <span class="drag-grip px-1 text-zinc-500 hover:text-zinc-100 cursor-grab" draggable="true" data-grip-id="${sec.id}" title="Drag to reorder">⠿</span>
-          <span class="text-[10px] text-zinc-400 font-mono px-1 font-semibold">${idx + 1}</span>
-          <button class="sec-move-up-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isFirst ? 'opacity-30 pointer-events-none' : ''}" title="Move Up" data-id="${sec.id}">
-            ${SVG_ICONS.up}
-          </button>
-          <button class="sec-move-down-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isLast ? 'opacity-30 pointer-events-none' : ''}" title="Move Down" data-id="${sec.id}">
-            ${SVG_ICONS.down}
-          </button>
-          <button class="sec-inspector-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Section Settings" data-id="${sec.id}">
-            ${SVG_ICONS.gear}
-          </button>
-          <button class="sec-duplicate-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition" title="Duplicate Section" data-id="${sec.id}">
-            ${SVG_ICONS.copy}
-          </button>
-          <button class="sec-delete-btn p-1 text-rose-400 hover:text-rose-300 rounded hover:bg-rose-950/40 transition" title="Delete Section" data-id="${sec.id}">
-            ${SVG_ICONS.trash}
-          </button>
-        </div>
-
-        <!-- Section Content -->
-        <div class="section-inner-content">
-          ${renderSectionInteractiveContent(sec, state)}
-        </div>
-      </section>
-    `;
-  });
-
-  // Bottom In-between Add Divider (drop target)
-  html += `
-    <div class="add-section-divider group/divider py-3 flex items-center justify-center relative select-none min-h-[24px]" data-drop-index="${sections.length}">
-      <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
-      <button 
-        class="insert-section-btn px-3 py-1 text-xs font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition"
-        data-insert-index="${sections.length}"
-        title="Add section to README"
-      >
-        ${SVG_ICONS.plus}
-        <span>Add Section to README</span>
-      </button>
-    </div>
-  `;
-
-  html += `</div>`;
-
-  container.innerHTML = html;
-  attachCanvasEventListeners(container, state);
-}
-
-function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = 'hero') {
-  const { width = '100%', radius = '8px', ratio = 'auto' } = options;
-  const ratioStyle = ratio && ratio !== 'auto' ? `aspect-ratio: ${ratio}; object-fit: cover;` : '';
-
+function renderTechPickerPanel(sectionId) {
+  const section = store.findSection(sectionId);
+  const selected = new Set(section.data.technologies || []);
   return `
-    <div class="direct-image-editor-container group/imgctrl relative inline-block my-3 max-w-full" data-section-id="${sectionId}" data-image-type="${imageType}">
-      <!-- Image Display Card -->
-      <div class="relative inline-block max-w-full overflow-hidden transition-all shadow-md bg-zinc-900 border border-border/60" style="border-radius: ${radius};">
-        <img
-          src="${imageUrl}"
-          alt="Image"
-          loading="lazy" decoding="async"
-          style="width: ${width}; ${ratioStyle}"
-          class="max-w-full mx-auto block transition-all"
-        />
-      </div>
-
-      <!-- Instant 1-Click On-Image Control Strip (Ultra-easy for kids & beginners) -->
-      <div class="image-control-strip mt-2.5 flex flex-wrap items-center justify-center gap-1.5 bg-zinc-900 border border-zinc-700/80 rounded-lg px-2.5 py-1.5 shadow-xl text-xs select-none">
-        <!-- Size Pills -->
-        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Size:</span>
-        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
-          ${['25%', '50%', '75%', '100%'].map(sz => `
-            <button 
-              type="button"
-              class="img-size-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${width === sz ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
-              data-size="${sz}"
-            >${sz}</button>
-          `).join('')}
-        </div>
-
-        <span class="text-zinc-700 mx-0.5">|</span>
-
-        <!-- Corners Pills -->
-        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Corners:</span>
-        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
-          ${[
-            { r: '0px', label: 'Sharp' },
-            { r: '8px', label: 'Round' },
-            { r: '24px', label: 'Pill' }
-          ].map(cr => `
-            <button 
-              type="button"
-              class="img-radius-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${radius === cr.r ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
-              data-radius="${cr.r}"
-            >${cr.label}</button>
-          `).join('')}
-        </div>
-
-        <span class="text-zinc-700 mx-0.5">|</span>
-
-        <!-- Aspect Ratio / Crop Pills -->
-        <span class="text-[11px] text-zinc-400 font-medium mr-0.5">Crop:</span>
-        <div class="inline-flex bg-zinc-800 rounded p-0.5 border border-zinc-700/60">
-          ${[
-            { r: 'auto', label: 'Auto' },
-            { r: '3/1', label: '3:1' },
-            { r: '16/9', label: '16:9' },
-            { r: '1/1', label: '1:1' }
-          ].map(rt => `
-            <button 
-              type="button"
-              class="img-ratio-btn px-2 py-0.5 text-[10px] rounded transition cursor-pointer font-medium ${ratio === rt.r ? 'bg-zinc-100 text-zinc-950 font-bold shadow-xs' : 'text-zinc-400 hover:text-zinc-200'}" 
-              data-ratio="${rt.r}"
-            >${rt.label}</button>
-          `).join('')}
-        </div>
-
-        <span class="text-zinc-700 mx-0.5">|</span>
-
-        <!-- Replace File / URL -->
-        <button 
-          type="button"
-          class="img-replace-file-btn px-2 py-0.5 text-[11px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 transition cursor-pointer flex items-center gap-1 shadow-xs" 
-          title="Pick new image from computer"
-        >
-          ${SVG_ICONS.upload}
-          <span>Replace</span>
+    <input type="text" class="field-input tech-picker-search" placeholder="Search technologies..." />
+    <div class="tech-picker-categories">
+      ${TECH_CATEGORIES.map(c => `<button type="button" class="tech-cat-btn" data-cat="${c.id}">${c.name}</button>`).join('')}
+    </div>
+    <div class="tech-picker-grid">
+      ${TECH_CATALOG.map(t => `
+        <button type="button" class="tech-picker-item ${selected.has(t.id) ? 'tech-picker-item-selected' : ''}" data-tech="${t.id}" data-cat="${t.category}" data-name="${t.name.toLowerCase()}">
+          ${esc(t.name)}
         </button>
-
-        <button 
-          type="button"
-          class="img-replace-url-btn px-2 py-0.5 text-[11px] rounded bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 border border-zinc-700 transition cursor-pointer" 
-          title="Paste image link"
-        >
-          URL
-        </button>
-
-        <!-- Delete Button -->
-        <button 
-          type="button"
-          class="img-delete-btn p-1 rounded bg-rose-950/40 hover:bg-rose-900/60 text-rose-400 border border-rose-800/50 transition cursor-pointer ml-1" 
-          title="Remove image"
-        >
-          ${SVG_ICONS.trash}
-        </button>
-
-        <input type="file" class="direct-img-file-input hidden" accept="image/*" />
-      </div>
+      `).join('')}
     </div>
   `;
 }
 
-function renderKidFriendlyDropzone(sectionId, title = 'Add Project Banner / Logo', imageType = 'hero') {
-  return `
-    <div class="kid-dropzone-box border-2 border-dashed border-zinc-700/80 hover:border-zinc-500 rounded-xl p-5 text-center transition bg-zinc-900/30 hover:bg-zinc-900/60 select-none my-3 cursor-pointer group" data-section-id="${sectionId}" data-image-type="${imageType}">
-      <div class="w-9 h-9 mx-auto rounded-full bg-zinc-800/80 flex items-center justify-center text-zinc-400 group-hover:text-zinc-200 transition mb-2">
-        ${SVG_ICONS.image}
-      </div>
-      <p class="text-xs font-semibold text-foreground">${title}</p>
-      <p class="text-[11px] text-muted-foreground mt-0.5">Click to choose an image from your computer, or drag and drop</p>
-      <div class="mt-2.5 flex items-center justify-center gap-2">
-        <button type="button" class="dropzone-choose-file-btn px-3 py-1 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 shadow-xs cursor-pointer flex items-center gap-1.5">
-          ${SVG_ICONS.upload}
-          <span>Choose File</span>
-        </button>
-        <button type="button" class="dropzone-enter-url-btn px-2.5 py-1 text-xs font-medium rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 border border-zinc-700 shadow-xs cursor-pointer">
-          Paste URL
-        </button>
-      </div>
-      <input type="file" class="dropzone-file-input hidden" accept="image/*" />
-    </div>
-  `;
+function attachTechPickerListeners(panel, sectionId) {
+  const items = () => Array.from(panel.querySelectorAll('.tech-picker-item'));
+
+  panel.querySelector('.tech-picker-search')?.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    items().forEach(el => { el.hidden = q && !el.dataset.name.includes(q); });
+  });
+
+  panel.querySelectorAll('.tech-cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.cat;
+      items().forEach(el => { el.hidden = cat !== 'all' && el.dataset.cat !== cat; });
+    });
+  });
+
+  panel.querySelectorAll('.tech-picker-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const section = store.findSection(sectionId);
+      const current = new Set(section.data.technologies || []);
+      const techId = el.dataset.tech;
+      if (current.has(techId)) current.delete(techId); else current.add(techId);
+      store.updateSectionData(sectionId, { technologies: Array.from(current) });
+    });
+  });
+}
+function openAddSectionMenu(onPick) {
+  // Simple: return the list for the caller (palette/library) to render its own UI.
+  return Object.entries(SECTION_LABELS).map(([type, label]) => ({ type, label }));
 }
 
-function renderSectionInteractiveContent(section, state) {
-  const { type, data, id } = section;
+/* ==================== MODULE: components/sectionLibrary.js ==================== */
 
-  switch (type) {
-    case SECTION_TYPES.HERO: {
-      const align = data.align || 'center';
-      const alignClass = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
-      const width = data.logoWidth || '100%';
-      const radius = data.logoRadius || '8px';
-      const ratio = data.aspectRatio || 'auto';
-
-      let bannerHtml = '';
-      if (data.showLogo && data.logoUrl) {
-        bannerHtml = renderDirectImageEditorHtml(data.logoUrl, { width, radius, ratio }, id, 'hero');
-      } else {
-        bannerHtml = renderKidFriendlyDropzone(id, 'Add Project Banner / Logo', 'hero');
-      }
-
-      return `
-        <div class="${alignClass} space-y-2 py-2">
-          ${bannerHtml}
-          <div>
-            <h1
-              class="canvas-editable-heading text-3xl font-bold tracking-tight text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-0.5 transition cursor-text inline-block min-w-[120px]"
-              contenteditable="true"
-              data-field="projectName"
-              data-section-id="${id}"
-              title="Click to edit project name"
-            >${escapeHtml(data.projectName || 'Project Title')}</h1>
-          </div>
-          <div>
-            <p
-              class="canvas-editable-text text-base text-zinc-400 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-1 transition cursor-text inline-block min-w-[200px]"
-              contenteditable="true"
-              data-field="tagline"
-              data-section-id="${id}"
-              title="Click to edit tagline"
-            >${escapeHtml(data.tagline || 'A modern open-source project built with passion.')}</p>
-          </div>
-          <div class="flex items-center ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'} gap-1.5 pt-1 select-none">
-            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.animateTagline ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="animateTagline" title="Animated typing tagline (online)">✨ Typing</button>
-            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.showCapsuleBanner ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="showCapsuleBanner" title="Capsule-render header banner (online)">🌊 Banner</button>
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.BADGES: {
-      const align = data.align || 'center';
-      const alignClass = align === 'center' ? 'text-center' : (align === 'right' ? 'text-right' : 'text-left');
-      const owner = data.repoOwner || 'owner';
-      const repo = data.repoName || 'repo';
-      const style = data.style || 'for-the-badge';
-
-      const badges = [];
-      const lazy = 'loading="lazy" decoding="async"';
-      if (data.showStars) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/stars/' + owner + '/' + repo + '?style=' + style + '" alt="Stars" class="h-5" />');
-      if (data.showForks) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/forks/' + owner + '/' + repo + '?style=' + style + '" alt="Forks" class="h-5" />');
-      if (data.showIssues) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues/' + owner + '/' + repo + '?style=' + style + '" alt="Issues" class="h-5" />');
-      if (data.showPRs) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues-pr/' + owner + '/' + repo + '?style=' + style + '" alt="PRs" class="h-5" />');
-      if (data.showLicense) badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/License-MIT-blue.svg?style=' + style + '" alt="License" class="h-5" />');
-      if (data.showRelease) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/v/release/' + owner + '/' + repo + '?style=' + style + '" alt="Release" class="h-5" />');
-
-      if (Array.isArray(data.customBadges)) {
-        data.customBadges.forEach(cb => {
-          const l = encodeURIComponent(cb.label || 'Badge');
-          const m = encodeURIComponent(cb.message || 'Value');
-          const c = encodeURIComponent(cb.color || 'blue');
-          badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/' + l + '-' + m + '-' + c + '?style=' + style + '" alt="' + cb.label + '" class="h-5" />');
-        });
-      }
-
-      return `
-        <div class="${alignClass} py-2 space-y-2">
-          <div class="flex flex-wrap items-center justify-${align === 'center' ? 'center' : (align === 'right' ? 'end' : 'start')} gap-1.5">
-            ${badges.length > 0 ? badges.join('\n') : '<span class="text-xs text-muted-foreground italic">No badges selected. Click below to add shields.</span>'}
-          </div>
-
-          <!-- Direct Badge Quick Customizer Pill -->
-          <div class="pt-1 select-none">
-            <button 
-              class="open-badge-popover-btn text-xs text-muted-foreground hover:text-foreground bg-card/60 hover:bg-muted border border-border rounded-md px-2.5 py-1 inline-flex items-center gap-1.5 transition cursor-pointer"
-              data-id="${id}"
-            >
-              ${SVG_ICONS.shield}
-              <span>Badges (${badges.length}) ▾</span>
-            </button>
-          </div>
-
-          <!-- Popover Modal for Badges if toggled -->
-          ${activeBadgePopoverSectionId === id ? renderBadgePopoverHtml(data, id) : ''}
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.ABOUT: {
-      return `
-        <div class="space-y-2">
-          <h2 
-            class="canvas-editable-heading text-xl font-semibold text-foreground border-b border-zinc-800 pb-1.5 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text inline-block min-w-[140px]"
-            contenteditable="true"
-            data-field="heading"
-            data-section-id="${id}"
-          >${escapeHtml(data.heading || 'About The Project')}</h2>
-
-          <div 
-            class="canvas-editable-text text-sm text-zinc-300 leading-relaxed outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded p-2 transition cursor-text min-h-[60px] whitespace-pre-wrap"
-            contenteditable="true"
-            data-field="content"
-            data-section-id="${id}"
-            title="Click to edit about content"
-          >${escapeHtml(data.content || 'A brief, compelling overview of why this project exists, the real-world problem it solves, and how it helps developers achieve their goals.')}</div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.TECH_STACK: {
-      const techs = data.technologies || [];
-      const style = data.style || 'for-the-badge';
-      const align = data.align || 'center';
-      const tileSize = data.tileSize || 'medium';
-      const tileStyle = data.tileStyle || 'badges';
-      const alignClass = align === 'center' ? 'justify-center' : (align === 'right' ? 'justify-end' : 'justify-start');
-      const imgH = tileSize === 'small' ? 'h-5' : tileSize === 'large' ? 'h-7' : tileSize === 'xlarge' ? 'h-8' : 'h-6';
-
-      return `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Built With')}</h2>
-
-            <div class="flex items-center gap-1.5 select-none">
-              <div class="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-md p-0.5 text-[10px]">
-                ${['small', 'medium', 'large'].map(sz => `
-                  <button class="tile-size-btn px-1.5 py-0.5 rounded transition cursor-pointer ${tileSize === sz ? 'bg-zinc-100 text-zinc-950 font-semibold' : 'text-zinc-400 hover:text-zinc-200'}" data-size="${sz}" data-id="${id}" title="Tile size ${sz}">${sz[0].toUpperCase()}</button>
-                `).join('')}
-              </div>
-              <button class="open-tech-picker-canvas-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs cursor-pointer">
-                ${SVG_ICONS.plus}
-                <span>Tiles</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="tile-grid tile-size-${tileSize} tile-style-${tileStyle} ${alignClass} pt-1" data-tech-dropzone="${id}">
-            ${techs.map(tId => {
-              const tech = TECH_CATALOG.find(t => t.id === tId) || { name: tId, logo: tId, color: 'blue' };
-              const badgeUrl = getBadgeUrl(tech, style);
-              return `
-                <div class="tile-chip tech-badge-chip group/chip" draggable="true" data-tech-id="${tId}" data-id="${tId}" title="Drag to reorder — hover to remove">
-                  <span class="drag-grip text-zinc-600 text-[10px]">⠿</span>
-                  <img src="${badgeUrl}" alt="${tech.name}" loading="lazy" decoding="async" class="${imgH} rounded shadow-xs pointer-events-none" />
-                  <button
-                    class="remove-canvas-tech-btn w-4 h-4 bg-rose-600/80 text-white rounded-full text-[10px] opacity-0 group-hover/chip:opacity-100 transition flex items-center justify-center cursor-pointer hover:bg-rose-500"
-                    data-tech-id="${tId}"
-                    title="Remove ${tech.name}"
-                  >✕</button>
-                </div>
-              `;
-            }).join('')}
-            ${techs.length === 0 ? '<p class="text-xs text-muted-foreground italic w-full">No tiles yet. Click “Tiles” or drag from Tech Picker. Tip: drop images anywhere to set banners.</p>' : ''}
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.FEATURES: {
-      const items = data.items || [];
-      return `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Key Features')}</h2>
-
-            <button class="add-canvas-feature-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
-              ${SVG_ICONS.plus}
-              <span>Add Feature</span>
-            </button>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-            ${items.map((feat, idx) => `
-              <div class="feature-item-card group/feat p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-lg space-y-1 relative hover:border-zinc-700 transition">
-                <button class="delete-canvas-feature-btn absolute top-2 right-2 text-zinc-500 hover:text-rose-400 opacity-0 group-hover/feat:opacity-100 transition text-xs p-1 cursor-pointer" data-idx="${idx}" title="Delete feature">✕</button>
-                <div class="flex items-center gap-2">
-                  <span 
-                    class="canvas-feat-title font-semibold text-sm text-foreground outline-none hover:bg-zinc-800/60 rounded px-1 flex-1 cursor-text"
-                    contenteditable="true"
-                    data-idx="${idx}"
-                    data-subfield="title"
-                  >${escapeHtml(feat.title || 'Feature Title')}</span>
-                </div>
-                <p 
-                  class="canvas-feat-desc text-xs text-zinc-400 leading-relaxed outline-none hover:bg-zinc-800/60 rounded px-1 cursor-text whitespace-pre-wrap"
-                  contenteditable="true"
-                  data-idx="${idx}"
-                  data-subfield="desc"
-                >${escapeHtml(feat.desc || 'Feature description...')}</p>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.DEMO: {
-      const width = data.width || '100%';
-      const radius = data.radius || '8px';
-      const ratio = data.aspectRatio || 'auto';
-
-      let imageHtml = '';
-      if (data.imageUrl) {
-        imageHtml = renderDirectImageEditorHtml(data.imageUrl, { width, radius, ratio }, id, 'demo');
-      } else {
-        imageHtml = renderKidFriendlyDropzone(id, 'Add Preview Screenshot / GIF', 'demo');
-      }
-
-      return `
-        <div class="space-y-3">
-          <div class="border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Preview & Screenshots')}</h2>
-          </div>
-
-          <div class="text-center py-1">
-            ${imageHtml}
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.INSTALLATION: {
-      const steps = data.steps || [];
-      const pm = data.packageManager || 'npm';
-      return `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Getting Started / Installation')}</h2>
-
-            <div class="flex items-center gap-2 select-none">
-              <!-- Package Manager Selector Tabs -->
-              <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-md p-0.5 text-xs">
-                ${['npm', 'yarn', 'pnpm', 'bun'].map(p => `
-                  <button 
-                    class="pm-selector-btn px-2 py-0.5 rounded text-[11px] font-medium transition cursor-pointer ${
-                      pm === p ? 'bg-zinc-100 text-zinc-950 font-semibold' : 'text-zinc-400 hover:text-zinc-200'
-                    }"
-                    data-pm="${p}"
-                  >${p}</button>
-                `).join('')}
-              </div>
-
-              <button class="add-canvas-step-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
-                ${SVG_ICONS.plus}
-                <span>Add Step</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="space-y-3 pt-1">
-            ${steps.map((step, idx) => `
-              <div class="group/step space-y-1.5 p-2 rounded-lg hover:bg-zinc-900/30 transition relative">
-                <div class="flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="w-5 h-5 rounded-full bg-zinc-800 text-zinc-300 flex items-center justify-center text-[11px] font-mono">${idx + 1}</span>
-                    <span 
-                      class="canvas-step-title font-medium text-xs text-foreground outline-none hover:bg-zinc-800/60 rounded px-1.5 py-0.5 cursor-text"
-                      contenteditable="true"
-                      data-idx="${idx}"
-                      data-subfield="title"
-                    >${escapeHtml(step.title || 'Step Title')}</span>
-                  </div>
-                  <button class="delete-canvas-step-btn text-zinc-500 hover:text-rose-400 opacity-0 group-step:opacity-100 transition text-xs p-1 cursor-pointer" data-idx="${idx}">✕</button>
-                </div>
-
-                <div class="relative group/code">
-                  <pre class="bg-zinc-950 border border-zinc-800 rounded-lg p-3 font-mono text-xs text-emerald-400 overflow-x-auto"><code 
-                    class="canvas-step-cmd outline-none cursor-text block"
-                    contenteditable="true"
-                    data-idx="${idx}"
-                    data-subfield="cmd"
-                  >${escapeHtml(step.cmd || 'echo "command"')}</code></pre>
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.PROJECT_STRUCTURE: {
-      return `
-        <div class="space-y-3">
-          <div class="border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Project Structure')}</h2>
-          </div>
-          <pre class="bg-zinc-950 border border-zinc-800 rounded-lg p-3 font-mono text-xs text-zinc-300 overflow-x-auto leading-relaxed"><code 
-            class="outline-none cursor-text block whitespace-pre"
-            contenteditable="true"
-            data-field="tree"
-            data-section-id="${id}"
-          >${escapeHtml(data.tree || '.\n├── src/\n│   ├── index.js\n│   └── utils.js\n├── package.json\n└── README.md')}</code></pre>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.ROADMAP: {
-      const tasks = data.tasks || [];
-      return `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Roadmap')}</h2>
-
-            <button class="add-canvas-task-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
-              ${SVG_ICONS.plus}
-              <span>Add Task</span>
-            </button>
-          </div>
-
-          <div class="space-y-1.5 pt-1">
-            ${tasks.map((task, idx) => `
-              <div class="group/task flex items-center gap-2.5 p-2 rounded-md hover:bg-zinc-900/40 transition">
-                <input 
-                  type="checkbox" 
-                  class="canvas-task-checkbox rounded border-zinc-700 text-zinc-100 focus:ring-0 cursor-pointer w-4 h-4"
-                  ${task.completed ? 'checked' : ''} 
-                  data-idx="${idx}" 
-                />
-                <span 
-                  class="canvas-task-text text-sm flex-1 outline-none hover:bg-zinc-800/50 rounded px-1.5 py-0.5 cursor-text ${
-                    task.completed ? 'line-through text-zinc-500' : 'text-zinc-200'
-                  }"
-                  contenteditable="true"
-                  data-idx="${idx}"
-                >${escapeHtml(task.text || 'Task milestone')}</span>
-                <button class="delete-canvas-task-btn text-zinc-500 hover:text-rose-400 opacity-0 group-task:opacity-100 transition text-xs p-1 cursor-pointer" data-idx="${idx}">✕</button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.LICENSE: {
-      const activeLic = getLicenseById(data.type || 'MIT');
-      const year = data.year || new Date().getFullYear().toString();
-      const holder = data.holder || 'Your Name';
-      const proj = data.projectName || '';
-      const text = activeLic.generateText(year, holder, proj);
-
-      return `
-        <div class="space-y-3">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'License')}</h2>
-
-            <div class="flex items-center gap-2 select-none">
-              <button class="copy-canvas-lic-btn btn-secondary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer">
-                ${SVG_ICONS.copy}
-                <span>Copy</span>
-              </button>
-              <button class="download-canvas-lic-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 cursor-pointer shadow-xs">
-                ${SVG_ICONS.download}
-                <span>Download LICENSE</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Interactive License Standard Pills -->
-          <div class="flex items-center gap-1.5 flex-wrap select-none pt-1">
-            <span class="text-xs text-muted-foreground mr-1">Standard:</span>
-            ${['MIT', 'Apache-2.0', 'GPL-3.0', 'BSD-3-Clause', 'ISC', 'Unlicense'].map(licId => `
-              <button 
-                class="lic-pill-btn px-2.5 py-1 text-xs rounded-md border transition cursor-pointer ${
-                  activeLic.id === licId 
-                    ? 'bg-zinc-100 text-zinc-950 font-bold border-zinc-100 shadow-xs' 
-                    : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'
-                }"
-                data-lic="${licId}"
-              >${licId}</button>
-            `).join('')}
-          </div>
-
-          <p class="text-xs text-zinc-400">
-            Distributed under the <strong class="text-zinc-200">${activeLic.name}</strong>. See <code class="text-zinc-300">LICENSE</code> for more information.
-          </p>
-
-          <details class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-3 text-xs text-zinc-400 cursor-pointer">
-            <summary class="font-medium text-zinc-300 hover:text-zinc-100">View Full Legal Text</summary>
-            <pre class="mt-2 text-[11px] font-mono leading-relaxed max-h-40 overflow-y-auto whitespace-pre-wrap text-zinc-400">${escapeHtml(text)}</pre>
-          </details>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.STATS: {
-      const toggles = [
-        { key: 'showActivityGraph', label: 'Activity graph' },
-        { key: 'showContributors', label: 'Contributors' },
-        { key: 'showStarHistory', label: 'Star history' },
-        { key: 'showTopLangs', label: 'Top langs' },
-        { key: 'showStreak', label: 'Streak' },
-        { key: 'showVisitors', label: 'Visitors' }
-      ];
-      return `
-        <div class="space-y-3">
-          <div class="border-b border-zinc-800 pb-1.5">
-            <h2
-              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-              contenteditable="true"
-              data-field="heading"
-              data-section-id="${id}"
-            >${escapeHtml(data.heading || 'Stats & Activity')}</h2>
-            <p class="text-[11px] text-muted-foreground mt-0.5">Opt-in online visuals — README still works offline, images load on GitHub.</p>
-          </div>
-          <div class="flex flex-wrap gap-1.5 select-none">
-            ${toggles.map(t => `
-              <button class="stats-toggle-btn px-2.5 py-1 text-[11px] rounded-md border transition cursor-pointer ${data[t.key] ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="${t.key}" data-id="${id}">${data[t.key] ? '✓ ' : '+ '}${t.label}</button>
-            `).join('')}
-          </div>
-          <div
-            class="canvas-editable-text text-xs text-zinc-400 outline-none hover:bg-zinc-800/40 rounded px-1.5 py-0.5 cursor-text"
-            contenteditable="true" data-field="githubUser" data-section-id="${id}"
-            title="GitHub username for stats"
-          >${escapeHtml(data.githubUser || 'yourusername')}</div>
-        </div>
-      `;
-    }
-
-    case SECTION_TYPES.CUSTOM: {
-      return `
-        <div class="space-y-2">
-          <h2
-            class="canvas-editable-heading text-xl font-semibold text-foreground border-b border-zinc-800 pb-1.5 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-            contenteditable="true"
-            data-field="heading"
-            data-section-id="${id}"
-          >${escapeHtml(data.heading || 'Custom Section')}</h2>
-
-          <div
-            class="canvas-editable-text font-mono text-xs text-zinc-300 bg-zinc-950/60 border border-zinc-800/80 rounded-lg p-3 outline-none hover:border-zinc-700 focus:border-zinc-600 transition cursor-text min-h-[100px] whitespace-pre-wrap leading-relaxed"
-            contenteditable="true"
-            data-field="markdown"
-            data-section-id="${id}"
-            title="Click to edit custom markdown"
-          >${escapeHtml(data.markdown || 'Add custom markdown here...')}</div>
-        </div>
-      `;
-    }
-
-    default: {
-      return `
-        <div class="space-y-2">
-          <h2 
-            class="canvas-editable-heading text-xl font-semibold text-foreground border-b border-zinc-800 pb-1.5 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
-            contenteditable="true"
-            data-field="heading"
-            data-section-id="${id}"
-          >${escapeHtml(data.heading || section.title)}</h2>
-          <p class="text-xs text-muted-foreground flex items-center gap-1.5">
-            <span>Configure this section via the settings icon:</span>
-            <button class="sec-inspector-btn inline-flex items-center gap-1 text-foreground underline" data-id="${id}">
-              ${SVG_ICONS.gear} Settings
-            </button>
-          </p>
-        </div>
-      `;
-    }
+function esc(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function openSectionLibrary() {
+  let modal = document.getElementById('section-library-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'section-library-modal';
+    modal.className = 'modal-backdrop';
+    document.body.appendChild(modal);
   }
-}
 
-function renderBadgePopoverHtml(data, sectionId) {
-  const flags = [
-    { key: 'showStars', label: 'GitHub Stars' },
-    { key: 'showForks', label: 'GitHub Forks' },
-    { key: 'showIssues', label: 'Open Issues' },
-    { key: 'showPRs', label: 'Pull Requests' },
-    { key: 'showLicense', label: 'License' },
-    { key: 'showRelease', label: 'Latest Release' },
-    { key: 'showLastCommit', label: 'Last Commit' },
-    { key: 'showCodeSize', label: 'Repository Size' }
-  ];
+  const existingTypes = new Set(store.getState().sections.map(s => s.type));
 
-  return `
-    <div class="badge-popover-box mt-2 p-3 bg-zinc-900 border border-zinc-700 rounded-lg shadow-2xl text-left max-w-md mx-auto space-y-2.5 animate-in fade-in duration-100 z-30">
-      <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-        <span class="text-xs font-semibold text-zinc-200">Toggle Badges</span>
-        <button class="close-badge-popover-btn text-xs text-zinc-400 hover:text-zinc-100 p-1 cursor-pointer">✕</button>
+  modal.innerHTML = `
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Add a section</h3>
+        <button type="button" class="modal-close-btn" id="close-section-library-btn">✕</button>
       </div>
-
-      <div class="grid grid-cols-2 gap-2 text-xs">
-        ${flags.map(f => `
-          <label class="flex items-center gap-1.5 cursor-pointer text-zinc-300 hover:text-zinc-100">
-            <input type="checkbox" class="badge-flag-toggle rounded border-zinc-700 text-zinc-100 cursor-pointer" data-flag="${f.key}" ${data[f.key] ? 'checked' : ''} />
-            <span>${f.label}</span>
-          </label>
+      <input type="text" class="field-input" id="section-library-search" placeholder="Search sections..." />
+      <div class="section-library-grid">
+        ${Object.entries(SECTION_LABELS).map(([type, label]) => `
+          <button type="button" class="section-library-item" data-type="${type}" data-name="${label.toLowerCase()}">
+            ${esc(label)}${existingTypes.has(type) ? ' <span class="badge-muted">already added</span>' : ''}
+          </button>
         `).join('')}
       </div>
-
-      <div class="flex items-center justify-between border-t border-zinc-800 pt-2">
-        <select class="badge-style-select form-input text-xs py-1 h-7 w-auto">
-          <option value="for-the-badge" ${data.style === 'for-the-badge' ? 'selected' : ''}>for-the-badge</option>
-          <option value="flat-square" ${data.style === 'flat-square' ? 'selected' : ''}>flat-square</option>
-          <option value="flat" ${data.style === 'flat' ? 'selected' : ''}>flat</option>
-          <option value="plastic" ${data.style === 'plastic' ? 'selected' : ''}>plastic</option>
-        </select>
-        <button class="close-badge-popover-btn btn-primary text-xs px-2.5 py-1 cursor-pointer">Done</button>
-      </div>
     </div>
   `;
-}
 
-function setupCanvasDragDrop(container) {
-  if (container.dataset.dndBound === 'true') return;
-  container.dataset.dndBound = 'true';
-  let dragSectionId = null;
+  modal.classList.remove('hidden');
 
-  container.addEventListener('dragstart', (e) => {
-    const grip = e.target.closest?.('[data-grip-id]');
-    const block = e.target.closest?.('.interactive-section-block');
-    const chip = e.target.closest?.('.tile-chip[data-tech-id]');
-    if (grip) {
-      dragSectionId = grip.dataset.gripId;
-      e.dataTransfer.setData('text/readmify-section-id', dragSectionId);
-      e.dataTransfer.effectAllowed = 'move';
-      block?.classList.add('dragging');
-    } else if (chip && e.target.closest('.tile-grid')) {
-      e.dataTransfer.setData('text/readmify-tech-id', chip.dataset.techId);
-      e.dataTransfer.setData('text/readmify-tech-from', chip.closest('.interactive-section-block')?.dataset.sectionId || '');
-      e.dataTransfer.effectAllowed = 'move';
-    }
-  });
-  container.addEventListener('dragend', () => {
-    dragSectionId = null;
-    container.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
-    container.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
-  });
-  container.addEventListener('dragover', (e) => {
-    const divider = e.target.closest?.('.add-section-divider');
-    const block = e.target.closest?.('.interactive-section-block');
-    if (divider || block) {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = 'move';
-      divider?.classList.add('drop-target');
-    }
-  });
-  container.addEventListener('dragleave', (e) => {
-    const divider = e.target.closest?.('.add-section-divider');
-    if (divider && !divider.contains(e.relatedTarget)) divider.classList.remove('drop-target');
-  });
-  container.addEventListener('drop', (e) => {
-    const divider = e.target.closest?.('.add-section-divider');
-    if (!divider) return;
-    e.preventDefault();
-    divider.classList.remove('drop-target');
-    const dropIndex = parseInt(divider.dataset.dropIndex, 10);
-    const movingId = e.dataTransfer.getData('text/readmify-section-id');
-    const libType = e.dataTransfer.getData('text/readmify-section-type');
-    const techId = e.dataTransfer.getData('text/readmify-tech-id');
-    const state = store.getState();
-    if (movingId) {
-      const from = state.sections.findIndex(s => s.id === movingId);
-      if (from !== -1) {
-        let to = isNaN(dropIndex) ? state.sections.length : dropIndex;
-        // Adjust for removal shift when moving down
-        const without = state.sections.filter(s => s.id !== movingId);
-        to = Math.max(0, Math.min(to > from ? to - 1 : to, without.length));
-        const [item] = state.sections.splice(from, 1);
-        state.sections.splice(to, 0, item);
-        store.notify({ type: 'REORDER_SECTIONS', force: true });
-        showToast('Section reordered', 'success');
-      }
-      return;
-    }
-    if (libType) {
-      store.addSectionFromType(libType, null, isNaN(dropIndex) ? null : dropIndex);
-      showToast('Section added', 'success');
-      return;
-    }
-    if (techId) {
-      // Drop tech onto nearest tech section near divider
-      const all = store.getState().sections;
-      const techSec = all.slice(0, isNaN(dropIndex) ? all.length : dropIndex).reverse().find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled)
-        || all.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
-      if (techSec) {
-        const list = [...(techSec.data.technologies || [])];
-        if (!list.includes(techId)) {
-          list.push(techId);
-          store.updateSectionData(techSec.id, { technologies: list });
-          showToast('Tech added via drag & drop', 'success');
-        }
-      }
-    }
-  });
-}
+  modal.querySelector('#close-section-library-btn').addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
 
-function attachCanvasEventListeners(container, state) {
-  const getSec = (id) => store.getState().sections.find(s => s.id === id);
-
-  // 1. In-place contenteditable text inputs
-  container.querySelectorAll('[contenteditable="true"]').forEach(el => {
-    el.addEventListener('input', () => {
-      const sectionId = el.dataset.sectionId || el.closest('.interactive-section-block')?.dataset.sectionId;
-      if (!sectionId) return;
-
-      const field = el.dataset.field;
-      const subfield = el.dataset.subfield;
-      const idx = el.dataset.idx !== undefined ? parseInt(el.dataset.idx, 10) : null;
-      const val = el.innerText;
-
-      if (field) {
-        store.updateSectionData(sectionId, { [field]: val });
-      } else if (subfield && idx !== null) {
-        const sec = getSec(sectionId);
-        if (!sec || !sec.data) return;
-
-        if (sec.type === SECTION_TYPES.FEATURES && Array.isArray(sec.data.items)) {
-          const items = JSON.parse(JSON.stringify(sec.data.items));
-          if (items[idx]) {
-            items[idx][subfield] = val;
-            store.updateSectionData(sectionId, { items });
-          }
-        } else if (sec.type === SECTION_TYPES.INSTALLATION && Array.isArray(sec.data.steps)) {
-          const steps = JSON.parse(JSON.stringify(sec.data.steps));
-          if (steps[idx]) {
-            steps[idx][subfield] = val;
-            store.updateSectionData(sectionId, { steps });
-          }
-        }
-      } else if (idx !== null && el.classList.contains('canvas-task-text')) {
-        const sec = getSec(sectionId);
-        if (sec && Array.isArray(sec.data.tasks)) {
-          const tasks = JSON.parse(JSON.stringify(sec.data.tasks));
-          if (tasks[idx]) {
-            tasks[idx].text = val;
-            store.updateSectionData(sectionId, { tasks });
-          }
-        }
-      }
-    });
-
-    // Prevent enter adding extra divs in single-line headings
-    if (el.classList.contains('canvas-editable-heading')) {
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          el.blur();
-        }
-      });
-    }
+  modal.querySelector('#section-library-search').addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    modal.querySelectorAll('.section-library-item').forEach(el => { el.hidden = q && !el.dataset.name.includes(q); });
   });
 
-  // 2. Section Floating Toolbar Handlers (▲, ▼, ⚙️, 📑, 🗑️)
-  container.querySelectorAll('.sec-move-up-btn').forEach(btn => {
+  modal.querySelectorAll('.section-library-item').forEach(btn => {
     btn.addEventListener('click', () => {
-      store.moveSection(btn.dataset.id, 'up');
-    });
-  });
-
-  container.querySelectorAll('.sec-move-down-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      store.moveSection(btn.dataset.id, 'down');
-    });
-  });
-
-  container.querySelectorAll('.sec-inspector-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      store.setActiveSection(btn.dataset.id);
-      openSlideOverInspector(btn.dataset.id);
-    });
-  });
-
-  container.querySelectorAll('.sec-duplicate-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const newId = store.duplicateSection(btn.dataset.id);
-      if (newId) showToast('Section duplicated!', 'success');
-    });
-  });
-
-  container.querySelectorAll('.sec-delete-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const sec = getSec(btn.dataset.id);
-      const removed = store.removeSection(btn.dataset.id);
-      if (removed) {
-        showToast(`Removed "${sec?.title || 'section'}" — Undo?`, 'info');
-        // One-click undo via toast click (no confirm friction)
-        const toasts = document.querySelectorAll('#readmify-toast-container > div');
-        const last = toasts[toasts.length - 1];
-        if (last) {
-          last.style.cursor = 'pointer';
-          last.title = 'Click to undo';
-          last.addEventListener('click', () => store.undoRemoveSection(), { once: true });
-          setTimeout(() => { try { last.style.cursor = ''; } catch (e) {} }, 4000);
-        }
-      }
-    });
-  });
-
-  // 2b. Drag & drop reorder (grip -> section/divider). Native HTML5, no deps.
-  try { setupCanvasDragDrop(container); } catch (e) { console.warn('dnd setup failed', e); }
-
-  // 3. In-between Section Adders
-  container.querySelectorAll('.insert-section-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const insertIndex = parseInt(btn.dataset.insertIndex, 10);
-      openSectionLibrary(insertIndex);
-    });
-  });
-
-  // 4. DIRECT ON-IMAGE CONTROLS (Size, Radius, Ratio, Replace File/URL, Delete)
-  container.querySelectorAll('.img-size-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const imgType = ctrl?.dataset.imageType;
-      const sz = btn.dataset.size;
-      if (!secId || !sz) return;
-
-      if (imgType === 'hero') {
-        store.updateSectionData(secId, { logoWidth: sz });
-      } else if (imgType === 'demo') {
-        store.updateSectionData(secId, { width: sz });
-      }
-    });
-  });
-
-  container.querySelectorAll('.img-radius-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const imgType = ctrl?.dataset.imageType;
-      const rad = btn.dataset.radius;
-      if (!secId || !rad) return;
-
-      if (imgType === 'hero') {
-        store.updateSectionData(secId, { logoRadius: rad });
-      } else if (imgType === 'demo') {
-        store.updateSectionData(secId, { radius: rad });
-      }
-    });
-  });
-
-  container.querySelectorAll('.img-ratio-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const ratio = btn.dataset.ratio;
-      if (!secId || !ratio) return;
-      store.updateSectionData(secId, { aspectRatio: ratio });
-    });
-  });
-
-  container.querySelectorAll('.img-replace-file-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const fileInput = ctrl?.querySelector('.direct-img-file-input');
-      fileInput?.click();
-    });
-  });
-
-  container.querySelectorAll('.direct-img-file-input').forEach(input => {
-    input.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
-      const ctrl = input.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const imgType = ctrl?.dataset.imageType;
-      if (!secId) return;
-
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const url = evt.target.result;
-        if (imgType === 'hero') {
-          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
-        } else if (imgType === 'demo') {
-          store.updateSectionData(secId, { imageUrl: url });
-        }
-        showToast('Image replaced successfully!', 'success');
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-
-  container.querySelectorAll('.img-replace-url-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const imgType = ctrl?.dataset.imageType;
-      if (!secId) return;
-
-      const sec = getSec(secId);
-      const currentUrl = (imgType === 'hero' ? sec?.data?.logoUrl : sec?.data?.imageUrl) || '';
-      const inputUrl = prompt('Enter image URL (PNG, JPG, GIF, SVG):', currentUrl);
-      if (inputUrl && inputUrl.trim()) {
-        const clean = inputUrl.trim();
-        if (imgType === 'hero') {
-          store.updateSectionData(secId, { showLogo: true, logoUrl: clean });
-        } else if (imgType === 'demo') {
-          store.updateSectionData(secId, { imageUrl: clean });
-        }
-        showToast('Image URL updated!', 'success');
-      }
-    });
-  });
-
-  container.querySelectorAll('.img-delete-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const ctrl = btn.closest('.direct-image-editor-container');
-      const secId = ctrl?.dataset.sectionId;
-      const imgType = ctrl?.dataset.imageType;
-      if (!secId) return;
-
-      if (imgType === 'hero') {
-        store.updateSectionData(secId, { showLogo: false, logoUrl: '' });
-      } else if (imgType === 'demo') {
-        store.updateSectionData(secId, { imageUrl: '' });
-      }
-      showToast('Image removed', 'info');
-    });
-  });
-
-  // 5. KID-FRIENDLY DROPZONE HANDLERS (When no image is present)
-  container.querySelectorAll('.kid-dropzone-box').forEach(box => {
-    const secId = box.dataset.sectionId;
-    const imgType = box.dataset.imageType;
-    const fileInput = box.querySelector('.dropzone-file-input');
-
-    // Clicking box or choose button opens file selector
-    box.addEventListener('click', (e) => {
-      if (e.target.closest('.dropzone-enter-url-btn')) return;
-      fileInput?.click();
-    });
-
-    box.querySelector('.dropzone-choose-file-btn')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      fileInput?.click();
-    });
-
-    fileInput?.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (!file || !secId) return;
-
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const url = evt.target.result;
-        if (imgType === 'hero') {
-          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
-        } else if (imgType === 'demo') {
-          store.updateSectionData(secId, { imageUrl: url });
-        }
-        showToast('Image uploaded successfully!', 'success');
-      };
-      reader.readAsDataURL(file);
-    });
-
-    box.querySelector('.dropzone-enter-url-btn')?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (!secId) return;
-      const inputUrl = prompt('Enter image URL (PNG, JPG, GIF, SVG):', '');
-      if (inputUrl && inputUrl.trim()) {
-        const clean = inputUrl.trim();
-        if (imgType === 'hero') {
-          store.updateSectionData(secId, { showLogo: true, logoUrl: clean });
-        } else if (imgType === 'demo') {
-          store.updateSectionData(secId, { imageUrl: clean });
-        }
-        showToast('Image added successfully!', 'success');
-      }
-    });
-
-    // Drag and drop support directly on canvas
-    box.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      box.classList.add('border-primary', 'bg-zinc-800/50');
-    });
-
-    box.addEventListener('dragleave', () => {
-      box.classList.remove('border-primary', 'bg-zinc-800/50');
-    });
-
-    box.addEventListener('drop', (e) => {
-      e.preventDefault();
-      box.classList.remove('border-primary', 'bg-zinc-800/50');
-      const file = e.dataTransfer?.files?.[0];
-      if (!file || !secId) return;
-
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        const url = evt.target.result;
-        if (imgType === 'hero') {
-          store.updateSectionData(secId, { showLogo: true, logoUrl: url });
-        } else if (imgType === 'demo') {
-          store.updateSectionData(secId, { imageUrl: url });
-        }
-        showToast('Image uploaded successfully!', 'success');
-      };
-      reader.readAsDataURL(file);
-    });
-  });
-
-  // 6. Tech Stack Handlers (tiles: size, drag reorder, drop add)
-  container.querySelectorAll('.open-tech-picker-canvas-btn').forEach(btn => {
-    btn.addEventListener('click', () => renderTechPickerModal());
-  });
-
-  container.querySelectorAll('.tile-size-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (btn.dataset.id) store.updateSectionData(btn.dataset.id, { tileSize: btn.dataset.size });
-    });
-  });
-
-  container.querySelectorAll('.remove-canvas-tech-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const tId = btn.dataset.techId;
-      if (secId && tId) {
-        const sec = getSec(secId);
-        const list = sec?.data?.technologies || [];
-        store.updateSectionData(secId, { technologies: list.filter(t => t !== tId) });
-      }
-    });
-  });
-
-  // Tile drag reorder within + across tech sections
-  container.querySelectorAll('[data-tech-dropzone]').forEach(zone => {
-    zone.addEventListener('dragover', (e) => {
-      if (e.dataTransfer.types?.includes('text/readmify-tech-id') || e.dataTransfer.types?.includes('text/readmify-section-type')) return;
-      // allow tech chips
-      if ([... (e.dataTransfer.types || [])].join(' ').includes('tech') || e.dataTransfer.getData) {
-        e.preventDefault();
-      } else {
-        // Fallback: allow any dragover so drop works in most browsers
-        try { e.preventDefault(); } catch (err) {}
-      }
-    });
-    zone.addEventListener('drop', (e) => {
-      const techId = e.dataTransfer.getData('text/readmify-tech-id');
-      const fromSec = e.dataTransfer.getData('text/readmify-tech-from');
-      const toSec = zone.dataset.techDropzone;
-      if (!techId || !toSec) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const toSection = getSec(toSec);
-      if (!toSection) return;
-      // Remove from source if different section
-      if (fromSec && fromSec !== toSec) {
-        const fromSection = getSec(fromSec);
-        if (fromSection) {
-          const fl = (fromSection.data.technologies || []).filter(t => t !== techId);
-          store.updateSectionData(fromSec, { technologies: fl });
-        }
-      } else if (fromSec === toSec) {
-        // Reorder to end (simple) — full positional reorder via drag order
-        const cur = [...(toSection.data.technologies || [])].filter(t => t !== techId);
-        // Insert near drop target chip if hovering one
-        const overChip = e.target.closest?.('.tile-chip');
-        if (overChip?.dataset.techId) {
-          const at = cur.indexOf(overChip.dataset.techId);
-          cur.splice(at >= 0 ? at : cur.length, 0, techId);
-        } else cur.push(techId);
-        store.updateSectionData(toSec, { technologies: cur });
-        return;
-      }
-      const list = [...(toSection.data.technologies || [])];
-      if (!list.includes(techId)) {
-        list.push(techId);
-        store.updateSectionData(toSec, { technologies: list });
-        showToast('Tile added', 'success');
-      }
-    });
-  });
-
-  // 7. Feature List Handlers
-  container.querySelectorAll('.add-canvas-feature-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      if (!secId) return;
-      const sec = getSec(secId);
-      const items = [...(sec?.data?.items || [])];
-      items.push({ title: 'New Feature', desc: 'Describe your feature in a few clear sentences.' });
-      store.updateSectionData(secId, { items });
-    });
-  });
-
-  container.querySelectorAll('.delete-canvas-feature-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const idx = parseInt(btn.dataset.idx, 10);
-      if (!secId) return;
-      const sec = getSec(secId);
-      const items = (sec?.data?.items || []).filter((_, i) => i !== idx);
-      store.updateSectionData(secId, { items });
-    });
-  });
-
-  // 8. Installation Steps & Package Manager Handlers
-  container.querySelectorAll('.add-canvas-step-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      if (!secId) return;
-      const sec = getSec(secId);
-      const steps = [...(sec?.data?.steps || [])];
-      steps.push({ title: 'New Step', cmd: 'npm run start' });
-      store.updateSectionData(secId, { steps });
-    });
-  });
-
-  container.querySelectorAll('.delete-canvas-step-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const idx = parseInt(btn.dataset.idx, 10);
-      if (!secId) return;
-      const sec = getSec(secId);
-      const steps = (sec?.data?.steps || []).filter((_, i) => i !== idx);
-      store.updateSectionData(secId, { steps });
-    });
-  });
-
-  container.querySelectorAll('.pm-selector-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const pm = btn.dataset.pm;
-      if (secId && pm) store.updateSectionData(secId, { packageManager: pm });
-    });
-  });
-
-  // 9. Roadmap Task Checkboxes & Adders
-  container.querySelectorAll('.canvas-task-checkbox').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const secId = cb.closest('.interactive-section-block')?.dataset.sectionId;
-      const idx = parseInt(cb.dataset.idx, 10);
-      if (!secId) return;
-      const sec = getSec(secId);
-      const tasks = JSON.parse(JSON.stringify(sec?.data?.tasks || []));
-      if (tasks[idx]) {
-        tasks[idx].completed = cb.checked;
-        store.updateSectionData(secId, { tasks });
-      }
-    });
-  });
-
-  container.querySelectorAll('.add-canvas-task-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      if (!secId) return;
-      const sec = getSec(secId);
-      const tasks = [...(sec?.data?.tasks || [])];
-      tasks.push({ text: 'New milestone', completed: false });
-      store.updateSectionData(secId, { tasks });
-    });
-  });
-
-  container.querySelectorAll('.delete-canvas-task-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const idx = parseInt(btn.dataset.idx, 10);
-      if (!secId) return;
-      const sec = getSec(secId);
-      const tasks = (sec?.data?.tasks || []).filter((_, i) => i !== idx);
-      store.updateSectionData(secId, { tasks });
-    });
-  });
-
-  // 10. License Studio Pills & Actions
-  container.querySelectorAll('.lic-pill-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const lic = btn.dataset.lic;
-      if (secId && lic) store.updateSectionData(secId, { type: lic });
-    });
-  });
-
-  container.querySelectorAll('.download-canvas-lic-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const sec = getSec(secId);
-      const data = sec?.data || {};
-      const lic = getLicenseById(data.type || 'MIT');
-      const year = data.year || new Date().getFullYear().toString();
-      const holder = data.holder || 'Your Name';
-      const proj = data.projectName || '';
-      const text = lic.generateText(year, holder, proj);
-      downloadReadmeFile(text, 'LICENSE');
-      fireConfetti();
-      showToast(`Downloaded LICENSE (${lic.id})!`, 'success');
-    });
-  });
-
-  container.querySelectorAll('.copy-canvas-lic-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const sec = getSec(secId);
-      const data = sec?.data || {};
-      const lic = getLicenseById(data.type || 'MIT');
-      const year = data.year || new Date().getFullYear().toString();
-      const holder = data.holder || 'Your Name';
-      const proj = data.projectName || '';
-      const text = lic.generateText(year, holder, proj);
-      copyToClipboard(text, `Copied ${lic.name} agreement to clipboard!`);
-    });
-  });
-
-  // 11. Badge Popover Handlers
-  container.querySelectorAll('.open-badge-popover-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const sId = btn.dataset.id;
-      activeBadgePopoverSectionId = (activeBadgePopoverSectionId === sId) ? null : sId;
-      renderInteractiveCanvas(container, store.getState(), { force: true });
-    });
-  });
-
-  container.querySelectorAll('.close-badge-popover-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeBadgePopoverSectionId = null;
-      renderInteractiveCanvas(container, store.getState(), { force: true });
-    });
-  });
-
-  container.querySelectorAll('.badge-flag-toggle').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const secId = cb.closest('.interactive-section-block')?.dataset.sectionId;
-      const flag = cb.dataset.flag;
-      if (secId && flag) {
-        store.updateSectionData(secId, { [flag]: cb.checked });
-      }
-    });
-  });
-
-  container.querySelectorAll('.badge-style-select').forEach(sel => {
-    sel.addEventListener('change', () => {
-      const secId = sel.closest('.interactive-section-block')?.dataset.sectionId;
-      if (secId) store.updateSectionData(secId, { style: sel.value });
-    });
-  });
-
-  // 12. Stats toggles + hero visual toggles
-  container.querySelectorAll('.stats-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.dataset.id || btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const flag = btn.dataset.flag;
-      if (!secId || !flag) return;
-      const sec = getSec(secId);
-      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
-    });
-  });
-  container.querySelectorAll('.hero-visual-toggle').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
-      const flag = btn.dataset.flag;
-      if (!secId || !flag) return;
-      const sec = getSec(secId);
-      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
+      store.addSectionFromType(btn.dataset.type);
+      modal.classList.add('hidden');
     });
   });
 }
-
-function openSlideOverInspector(sectionId) {
-  const panel = document.getElementById('slide-over-inspector');
-  if (!panel) return;
-
-  panel.classList.remove('translate-x-full');
-  panel.classList.add('translate-x-0');
-
-  const contentContainer = panel.querySelector('#inspector-form-container');
-  if (contentContainer) {
-    renderSectionEditor(contentContainer, { force: true });
-  }
-}
-function closeSlideOverInspector() {
-  const panel = document.getElementById('slide-over-inspector');
-  if (panel) {
-    panel.classList.add('translate-x-full');
-    panel.classList.remove('translate-x-0');
-  }
+function closeSectionLibrary() {
+  document.getElementById('section-library-modal')?.classList.add('hidden');
 }
 
 /* ==================== MODULE: components/wizard.js ==================== */
 
-// Guide states: 'hub' | 'scanning' | 'report' | 'manual-step-1' | 'manual-step-2' | 'manual-step-3'
-let guideView = 'hub';
-let currentScanAnalysis = null;
-let currentScanProgress = { step: 1, message: 'Initializing deep scan...' };
-let currentRepoInput = '';
-
-let manualData = {
-  projectName: '',
-  tagline: '',
-  repoOwner: '',
-  repoName: '',
-  packageManager: 'npm',
-  technologies: ['javascript', 'html5', 'css3', 'git']
-};
-
-const POPULAR_SAMPLE_REPOS = [
-  { label: 'Express.js', repo: 'expressjs/express' },
-  { label: 'FastAPI', repo: 'fastapi/fastapi' },
-  { label: 'Tailwind CSS', repo: 'tailwindlabs/tailwindcss' },
-  { label: 'React', repo: 'facebook/react' },
-  { label: 'shadcn/ui', repo: 'shadcn-ui/ui' }
-];
-function openWizard(initialRepo = '', autoScan = false) {
-  const state = store.getState();
-  const hero = state.sections.find(s => s.type === SECTION_TYPES.HERO);
-
-  if (initialRepo) {
-    currentRepoInput = initialRepo;
-  } else if (hero?.data?.repoOwner && hero?.data?.repoName && hero.data.repoName !== 'your-awesome-project') {
-    currentRepoInput = `${hero.data.repoOwner}/${hero.data.repoName}`;
-  } else {
-    currentRepoInput = '';
-  }
-
-  if (hero?.data?.projectName && hero.data.projectName !== 'Readmify' && hero.data.projectName !== 'My Project') {
-    manualData.projectName = hero.data.projectName;
-    manualData.tagline = hero.data.tagline || '';
-    manualData.repoOwner = hero.data.repoOwner || '';
-    manualData.repoName = hero.data.repoName || '';
-  }
-
-  let modal = document.getElementById('quick-wizard-modal');
+function openWizard() {
+  let modal = document.getElementById('wizard-modal');
   if (!modal) {
     modal = document.createElement('div');
-    modal.id = 'quick-wizard-modal';
-    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs';
+    modal.id = 'wizard-modal';
+    modal.className = 'modal-backdrop';
     document.body.appendChild(modal);
   }
 
-  modal.classList.remove('hidden');
-
-  if (autoScan && currentRepoInput) {
-    startDeepScan(currentRepoInput);
-  } else {
-    guideView = 'hub';
-    renderGuideView();
-  }
-}
-function closeWizard() {
-  const modal = document.getElementById('quick-wizard-modal');
-  if (modal) {
-    modal.classList.add('hidden');
-  }
-}
-
-function renderGuideView() {
-  const modal = document.getElementById('quick-wizard-modal');
-  if (!modal) return;
-
   modal.innerHTML = `
-    <div class="bg-card border border-border rounded-lg w-full max-w-xl shadow-2xl flex flex-col overflow-hidden max-h-[88vh]">
-      <!-- Header -->
-      <div class="px-5 py-3.5 border-b border-border bg-card flex items-center justify-between flex-shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div class="w-7 h-7 rounded-md bg-muted border border-border flex items-center justify-center text-foreground font-semibold text-xs">
-            📖
-          </div>
-          <div>
-            <h3 class="text-xs font-semibold text-foreground">Readmify Easy Guide</h3>
-            <p class="text-[11px] text-muted-foreground">${getGuideSubtitle()}</p>
-          </div>
-        </div>
-        <button id="close-guide-btn" class="text-muted-foreground hover:text-foreground text-xs p-1">✕</button>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Quick Start</h3>
+        <button type="button" class="modal-close-btn" id="close-wizard-btn">✕</button>
       </div>
-
-      <!-- Main Body -->
-      <div class="p-5 overflow-y-auto flex-1 space-y-4 bg-background">
-        ${getGuideBodyHtml()}
+      <p class="field-hint">Scan a public GitHub repo to auto-fill sections, or start from a template.</p>
+      <div class="field-row-inline">
+        <input type="text" class="field-input" id="wizard-repo-input" placeholder="owner/repo or GitHub URL" />
+        <button type="button" class="btn-primary" id="wizard-scan-btn">Scan</button>
       </div>
-
-      <!-- Footer Navigation -->
-      <div class="px-5 py-3 border-t border-border bg-card flex items-center justify-between flex-shrink-0">
-        ${getGuideFooterHtml()}
+      <div id="wizard-scan-status" class="field-hint"></div>
+      <p class="field-hint" style="margin-top:16px;">Or start from a template:</p>
+      <div class="section-library-grid">
+        ${TEMPLATES.map(t => `<button type="button" class="section-library-item" data-template="${t.id}">${t.name}</button>`).join('')}
       </div>
     </div>
   `;
 
-  modal.querySelector('#close-guide-btn')?.addEventListener('click', closeWizard);
-  attachGuideListeners(modal);
-}
+  modal.classList.remove('hidden');
 
-function getGuideSubtitle() {
-  switch (guideView) {
-    case 'hub':
-      return 'The smartest way to generate a README from your repo';
-    case 'scanning':
-      return 'Deep scanning repository files, manifests & scripts...';
-    case 'report':
-      return 'Repository analyzed! Review insights before generating';
-    case 'manual-step-1':
-      return 'Manual Guide: Step 1 of 3 (Project Identity)';
-    case 'manual-step-2':
-      return 'Manual Guide: Step 2 of 3 (Tech Stack)';
-    case 'manual-step-3':
-      return 'Manual Guide: Step 3 of 3 (Run & Install)';
-    default:
-      return 'Create a stunning README';
-  }
-}
+  modal.querySelector('#close-wizard-btn').addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
 
-function getGuideBodyHtml() {
-  switch (guideView) {
-    case 'hub':
-      return `
-        <!-- Main Card: Auto-Detect with Repo Link -->
-        <div class="p-4 bg-card border border-border rounded-lg space-y-3.5">
-          <div class="flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h4 class="text-xs font-semibold text-foreground uppercase tracking-wider">Fastest: Scan Your GitHub Repo</h4>
-          </div>
-          <p class="text-xs text-muted-foreground leading-relaxed">
-            Paste your repository link. Readmify will deeply inspect your file tree, <code class="text-[11px] px-1 py-0.5 rounded bg-muted text-foreground">package.json</code>, lockfiles, environment variables, and scripts to construct an entire tailored README.
-          </p>
-
-          <div class="space-y-2">
-            <div class="flex gap-2">
-              <div class="relative flex-1">
-                <span class="absolute left-2.5 top-2.5 text-muted-foreground text-xs pointer-events-none">🐙</span>
-                <input 
-                  type="text" 
-                  id="guide-repo-input" 
-                  value="${currentRepoInput}"
-                  placeholder="https://github.com/owner/repo or owner/repo..." 
-                  class="form-input text-xs pl-7 pr-3 h-9" 
-                />
-              </div>
-              <button id="guide-deep-scan-btn" class="btn-primary text-xs px-4 h-9 whitespace-nowrap flex items-center gap-1.5 shadow-sm">
-                <span>⚡</span> Deep Scan & Generate
-              </button>
-            </div>
-
-            <!-- Quick Example Chips -->
-            <div class="flex flex-wrap items-center gap-1.5 pt-1">
-              <span class="text-[10px] text-muted-foreground mr-1">Try sample:</span>
-              ${POPULAR_SAMPLE_REPOS.map(sample => `
-                <button class="sample-repo-chip text-[10px] px-2 py-0.5 rounded border border-border bg-muted/60 hover:bg-muted text-muted-foreground hover:text-foreground transition" data-repo="${sample.repo}">
-                  ${sample.label}
-                </button>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-
-        <!-- Alternative: Manual Setup -->
-        <div class="p-4 rounded-lg border border-dashed border-border bg-card/30 flex items-center justify-between gap-3">
-          <div class="space-y-0.5">
-            <div class="text-xs font-medium text-foreground">Building locally without a GitHub link yet?</div>
-            <p class="text-[11px] text-muted-foreground">Answer 3 simple questions to set up your project manually.</p>
-          </div>
-          <button id="guide-start-manual-btn" class="btn-secondary text-xs px-3 py-1.5 whitespace-nowrap">
-            1-Min Manual Guide →
-          </button>
-        </div>
-      `;
-
-    case 'scanning':
-      return `
-        <div class="py-8 px-4 flex flex-col items-center justify-center text-center space-y-4">
-          <div class="w-12 h-12 rounded-full border-2 border-border border-t-foreground animate-spin flex items-center justify-center text-xs">
-            ⚡
-          </div>
-          <div class="space-y-1">
-            <h4 class="text-xs font-semibold text-foreground">Analyzing Repository Architecture</h4>
-            <p id="guide-live-status-text" class="text-xs text-muted-foreground">${currentScanProgress.message}</p>
-          </div>
-
-          <div class="w-full max-w-sm bg-muted/40 border border-border rounded-lg p-3 text-left space-y-2 text-[11px] font-mono text-muted-foreground">
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 1 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step > 1 ? '✅' : '⏳'}</span> 1. Verify repository & metadata
-            </div>
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 2 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step > 2 ? '✅' : '⏳'}</span> 2. Scan recursive git file tree
-            </div>
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 3 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step > 3 ? '✅' : '⏳'}</span> 3. Inspect package manifests & lockfiles
-            </div>
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 4 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step > 4 ? '✅' : '⏳'}</span> 4. Extract dependencies & frameworks
-            </div>
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 5 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step > 5 ? '✅' : '⏳'}</span> 5. Parse environment variables (.env.example)
-            </div>
-            <div class="flex items-center gap-2 ${currentScanProgress.step >= 6 ? 'text-foreground font-medium' : 'opacity-40'}">
-              <span>${currentScanProgress.step >= 6 ? '✅' : '⏳'}</span> 6. Map directory tree & synthesize features
-            </div>
-          </div>
-        </div>
-      `;
-
-    case 'report':
-      if (!currentScanAnalysis) return '<p class="text-xs text-muted-foreground">No analysis data available.</p>';
-      const a = currentScanAnalysis;
-      const langSummary = a.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
-
-      return `
-        <div class="space-y-3.5">
-          <!-- Summary Header Box -->
-          <div class="p-3.5 bg-card border border-border rounded-lg flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-md bg-muted border border-border flex items-center justify-center text-sm font-semibold text-foreground">
-                📦
-              </div>
-              <div>
-                <h4 class="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                  <span>${a.owner} / ${a.repo}</span>
-                  <span class="text-[10px] px-1.5 py-0.2 rounded border border-border bg-muted text-muted-foreground font-normal">${a.license}</span>
-                </h4>
-                <p class="text-[11px] text-muted-foreground truncate max-w-sm">${a.description || 'No description provided'}</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-right">
-              <span class="text-xs font-medium text-foreground">⭐ ${a.stars.toLocaleString()}</span>
-              <span class="text-[11px] text-muted-foreground">🍴 ${a.forks.toLocaleString()}</span>
-            </div>
-          </div>
-
-          <!-- Discovered Stats Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div class="p-2.5 bg-card border border-border rounded-md text-center">
-              <div class="text-[10px] text-muted-foreground">Package Mgr</div>
-              <div class="text-xs font-semibold text-foreground uppercase mt-0.5">${a.packageManager}</div>
-            </div>
-            <div class="p-2.5 bg-card border border-border rounded-md text-center">
-              <div class="text-[10px] text-muted-foreground">Files Scanned</div>
-              <div class="text-xs font-semibold text-foreground mt-0.5">${a.totalFiles || 'All'}</div>
-            </div>
-            <div class="p-2.5 bg-card border border-border rounded-md text-center">
-              <div class="text-[10px] text-muted-foreground">Env Variables</div>
-              <div class="text-xs font-semibold text-foreground mt-0.5">${a.envVars.length} found</div>
-            </div>
-            <div class="p-2.5 bg-card border border-border rounded-md text-center">
-              <div class="text-[10px] text-muted-foreground">CI Workflows</div>
-              <div class="text-xs font-semibold text-foreground mt-0.5">${a.workflowBadges.length} detected</div>
-            </div>
-          </div>
-
-          <!-- Detected Tech Badges -->
-          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-medium text-foreground">Discovered Tech Stack (${a.matchedTechIds.length})</span>
-              <span class="text-[10px] text-muted-foreground">${langSummary}</span>
-            </div>
-            <div class="flex flex-wrap gap-1.5 pt-1">
-              ${a.matchedTechIds.map(id => {
-                const item = TECH_CATALOG.find(t => t.id === id);
-                return `
-                  <span class="text-[11px] px-2 py-0.5 rounded-full border border-border bg-muted text-foreground flex items-center gap-1 font-medium">
-                    ${item?.name || id}
-                  </span>
-                `;
-              }).join('')}
-            </div>
-          </div>
-
-          <!-- Synthesized Features Preview -->
-          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5">
-            <span class="text-xs font-medium text-foreground">Synthesized Features (${a.features.length})</span>
-            <div class="space-y-1 pt-1 text-[11px]">
-              ${a.features.map(f => `
-                <div class="flex items-start gap-1.5 text-muted-foreground">
-                  <span>${f.icon}</span>
-                  <div><strong class="text-foreground">${f.title}:</strong> ${f.desc}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <!-- Smart extras: social card, contributors, release -->
-          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5 text-[11px] text-muted-foreground">
-            <span class="text-xs font-medium text-foreground">Smart extras (auto-filled, all optional)</span>
-            ${a.ogImage ? `<div class="flex items-center gap-2 pt-1"><img src="${a.ogImage}" alt="Social card" loading="lazy" class="h-10 rounded border border-border" /><span>GitHub social card will prefill your banner (off by default).</span></div>` : ''}
-            ${(a.topContributors?.length || 0) > 0 ? `<div>Top contributors: ${(a.topContributors || []).map(c => `<a href="${c.url}" class="underline">${c.login}</a>`).join(', ')}</div>` : ''}
-            ${a.latestRelease ? `<div>Latest release: <span class="text-foreground font-medium">${a.latestRelease}</span></div>` : ''}
-            ${a.homepage ? `<div>Homepage: <a href="${a.homepage}" class="underline break-all">${a.homepage}</a></div>` : ''}
-            <div class="pt-1">Tip: after Generate, open Tiles to resize, drag to reorder, or press Ctrl+K for actions.</div>
-          </div>
-        </div>
-      `;
-
-    case 'manual-step-1':
-      return `
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Project Name</label>
-            <input type="text" id="man-project-name" value="${manualData.projectName}" placeholder="e.g. MyAwesomeApp" class="form-input text-xs" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Tagline / What does it do?</label>
-            <input type="text" id="man-tagline" value="${manualData.tagline}" placeholder="e.g. Blazing-fast web app for managing data" class="form-input text-xs" />
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-medium text-foreground mb-1">GitHub Username / Org</label>
-              <input type="text" id="man-repo-owner" value="${manualData.repoOwner}" placeholder="e.g. yourname" class="form-input text-xs" />
-            </div>
-            <div>
-              <label class="block text-xs font-medium text-foreground mb-1">Repository Name</label>
-              <input type="text" id="man-repo-name" value="${manualData.repoName}" placeholder="e.g. my-awesome-app" class="form-input text-xs" />
-            </div>
-          </div>
-        </div>
-      `;
-
-    case 'manual-step-2':
-      const popularTech = ['typescript', 'javascript', 'python', 'react', 'nextjs', 'vue', 'tailwind', 'nodejs', 'express', 'fastapi', 'postgres', 'docker', 'git'];
-      return `
-        <div class="space-y-3">
-          <p class="text-xs text-muted-foreground">Click to select the primary technologies used in this project:</p>
-          <div class="flex flex-wrap gap-2 max-h-56 overflow-y-auto p-1">
-            ${popularTech.map(id => {
-              const item = TECH_CATALOG.find(t => t.id === id);
-              if (!item) return '';
-              const selected = manualData.technologies.includes(id);
-              return `
-                <button type="button" class="man-tech-chip px-3 py-1.5 rounded-md border text-xs font-medium flex items-center gap-1.5 transition ${
-                  selected 
-                    ? 'border-foreground bg-foreground text-background shadow-xs font-semibold' 
-                    : 'border-border bg-card text-muted-foreground hover:text-foreground hover:bg-muted'
-                }" data-tech="${id}">
-                  <span>${selected ? '✓' : '+'}</span>
-                  <span>${item.name}</span>
-                </button>
-              `;
-            }).join('')}
-          </div>
-        </div>
-      `;
-
-    case 'manual-step-3':
-      return `
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Package Manager / Toolchain</label>
-            <select id="man-package-manager" class="form-input text-xs">
-              <option value="npm" ${manualData.packageManager === 'npm' ? 'selected' : ''}>npm (Node.js)</option>
-              <option value="pnpm" ${manualData.packageManager === 'pnpm' ? 'selected' : ''}>pnpm (Node.js)</option>
-              <option value="yarn" ${manualData.packageManager === 'yarn' ? 'selected' : ''}>yarn (Node.js)</option>
-              <option value="bun" ${manualData.packageManager === 'bun' ? 'selected' : ''}>bun (JavaScript/TypeScript)</option>
-              <option value="pip" ${manualData.packageManager === 'pip' ? 'selected' : ''}>pip (Python)</option>
-              <option value="cargo" ${manualData.packageManager === 'cargo' ? 'selected' : ''}>cargo (Rust)</option>
-              <option value="go" ${manualData.packageManager === 'go' ? 'selected' : ''}>go (Go)</option>
-            </select>
-          </div>
-          <p class="text-xs text-muted-foreground">Standard installation and running steps will be created automatically based on your choice.</p>
-        </div>
-      `;
-  }
-}
-
-function getGuideFooterHtml() {
-  switch (guideView) {
-    case 'hub':
-      return `
-        <button id="guide-cancel-btn" class="btn-secondary text-xs px-3 py-1.5">
-          Close
-        </button>
-        <div class="text-[10px] text-muted-foreground">
-          Zero sign-up required • Free GitHub API
-        </div>
-      `;
-
-    case 'scanning':
-      return `
-        <div class="text-xs text-muted-foreground">
-          Please wait a moment...
-        </div>
-        <button id="guide-cancel-scan-btn" class="btn-secondary text-xs px-3 py-1.5">
-          Cancel
-        </button>
-      `;
-
-    case 'report':
-      return `
-        <button id="guide-back-to-hub-btn" class="btn-secondary text-xs px-3 py-1.5">
-          ← Scan Another Repo
-        </button>
-        <button id="guide-apply-report-btn" class="btn-primary text-xs px-4 py-1.5 shadow-sm">
-          ✨ Generate Full README
-        </button>
-      `;
-
-    case 'manual-step-1':
-      return `
-        <button id="guide-back-to-hub-btn" class="btn-secondary text-xs px-3 py-1.5">
-          ← Back
-        </button>
-        <button id="guide-manual-next-1-btn" class="btn-primary text-xs px-3.5 py-1.5">
-          Next: Tech Stack →
-        </button>
-      `;
-
-    case 'manual-step-2':
-      return `
-        <button id="guide-manual-prev-1-btn" class="btn-secondary text-xs px-3 py-1.5">
-          ← Back
-        </button>
-        <button id="guide-manual-next-2-btn" class="btn-primary text-xs px-3.5 py-1.5">
-          Next: Install & Run →
-        </button>
-      `;
-
-    case 'manual-step-3':
-      return `
-        <button id="guide-manual-prev-2-btn" class="btn-secondary text-xs px-3 py-1.5">
-          ← Back
-        </button>
-        <button id="guide-manual-finish-btn" class="btn-primary text-xs px-4 py-1.5 shadow-sm">
-          ✨ Generate README
-        </button>
-      `;
-  }
-}
-
-function attachGuideListeners(modal) {
-  modal.querySelector('#guide-cancel-btn')?.addEventListener('click', closeWizard);
-  modal.querySelector('#guide-cancel-scan-btn')?.addEventListener('click', () => {
-    guideView = 'hub';
-    renderGuideView();
-  });
-
-  // Hub Scan trigger
-  const scanBtn = modal.querySelector('#guide-deep-scan-btn');
-  const inputEl = modal.querySelector('#guide-repo-input');
-
-  function triggerScan() {
-    const val = inputEl?.value?.trim();
-    if (!val) {
-      showToast('Please enter a GitHub repository URL or owner/repo', 'error');
-      return;
-    }
-    startDeepScan(val);
-  }
-
-  scanBtn?.addEventListener('click', triggerScan);
-  inputEl?.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      triggerScan();
-    }
-  });
-
-  // Sample Chips
-  modal.querySelectorAll('.sample-repo-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const repo = chip.dataset.repo;
-      if (inputEl) inputEl.value = repo;
-      startDeepScan(repo);
+  modal.querySelectorAll('[data-template]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      store.loadTemplate(btn.dataset.template);
+      showToast('Template loaded!', 'success');
+      modal.classList.add('hidden');
     });
   });
 
-  // Start Manual Guide
-  modal.querySelector('#guide-start-manual-btn')?.addEventListener('click', () => {
-    guideView = 'manual-step-1';
-    renderGuideView();
-  });
+  const scanBtn = modal.querySelector('#wizard-scan-btn');
+  const input = modal.querySelector('#wizard-repo-input');
+  const status = modal.querySelector('#wizard-scan-status');
 
-  // Back to Hub
-  modal.querySelector('#guide-back-to-hub-btn')?.addEventListener('click', () => {
-    guideView = 'hub';
-    renderGuideView();
-  });
-
-  // Apply Report
-  modal.querySelector('#guide-apply-report-btn')?.addEventListener('click', () => {
-    if (currentScanAnalysis) {
-      store.applyRepoAnalysis(currentScanAnalysis);
-      closeWizard();
+  const runScan = async () => {
+    const parsed = parseGitHubRepoInput(input.value);
+    if (!parsed) { showToast('Enter a valid repo (owner/repo or GitHub URL)', 'error'); return; }
+    scanBtn.disabled = true;
+    scanBtn.textContent = 'Scanning...';
+    try {
+      const info = await fetchGitHubRepoFullDetails(parsed.owner, parsed.repo, (p) => { status.textContent = p.message; });
+      store.applyRepoAnalysis(info);
       fireConfetti();
-      showToast(`README created for ${currentScanAnalysis.repo}!`, 'success');
+      showToast(`Scanned ${info.owner}/${info.repo}!`, 'success');
+      modal.classList.add('hidden');
+    } catch (err) {
+      showToast(err.message || 'Scan failed', 'error');
+    } finally {
+      scanBtn.disabled = false;
+      scanBtn.textContent = 'Scan';
+      status.textContent = '';
     }
-  });
+  };
 
-  // Manual Step 1 -> 2
-  modal.querySelector('#guide-manual-next-1-btn')?.addEventListener('click', () => {
-    const nameEl = modal.querySelector('#man-project-name');
-    const tagEl = modal.querySelector('#man-tagline');
-    const ownerEl = modal.querySelector('#man-repo-owner');
-    const repoEl = modal.querySelector('#man-repo-name');
-
-    manualData.projectName = nameEl?.value?.trim() || 'My Project';
-    manualData.tagline = tagEl?.value?.trim() || 'An open-source application.';
-    manualData.repoOwner = ownerEl?.value?.trim() || '';
-    manualData.repoName = repoEl?.value?.trim() || (nameEl?.value ? nameEl.value.toLowerCase().replace(/\s+/g, '-') : 'project');
-
-    guideView = 'manual-step-2';
-    renderGuideView();
-  });
-
-  // Manual Step 2: Tech chips
-  modal.querySelectorAll('.man-tech-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const techId = chip.dataset.tech;
-      if (manualData.technologies.includes(techId)) {
-        manualData.technologies = manualData.technologies.filter(t => t !== techId);
-      } else {
-        manualData.technologies.push(techId);
-      }
-      renderGuideView();
-    });
-  });
-
-  modal.querySelector('#guide-manual-prev-1-btn')?.addEventListener('click', () => {
-    guideView = 'manual-step-1';
-    renderGuideView();
-  });
-
-  modal.querySelector('#guide-manual-next-2-btn')?.addEventListener('click', () => {
-    guideView = 'manual-step-3';
-    renderGuideView();
-  });
-
-  modal.querySelector('#guide-manual-prev-2-btn')?.addEventListener('click', () => {
-    guideView = 'manual-step-2';
-    renderGuideView();
-  });
-
-  // Manual Finish
-  modal.querySelector('#guide-manual-finish-btn')?.addEventListener('click', () => {
-    const pkgEl = modal.querySelector('#man-package-manager');
-    manualData.packageManager = pkgEl?.value || 'npm';
-
-    // Apply manual data to store
-    store.batchUpdate(sections => {
-      const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
-      if (hero) {
-        hero.enabled = true;
-        hero.data.projectName = manualData.projectName;
-        hero.data.tagline = manualData.tagline;
-        hero.data.repoOwner = manualData.repoOwner;
-        hero.data.repoName = manualData.repoName;
-      }
-
-      const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
-      if (tech) {
-        tech.enabled = true;
-        tech.data.technologies = manualData.technologies;
-      }
-
-      const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION);
-      if (install) {
-        install.enabled = true;
-        install.data.packageManager = manualData.packageManager;
-        install.data.steps = [
-          {
-            title: 'Clone repository',
-            cmd: manualData.repoOwner && manualData.repoName 
-              ? `git clone https://github.com/${manualData.repoOwner}/${manualData.repoName}.git\ncd ${manualData.repoName}`
-              : `git clone <your-repo-url>\ncd <project-folder>`
-          },
-          {
-            title: 'Install dependencies',
-            cmd: `${manualData.packageManager} install`
-          },
-          {
-            title: 'Run application',
-            cmd: `${manualData.packageManager} run dev`
-          }
-        ];
-      }
-    });
-
-    closeWizard();
-    fireConfetti();
-    showToast('README generated successfully!', 'success');
-  });
+  scanBtn.addEventListener('click', runScan);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); runScan(); } });
 }
-
-async function startDeepScan(repoInput) {
-  const parsed = parseGitHubRepoInput(repoInput);
-  if (!parsed) {
-    showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
-    guideView = 'hub';
-    renderGuideView();
-    return;
-  }
-
-  currentRepoInput = `${parsed.owner}/${parsed.repo}`;
-  guideView = 'scanning';
-  currentScanProgress = { step: 1, message: `Connecting to GitHub API for ${parsed.owner}/${parsed.repo}...` };
-  renderGuideView();
-
-  try {
-    const analysis = await fetchGitHubRepoFullDetails(parsed.owner, parsed.repo, progress => {
-      currentScanProgress = progress;
-      const statusEl = document.getElementById('guide-live-status-text');
-      if (statusEl) statusEl.innerText = progress.message;
-      renderGuideView();
-    });
-
-    currentScanAnalysis = analysis;
-    guideView = 'report';
-    renderGuideView();
-  } catch (err) {
-    showToast(err.message || 'Failed to scan repository', 'error');
-    guideView = 'hub';
-    renderGuideView();
-  }
+function closeWizard() {
+  document.getElementById('wizard-modal')?.classList.add('hidden');
 }
 
 /* ==================== MODULE: components/palette.js ==================== */
 
-let paletteOpen = false;
+let open = false;
 let activeIdx = 0;
 let currentItems = [];
 
 function coreActions() {
   return [
-    { id: 'add-section', label: 'Add section…', hint: 'Library', run: () => openSectionLibrary() },
-    { id: 'scan-repo', label: 'Scan GitHub repo…', hint: 'Deep scan', run: () => openWizard('', false) },
-    { id: 'preview', label: 'Go to Preview', hint: 'View', run: () => store.setViewMode('preview') },
-    { id: 'editor', label: 'Go to Editor', hint: 'View', run: () => store.setViewMode('canvas') },
-    { id: 'code', label: 'Go to Code', hint: 'View', run: () => store.setViewMode('raw') },
-    { id: 'copy', label: 'Copy markdown', hint: 'Export', run: () => copyToClipboard(window.__readmifyMarkdown || '', 'Markdown copied!') },
-    { id: 'download', label: 'Download README.md', hint: 'Export', run: () => downloadReadmeFile(window.__readmifyMarkdown || '', 'README.md') },
-    { id: 'import', label: 'Import README…', hint: 'File', run: () => document.getElementById('nav-import-btn')?.click() },
-    { id: 'guide', label: 'Open Quick Guide', hint: 'Help', run: () => document.getElementById('nav-wizard-btn')?.click() },
-    { id: 'theme', label: 'Toggle theme', hint: 'View', run: () => document.getElementById('theme-toggle-btn')?.click() },
+    { label: 'Go to Editor', run: () => store.setViewMode('editor') },
+    { label: 'Go to Preview', run: () => store.setViewMode('preview') },
+    { label: 'Copy markdown', run: () => copyToClipboard(window.__readmifyMarkdown || '', 'Markdown copied!') },
+    { label: 'Download README.md', run: () => downloadReadmeFile(window.__readmifyMarkdown || '', 'README.md') },
+    { label: 'Quick Start (scan repo / templates)', run: () => openWizard() },
+    {
+      label: 'Toggle theme', run: () => {
+        const next = store.getState().previewTheme === 'dark' ? 'light' : 'dark';
+        store.setPreviewTheme(next);
+        showToast(`Switched to ${next} preview theme`, 'info');
+      }
+    },
+    {
+      label: 'Reset to default template', run: () => {
+        if (confirm('Reset your README to the default template? This clears your current sections.')) {
+          store.resetToDefault();
+        }
+      }
+    }
   ];
 }
-function openPalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
-  const input = document.getElementById('cmd-palette-input');
-  if (!bd || !input) return;
-  paletteOpen = true;
-  activeIdx = 0;
-  bd.classList.remove('hidden');
-  input.value = '';
-  renderPalette('');
-  setTimeout(() => input.focus(), 30);
-}
-function closePalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
-  if (bd) bd.classList.add('hidden');
-  paletteOpen = false;
-}
-function isPaletteOpen() { return paletteOpen; }
 
 function allItems(query) {
   const q = (query || '').toLowerCase().trim();
-  const actions = coreActions().map(a => ({ kind: 'action', title: a.label, sub: a.hint, run: a.run, id: a.id }));
-  const secs = (SECTION_CATALOG || []).map(c => ({
-    kind: 'section', title: `Add: ${c.title}`, sub: c.desc || c.category,
-    type: c.type, id: `sec-${c.type}`
-  }));
-  const all = [...actions, ...secs];
-  if (!q) return all.slice(0, 14);
-  return all.filter(i => `${i.title} ${i.sub || ''}`.toLowerCase().includes(q)).slice(0, 14);
+  const actions = coreActions().map(a => ({ kind: 'action', title: a.label, run: a.run }));
+  const sections = Object.entries(SECTION_LABELS).map(([type, label]) => ({ kind: 'section', title: `Add: ${label}`, type }));
+  const all = [...actions, ...sections];
+  if (!q) return all.slice(0, 12);
+  return all.filter(i => i.title.toLowerCase().includes(q)).slice(0, 12);
 }
 
-function renderPalette(query) {
+function render(query) {
   const list = document.getElementById('cmd-palette-list');
   if (!list) return;
   currentItems = allItems(query);
-  list.innerHTML = currentItems.map((it, idx) => `
-    <div class="cmd-item ${idx === activeIdx ? 'active' : ''} flex items-center justify-between px-2.5 py-2 rounded-md cursor-pointer"
-      data-idx="${idx}" ${it.kind === 'section' ? `draggable="true" data-section-type="${it.type}"` : ''}>
-      <span class="font-medium ${idx === activeIdx ? 'text-foreground' : 'text-zinc-200'}">${it.title}</span>
-      <span class="text-[10px] text-muted-foreground">${it.sub || ''}</span>
-    </div>`).join('') || `<div class="px-3 py-6 text-center text-muted-foreground">No matches</div>`;
+  list.innerHTML = currentItems.map((item, idx) => `
+    <div class="cmd-item ${idx === activeIdx ? 'active' : ''}" data-idx="${idx}">${item.title}</div>
+  `).join('') || `<div class="cmd-item-empty">No matches</div>`;
 
   list.querySelectorAll('.cmd-item').forEach(el => {
     el.addEventListener('click', () => runItem(parseInt(el.dataset.idx, 10)));
-    el.addEventListener('dragstart', (e) => {
-      const it = currentItems[parseInt(el.dataset.idx, 10)];
-      if (it?.kind === 'section') {
-        e.dataTransfer.setData('text/readmify-section-type', it.type);
-        e.dataTransfer.effectAllowed = 'copy';
-      }
-    });
   });
 }
 
 function runItem(idx) {
-  const it = currentItems[idx];
-  if (!it) return;
+  const item = currentItems[idx];
+  if (!item) return;
   closePalette();
-  if (it.kind === 'action' && typeof it.run === 'function') it.run();
-  else if (it.kind === 'section') store.addSectionFromType(it.type);
+  if (item.kind === 'action') item.run();
+  else if (item.kind === 'section') store.addSectionFromType(item.type);
 }
+function openPalette() {
+  const backdrop = document.getElementById('cmd-palette-backdrop');
+  const input = document.getElementById('cmd-palette-input');
+  if (!backdrop || !input) return;
+  open = true;
+  activeIdx = 0;
+  backdrop.classList.remove('hidden');
+  input.value = '';
+  render('');
+  setTimeout(() => input.focus(), 20);
+}
+function closePalette() {
+  document.getElementById('cmd-palette-backdrop')?.classList.add('hidden');
+  open = false;
+}
+function isPaletteOpen() { return open; }
 function initPalette() {
-  const bd = document.getElementById('cmd-palette-backdrop');
+  const backdrop = document.getElementById('cmd-palette-backdrop');
   const input = document.getElementById('cmd-palette-input');
   const btn = document.getElementById('nav-palette-btn');
-  if (!bd || !input) return;
-  if (bd.dataset.bound) return;
-  bd.dataset.bound = 'true';
+  if (!backdrop || !input) return;
 
   btn?.addEventListener('click', openPalette);
-  bd.addEventListener('click', (e) => { if (e.target === bd) closePalette(); });
-  input.addEventListener('input', () => { activeIdx = 0; renderPalette(input.value); });
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) closePalette(); });
+  input.addEventListener('input', () => { activeIdx = 0; render(input.value); });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, currentItems.length - 1); renderPalette(input.value); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); renderPalette(input.value); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, currentItems.length - 1); render(input.value); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); render(input.value); }
     else if (e.key === 'Enter') { e.preventDefault(); runItem(activeIdx); }
     else if (e.key === 'Escape') closePalette();
   });
   document.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
       e.preventDefault();
-      if (isPaletteOpen()) closePalette(); else openPalette();
+      isPaletteOpen() ? closePalette() : openPalette();
     }
     if (e.key === 'Escape' && isPaletteOpen()) closePalette();
   });
 }
 
-/* ==================== MODULE: app.js ==================== */
+/* ==================== MODULE: components/healthScore.js ==================== */
 
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function findGitHubUnsafeMarkup(markdownText) {
+  if (!markdownText) return [];
+  const issues = [];
+  if (/\sstyle\s*=/i.test(markdownText)) issues.push('Contains inline style= attributes, which GitHub strips from README HTML.');
+  if (/<script[\s>]/i.test(markdownText)) issues.push('Contains <script> tags, which GitHub never renders.');
+  if (/<style[\s>]/i.test(markdownText)) issues.push('Contains <style> tags, which GitHub never renders.');
+  return issues;
 }
 
-// DOM Elements
-let canvasViewContainer;
-let canvasBodyContainer;
-let purePreviewContainer;
-let rawMarkdownContainer;
-let slideOverInspector;
-let inspectorFormContainer;
-let sectionListContainer;
-let sectionPillBar;
-let previewBody;
-let rawMarkdownTextarea;
-let currentMarkdown = '';
+function countWords(text) {
+  if (!text) return 0;
+  const t = String(text).replace(/[#*`>\-[\]()!]/g, ' ').trim();
+  return t ? t.split(/\s+/).length : 0;
+}
+function calculateReadmeScore(sections, markdownText) {
+  if (!sections || !Array.isArray(sections)) {
+    return { score: 0, label: 'Empty', color: '#EF4444', tips: [] };
+  }
 
-let markdownDebounceTimer = null;
-let pendingMarkdownState = null;
+  let score = 0;
+  const tips = [];
+  const enabled = new Set(sections.filter(s => s.enabled).map(s => s.type));
+
+  const hero = sections.find(s => s.type === SECTION_TYPES.HERO && s.enabled);
+  if (hero?.data?.projectName && hero.data.projectName !== 'Project Title' && hero.data.projectName !== 'My Project') {
+    score += 15;
+  } else {
+    tips.push('Give your project a real name in the Header section.');
+  }
+
+  if (enabled.has(SECTION_TYPES.BADGES)) score += 10; else tips.push('Add a Badges section for quick social proof.');
+
+  const about = sections.find(s => s.type === SECTION_TYPES.ABOUT && s.enabled);
+  const aboutWords = countWords(about?.data?.content);
+  if (aboutWords > 15) score += 15; else tips.push('Write a short About section explaining what your project does.');
+
+  const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
+  if (tech?.data?.technologies?.length > 0) score += 10; else tips.push('List your tech stack.');
+
+  const features = sections.find(s => s.type === SECTION_TYPES.FEATURES && s.enabled);
+  if (features?.data?.items?.length >= 2) score += 10; else tips.push('List at least 2 key features.');
+
+  const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION && s.enabled);
+  if (install?.data?.steps?.length > 0) score += 15; else tips.push('Add step-by-step installation instructions.');
+
+  if (enabled.has(SECTION_TYPES.LICENSE)) score += 10; else tips.push('Add a License section.');
+  if (enabled.has(SECTION_TYPES.AUTHOR) || enabled.has(SECTION_TYPES.CONTRIBUTING)) score += 10; else tips.push('Add an Author or Contributing section.');
+
+  const demo = sections.find(s => s.type === SECTION_TYPES.DEMO && s.enabled);
+  if (demo?.data?.imageUrl || demo?.data?.liveUrl) score += 5;
+
+  if (/(TODO|FIXME|XXX)/i.test(JSON.stringify(sections))) tips.push('Remove TODO/FIXME placeholders before publishing.');
+
+  for (const issue of findGitHubUnsafeMarkup(markdownText)) tips.push(issue);
+
+  let label = 'Needs Work', color = '#EF4444';
+  if (score >= 90) { label = 'Outstanding'; color = '#10B981'; }
+  else if (score >= 70) { label = 'Great'; color = '#06B6D4'; }
+  else if (score >= 45) { label = 'Good'; color = '#F59E0B'; }
+
+  return { score: Math.min(score, 100), label, color, tips };
+}
+
+/* ==================== MODULE: app.js ==================== */
+
+let editorPaneBody, previewBody, rawView, previewTabBtn, rawTabBtn;
+let currentMarkdown = '';
+let mermaidReady = false;
 
 function initApp() {
-  canvasViewContainer = document.getElementById('canvas-view-container');
-  canvasBodyContainer = document.getElementById('interactive-canvas-body');
-  purePreviewContainer = document.getElementById('pure-preview-container');
-  rawMarkdownContainer = document.getElementById('raw-markdown-container');
-  slideOverInspector = document.getElementById('slide-over-inspector');
-  inspectorFormContainer = document.getElementById('inspector-form-container');
+  editorPaneBody = document.getElementById('editor-pane-body');
+  previewBody = document.getElementById('preview-body');
+  rawView = document.getElementById('raw-view');
+  previewTabBtn = document.getElementById('preview-tab-btn');
+  rawTabBtn = document.getElementById('raw-tab-btn');
 
-  sectionListContainer = document.getElementById('section-list-items');
-  sectionPillBar = document.getElementById('section-pill-bar');
-  previewBody = document.getElementById('github-preview-body');
-  rawMarkdownTextarea = document.getElementById('raw-markdown-textarea');
-
-  document.getElementById('close-inspector-btn')?.addEventListener('click', closeSlideOverInspector);
-  document.getElementById('raw-copy-btn')?.addEventListener('click', () => {
-    copyToClipboard(currentMarkdown, 'Copied README.md code to clipboard!');
-  });
-
-  setupNavbarControls();
-  setupViewModeSwitcher();
+  setupHeaderControls();
   setupImportModal();
-  setupOverflowAndExport();
-  setupGlobalDrop();
-  setupSavedIndicator();
-  try { initPalette(); } catch (e) { console.warn('palette init failed', e); }
+  initPalette();
 
-  // Subscribe to store updates (debounce typing path for smoothness)
-  store.subscribe((state, meta) => {
-    if (meta && meta.type === 'UPDATE_SECTION_DATA' && !meta.force) {
-      pendingMarkdownState = { state, meta };
-      if (markdownDebounceTimer) return;
-      markdownDebounceTimer = setTimeout(() => {
-        markdownDebounceTimer = null;
-        const p = pendingMarkdownState;
-        pendingMarkdownState = null;
-        if (p) renderApp(p.state, p.meta);
-      }, 220);
-      // Instant lightweight pill-active update only (no full rebuild)
-      return;
-    }
-    if (markdownDebounceTimer) {
-      clearTimeout(markdownDebounceTimer);
-      markdownDebounceTimer = null;
-      pendingMarkdownState = null;
-    }
-    renderApp(state, meta);
-  });
-
-  // Initial render
+  store.subscribe((state, meta) => renderApp(state, meta));
   renderApp(store.getState(), { force: true });
 
-  // Check if first time user, offer quick wizard
+  window.addEventListener('beforeunload', () => store.flushSave());
+
   if (!localStorage.getItem('readmify_visited')) {
     localStorage.setItem('readmify_visited', 'true');
-    setTimeout(() => {
-      openWizard();
-    }, 600);
+    setTimeout(() => openWizard(), 500);
   }
 }
 
 function renderApp(state, meta = {}) {
-  const mode = state.viewMode || 'canvas';
+  applyViewModeDom(state.viewMode);
 
-  // 1. Always update markdown representation & health score
-  currentMarkdown = generateMarkdown(state.sections);
-  try { window.__readmifyMarkdown = currentMarkdown; } catch (e) {}
-  // Only touch raw textarea when visible or forced (avoids layout thrash while typing)
-  if (rawMarkdownTextarea && (mode === 'raw' || meta.force)) {
-    rawMarkdownTextarea.value = currentMarkdown;
-  }
-  updateHealthAndStats(state.sections, currentMarkdown);
+  if (editorPaneBody) renderSectionFormList(editorPaneBody, meta);
 
-  // 2. Render Section Pills & Drawer
-  renderSidebar(state, meta);
-
-  // 3. Render Inspector if open
-  if (slideOverInspector && !slideOverInspector.classList.contains('translate-x-full')) {
-    if (inspectorFormContainer) {
-      renderSectionEditor(inspectorFormContainer, meta);
-    }
-  }
-
-  // 4. Render Active View Mode
-  applyViewModeDom(mode);
-
-  if (mode === 'canvas') {
-    if (canvasBodyContainer) {
-      renderInteractiveCanvas(canvasBodyContainer, state, meta);
-    }
-  } else if (mode === 'preview') {
-    renderPurePreview(state);
-  }
-}
-
-// --- 1. HORIZONTAL SECTION PILL BAR & DRAWER REORDERING ---
-function renderSidebar(state, meta = {}) {
-  // If only section data fields changed (typing in inputs), skip re-rendering pills and drawer
-  if (meta && meta.type === 'UPDATE_SECTION_DATA') {
-    return;
-  }
-
-  const { sections, activeSectionId } = state;
-
-  // 1A. Render Horizontal Pill Bar
-  if (sectionPillBar) {
-    sectionPillBar.innerHTML = sections.map((sec, idx) => {
-      const isActive = sec.id === activeSectionId;
-      const isHidden = !sec.enabled;
-      return `
-        <button 
-          class="section-pill px-2.5 py-1 text-xs rounded-md transition-all whitespace-nowrap flex items-center gap-1.5 border flex-shrink-0 cursor-pointer select-none ${
-            isActive 
-              ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100 shadow-sm' 
-              : 'bg-muted/70 hover:bg-muted text-muted-foreground hover:text-foreground border-border'
-          } ${isHidden ? 'opacity-50 line-through' : ''}"
-          data-section-id="${sec.id}"
-          title="${escapeHtml(sec.title)} (${sec.enabled ? 'visible' : 'hidden'})"
-        >
-          <span class="text-[10px] opacity-70 font-mono">${idx + 1}</span>
-          <span>${escapeHtml(sec.title)}</span>
-          ${!sec.enabled ? '<span class="text-[9px] opacity-70 font-mono">(hidden)</span>' : ''}
-        </button>
-      `;
-    }).join('');
-
-    sectionPillBar.querySelectorAll('.section-pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        const id = pill.dataset.sectionId;
-        store.setActiveSection(id);
-        const targetEl = document.querySelector(`.interactive-section-block[data-section-id="${id}"]`);
-        if (targetEl) {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      });
-    });
-
-    // Auto-scroll active pill into view only on explicit navigation (avoids scroll thrash while typing)
-    if (meta && (meta.type === 'SET_ACTIVE_SECTION' || meta.type === 'ADD_SECTION' || meta.force === true && meta.type !== 'UPDATE_SECTION_DATA')) {
-      const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
-      if (activePill) {
-        try { activePill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' }); } catch (e) {}
-      }
-    }
-  }
-
-  // 1B. Render Drawer List Items (draggable outline)
-  if (sectionListContainer) {
-    sectionListContainer.innerHTML = sections.map((sec, idx) => {
-      const isActive = sec.id === activeSectionId;
-      return `
-        <div
-          class="section-item group flex items-center justify-between px-2.5 py-1.5 rounded-md border cursor-pointer select-none transition-all ${
-            isActive
-              ? 'active bg-muted border-border text-foreground font-medium shadow-xs'
-              : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
-          } ${!sec.enabled ? 'opacity-50' : ''}"
-          data-section-id="${sec.id}"
-          data-index="${idx}"
-          draggable="true"
-          title="Drag to reorder"
-        >
-          <div class="flex items-center gap-2 flex-1 min-w-0">
-            <span class="drag-grip text-zinc-600 text-[10px] cursor-grab">⠿</span>
-            <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
-            <span class="text-xs truncate">${escapeHtml(sec.title)}</span>
-          </div>
-
-          <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
-            <div class="flex items-center">
-              <button class="move-up-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === 0 ? 'invisible' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
-              <button class="move-down-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === sections.length - 1 ? 'invisible' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
-            </div>
-
-            <input 
-              type="checkbox" 
-              class="toggle-section-cb rounded border-border text-foreground focus:ring-0 cursor-pointer ml-1" 
-              ${sec.enabled ? 'checked' : ''} 
-              data-id="${sec.id}" 
-              title="Toggle section visibility" 
-            />
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    sectionListContainer.querySelectorAll('.section-item').forEach(el => {
-      el.addEventListener('click', (e) => {
-        if (e.target.closest('button') || e.target.closest('input')) return;
-        const id = el.dataset.sectionId;
-        store.setActiveSection(id);
-      });
-    });
-
-    sectionListContainer.querySelectorAll('.move-up-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        store.moveSection(btn.dataset.id, 'up');
-      });
-    });
-
-    sectionListContainer.querySelectorAll('.move-down-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        store.moveSection(btn.dataset.id, 'down');
-      });
-    });
-
-    sectionListContainer.querySelectorAll('.toggle-section-cb').forEach(cb => {
-      cb.addEventListener('change', (e) => {
-        e.stopPropagation();
-        store.toggleSection(cb.dataset.id, cb.checked);
-      });
-    });
-
-    // Drawer drag reorder (native, no deps)
-    if (!sectionListContainer.dataset.dndBound) {
-      sectionListContainer.dataset.dndBound = 'true';
-      let dragIdx = null;
-      sectionListContainer.addEventListener('dragstart', (e) => {
-        const row = e.target.closest?.('.section-item');
-        if (!row) return;
-        dragIdx = parseInt(row.dataset.index, 10);
-        e.dataTransfer.setData('text/readmify-drawer-index', String(dragIdx));
-        e.dataTransfer.setData('text/readmify-section-id', row.dataset.sectionId);
-        e.dataTransfer.effectAllowed = 'move';
-        row.classList.add('dragging');
-      });
-      sectionListContainer.addEventListener('dragend', () => {
-        dragIdx = null;
-        sectionListContainer.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
-      });
-      sectionListContainer.addEventListener('dragover', (e) => {
-        if (e.target.closest?.('.section-item')) e.preventDefault();
-      });
-      sectionListContainer.addEventListener('drop', (e) => {
-        const over = e.target.closest?.('.section-item');
-        if (!over) return;
-        e.preventDefault();
-        const to = parseInt(over.dataset.index, 10);
-        const fromStr = e.dataTransfer.getData('text/readmify-drawer-index');
-        const from = fromStr !== '' ? parseInt(fromStr, 10) : dragIdx;
-        if (from !== null && !isNaN(from) && from !== to) store.reorderSections(from, to);
-      });
-    }
-  }
-
-  // 1C. Pill Bar & Drawer Buttons (Bind once)
-  const pillAddSecBtn = document.getElementById('pill-add-section-btn');
-  if (pillAddSecBtn && !pillAddSecBtn.dataset.bound) {
-    pillAddSecBtn.dataset.bound = 'true';
-    pillAddSecBtn.addEventListener('click', () => openSectionLibrary());
-  }
-
-  const toggleDrawerBtn = document.getElementById('toggle-section-drawer-btn');
-  const closeDrawerBtn = document.getElementById('close-section-drawer-btn');
-  const drawerPanel = document.getElementById('section-drawer-panel');
-
-  if (toggleDrawerBtn && drawerPanel && !toggleDrawerBtn.dataset.bound) {
-    toggleDrawerBtn.dataset.bound = 'true';
-    toggleDrawerBtn.addEventListener('click', () => {
-      drawerPanel.classList.toggle('hidden');
-    });
-  }
-
-  if (closeDrawerBtn && drawerPanel && !closeDrawerBtn.dataset.bound) {
-    closeDrawerBtn.dataset.bound = 'true';
-    closeDrawerBtn.addEventListener('click', () => {
-      drawerPanel.classList.add('hidden');
-    });
-  }
-
-  const addCustomBtn = document.getElementById('add-custom-sec-btn');
-  if (addCustomBtn && !addCustomBtn.dataset.bound) {
-    addCustomBtn.dataset.bound = 'true';
-    addCustomBtn.addEventListener('click', () => {
-      const title = prompt('Enter a title for the new section:', 'Custom Section');
-      if (title && title.trim()) {
-        store.addCustomSection(title.trim());
-      }
-    });
-  }
-
-  const resetBtn = document.getElementById('reset-template-btn');
-  if (resetBtn && !resetBtn.dataset.bound) {
-    resetBtn.dataset.bound = 'true';
-    resetBtn.addEventListener('click', () => {
-      if (confirm('Reset your README to standard default sections? Any unsaved edits will be cleared.')) {
-        store.resetToDefault();
-        showToast('Reset to default template', 'info');
-      }
-    });
-  }
-}
-
-// --- 2. LIVE PREVIEW & MARKDOWN RENDERING ---
-function renderPreview(state) {
-  currentMarkdown = generateMarkdown(state.sections);
+  const { markdown, html } = renderReadmeHtml(state.sections);
+  currentMarkdown = markdown;
+  window.__readmifyMarkdown = markdown;
 
   if (previewBody) {
-    previewBody.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
-
-    try {
-      if (window.marked) {
-        window.marked.setOptions({
-          gfm: true,
-          breaks: true
-        });
-        const rawHtml = window.marked.parse(currentMarkdown);
-        const safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
-        previewBody.innerHTML = safeHtml;
-      } else {
-        previewBody.innerText = currentMarkdown;
-      }
-    } catch (err) {
-      console.error('Markdown parse error:', err);
-      previewBody.innerText = currentMarkdown;
-    }
+    previewBody.className = 'markdown-body';
+    previewBody.innerHTML = html;
+    renderMermaidBlocks(previewBody);
   }
+  applyPreviewTheme(state.previewTheme);
+  if (rawView) rawView.value = markdown;
 
-  if (rawMarkdownTextarea) {
-    rawMarkdownTextarea.value = currentMarkdown;
-  }
-
-  updateHealthAndStats(state.sections, currentMarkdown);
+  updateHealthScore(state.sections, markdown);
+  updateSaveIndicator();
 }
 
-function updateHealthAndStats(sections, markdownText) {
-  const words = markdownText.trim() ? markdownText.trim().split(/\s+/).length : 0;
-  const chars = markdownText.length;
-  const readingTime = Math.max(1, Math.ceil(words / 200));
-
-  const statsWordEl = document.getElementById('stats-word-count');
-  const statsCharEl = document.getElementById('stats-char-count');
-  const statsTimeEl = document.getElementById('stats-reading-time');
-
-  if (statsWordEl) statsWordEl.textContent = `${words} words`;
-  if (statsCharEl) statsCharEl.textContent = `${chars} chars`;
-  if (statsTimeEl) statsTimeEl.textContent = `~${readingTime} min read`;
-
-  const health = calculateReadmeScore(sections);
-  const scoreBadge = document.getElementById('health-score-badge');
-  const scoreText = document.getElementById('health-score-text');
-  const scoreTip = document.getElementById('health-score-tip');
-
-  if (scoreBadge && scoreText) {
-    scoreBadge.style.borderColor = health.color;
-    scoreBadge.style.color = health.color;
-    scoreText.textContent = `${health.score}% (${health.label})`;
-  }
-
-  if (scoreTip) {
-    if (health.tips.length > 0) {
-      const top = health.tips[0];
-      scoreTip.innerHTML = '';
-      const tipSpan = document.createElement('span');
-      tipSpan.textContent = `Tip: ${typeof top === 'string' ? top : top.text} `;
-      scoreTip.appendChild(tipSpan);
-      // One-click suggestion: enable missing section directly
-      if (top && typeof top === 'object' && top.action) {
-        const btn = document.createElement('button');
-        btn.id = 'health-suggest-btn';
-        btn.className = 'ml-2 px-2 py-0.5 rounded border border-border bg-muted text-foreground text-[11px] font-medium';
-        btn.textContent = top.actionLabel || 'Fix it';
-        btn.addEventListener('click', () => {
-          try {
-            if (top.action.type === 'enable' && top.action.sectionType) {
-              store.addSectionFromType(top.action.sectionType);
-              showToast('Section enabled', 'success');
-            } else if (top.action.type === 'view' && top.action.mode) {
-              store.setViewMode(top.action.mode);
-            }
-          } catch (e) { console.warn(e); }
-        });
-        scoreTip.appendChild(btn);
-      }
-      scoreTip.classList.remove('hidden');
-    } else {
-      scoreTip.textContent = 'Your README is in top-tier shape!';
-    }
-  }
+function applyPreviewTheme(theme) {
+  const link = document.getElementById('github-markdown-theme-link');
+  const wrap = document.getElementById('preview-body-wrap');
+  if (link) link.href = theme === 'light'
+    ? 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown-light.css'
+    : 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown-dark.css';
+  if (wrap) { wrap.classList.toggle('theme-dark', theme !== 'light'); wrap.classList.toggle('theme-light', theme === 'light'); }
 }
 
-function setupOverflowAndExport() {
-  const overflowBtn = document.getElementById('nav-overflow-btn');
-  const overflowMenu = document.getElementById('nav-overflow-menu');
-  const exportBtn = document.getElementById('export-menu-btn');
-  const exportMenu = document.getElementById('export-menu');
-  const toggle = (el) => el?.classList.toggle('hidden');
-  overflowBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    exportMenu?.classList.add('hidden');
-    toggle(overflowMenu);
-  });
-  exportBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    overflowMenu?.classList.add('hidden');
-    toggle(exportMenu);
-  });
-  document.addEventListener('click', () => {
-    overflowMenu?.classList.add('hidden');
-    exportMenu?.classList.add('hidden');
-  });
-  overflowMenu?.querySelectorAll('[data-overflow]')?.forEach(b => {
-    b.addEventListener('click', () => {
-      const k = b.dataset.overflow;
-      if (k === 'guide') document.getElementById('nav-wizard-btn')?.click();
-      else if (k === 'import') document.getElementById('nav-import-btn')?.click();
-      else if (k === 'theme') document.getElementById('theme-toggle-btn')?.click();
-      else if (k === 'copy') document.getElementById('nav-copy-btn')?.click();
-      else if (k === 'reset') document.getElementById('reset-template-btn')?.click();
-    });
-  });
-  document.getElementById('export-menu-copy')?.addEventListener('click', () => document.getElementById('nav-copy-btn')?.click());
-  document.getElementById('export-menu-download')?.addEventListener('click', () => document.getElementById('nav-download-btn')?.click());
-  document.getElementById('export-menu-license')?.addEventListener('click', () => {
-    // Trigger license download from inspector/canvas if present, else toast
-    const btn = document.querySelector('.download-canvas-lic-btn, #download-license-file-btn');
-    if (btn) btn.click();
-    else showToast('Open License section → Download LICENSE', 'info');
-  });
-}
-
-function setupSavedIndicator() {
-  const dot = document.getElementById('save-state-dot');
-  const txt = document.getElementById('save-state-text');
-  if (!dot && !txt) return;
-  const markDirty = () => {
-    if (dot) { dot.classList.remove('saved'); dot.classList.add('dirty'); }
-    if (txt) txt.textContent = 'Saving…';
-  };
-  const markSaved = () => {
-    if (dot) { dot.classList.remove('dirty'); dot.classList.add('saved'); }
-    if (txt) {
-      const d = new Date();
-      txt.textContent = `Saved ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    }
-  };
-  // Any store notify => dirty, debounced save event => saved
-  const origNotify = store.notify.bind(store);
-  store.notify = (meta) => { try { markDirty(); } catch (e) {} return origNotify(meta); };
-  window.addEventListener('readmify:saved', markSaved);
-  // Flush on unload so no work is lost
-  window.addEventListener('beforeunload', () => { try { store.flushSave(); } catch (e) {} });
-}
-
-function setupGlobalDrop() {
-  const overlay = document.getElementById('global-drop-overlay');
-  const viewport = document.getElementById('canvas-scroll-viewport');
-  let dragDepth = 0;
-  const show = () => overlay && (overlay.classList.remove('hidden'), overlay.classList.add('flex'));
-  const hide = () => overlay && (overlay.classList.add('hidden'), overlay.classList.remove('flex'));
-  window.addEventListener('dragenter', (e) => {
-    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
-    dragDepth++;
-    show();
-    viewport?.classList.add('global-drag-over');
-  });
-  window.addEventListener('dragleave', () => {
-    dragDepth = Math.max(0, dragDepth - 1);
-    if (dragDepth === 0) { hide(); viewport?.classList.remove('global-drag-over'); }
-  });
-  window.addEventListener('dragover', (e) => { if (overlay && !overlay.classList.contains('hidden')) e.preventDefault(); });
-  window.addEventListener('drop', (e) => {
-    if (!overlay || overlay.classList.contains('hidden')) return;
-    // Only handle file drops here; section-type drops are handled on canvas dividers
-    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
-    e.preventDefault();
-    dragDepth = 0;
-    hide();
-    viewport?.classList.remove('global-drag-over');
-    const file = e.dataTransfer.files?.[0];
-    if (!file || !file.type.startsWith('image/')) {
-      if (file) showToast('Only images can be dropped as banners', 'error');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const url = evt.target.result;
-      const state = store.getState();
-      // Prefer hero, fallback to demo, else create hero
-      let target = state.sections.find(s => s.enabled && s.type === SECTION_TYPES.HERO)
-        || state.sections.find(s => s.enabled && s.type === 'demo')
-        || state.sections.find(s => s.type === SECTION_TYPES.HERO);
-      if (!target) return;
-      if (target.type === SECTION_TYPES.HERO) store.updateSectionData(target.id, { showLogo: true, logoUrl: url });
-      else store.updateSectionData(target.id, { imageUrl: url });
-      showToast('Banner added via drag & drop!', 'success');
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// --- 3. NAVBAR CONTROLS ---
-function setupNavbarControls() {
-  // GitHub Deep Scanner Bar
-  const navGithubInput = document.getElementById('nav-github-input');
-  const navGithubDetectBtn = document.getElementById('nav-github-detect-btn');
-
-  function handleNavDeepScan() {
-    const val = navGithubInput?.value?.trim() || '';
-    if (!val) {
-      openWizard('', false);
-      return;
-    }
-    const parsed = parseGitHubRepoInput(val);
-    if (!parsed) {
-      showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
-      return;
-    }
-    openWizard(val, true);
+function renderMermaidBlocks(container) {
+  const blocks = container.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+  if (blocks.length === 0) return;
+  if (!window.mermaid) return;
+  if (!mermaidReady) {
+    window.mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+    mermaidReady = true;
   }
-
-  if (navGithubDetectBtn && navGithubInput) {
-    navGithubDetectBtn.addEventListener('click', handleNavDeepScan);
-    navGithubInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleNavDeepScan();
-      }
-    });
-  }
-
-  // Add Section Catalog Button in Navbar
-  const navAddSecBtn = document.getElementById('nav-add-section-btn');
-  if (navAddSecBtn) {
-    navAddSecBtn.addEventListener('click', () => {
-      openSectionLibrary();
-    });
-  }
-
-  // Photo / Banner Hub Trigger
-  const navPhotosBtn = document.getElementById('nav-photos-btn');
-  if (navPhotosBtn) {
-    navPhotosBtn.addEventListener('click', () => {
-      renderPhotoModal('hero');
-    });
-  }
-
-  // Easy Guide Launch Button
-  const wizardBtn = document.getElementById('nav-wizard-btn');
-  if (wizardBtn) {
-    wizardBtn.addEventListener('click', () => openWizard(navGithubInput?.value?.trim() || '', false));
-  }
-
-  // Copy Markdown Button
-  const copyBtn = document.getElementById('nav-copy-btn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', async () => {
-      await copyToClipboard(currentMarkdown, 'Markdown copied! Paste directly into GitHub README.md');
-    });
-  }
-
-  // Download Button
-  const downloadBtn = document.getElementById('nav-download-btn');
-  if (downloadBtn) {
-    downloadBtn.addEventListener('click', () => {
-      downloadReadmeFile(currentMarkdown, 'README.md');
-    });
-  }
-
-  // GitHub Theme Toggle (Dark / Light)
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-      const currentTheme = store.getState().previewTheme;
-      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      store.setPreviewTheme(nextTheme);
-
-      themeToggleBtn.innerHTML = nextTheme === 'light' 
-        ? '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>' 
-        : '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
-      showToast(`Switched preview to GitHub ${nextTheme} mode`, 'info');
-    });
-  }
-}
-
-// --- 4. VIEW MODE SWITCHER (EDITOR / PREVIEW / CODE) ---
-function setupViewModeSwitcher() {
-  const modeBtns = document.querySelectorAll('.view-mode-btn');
-
-  modeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const mode = btn.dataset.mode;
-      store.setViewMode(mode);
-    });
+  blocks.forEach((block, idx) => {
+    const pre = block.closest('pre');
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = block.textContent;
+    div.id = `mermaid-diagram-${idx}-${Date.now()}`;
+    pre.replaceWith(div);
   });
-
-  if (rawMarkdownTextarea) {
-    rawMarkdownTextarea.addEventListener('input', (e) => {
-      currentMarkdown = e.target.value;
-      if (previewBody) {
-        try {
-          if (window.marked) {
-            const rawHtml = window.marked.parse(currentMarkdown);
-            const safeHtml = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
-            previewBody.innerHTML = safeHtml;
-          }
-        } catch (err) {
-          console.error('Markdown parse error:', err);
-        }
-      }
-    });
+  try {
+    window.mermaid.run({ nodes: container.querySelectorAll('.mermaid') });
+  } catch (e) {
+    console.warn('Mermaid render failed:', e);
   }
 }
 
 function applyViewModeDom(mode) {
-  const modeBtns = document.querySelectorAll('.view-mode-btn');
-  modeBtns.forEach(b => {
-    if (b.dataset.mode === mode) {
-      b.className = 'view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm';
-    } else {
-      b.className = 'view-mode-btn px-3.5 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground';
-    }
+  const editorPane = document.getElementById('editor-pane');
+  const previewPane = document.getElementById('preview-pane');
+  document.querySelectorAll('.view-mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
   });
-
-  if (canvasViewContainer) {
-    canvasViewContainer.classList.toggle('hidden', mode !== 'canvas');
-    if (mode === 'canvas') canvasViewContainer.classList.add('flex');
-    else canvasViewContainer.classList.remove('flex');
-  }
-  if (purePreviewContainer) {
-    purePreviewContainer.classList.toggle('hidden', mode !== 'preview');
-    if (mode === 'preview') purePreviewContainer.classList.add('flex');
-    else purePreviewContainer.classList.remove('flex');
-  }
-  if (rawMarkdownContainer) {
-    rawMarkdownContainer.classList.toggle('hidden', mode !== 'raw');
-    if (mode === 'raw') rawMarkdownContainer.classList.add('flex');
-    else rawMarkdownContainer.classList.remove('flex');
+  if (window.innerWidth < 900 && editorPane && previewPane) {
+    editorPane.classList.toggle('hidden', mode !== 'editor');
+    previewPane.classList.toggle('hidden', mode === 'editor' ? false : mode !== 'preview');
+    if (mode === 'editor') previewPane.classList.add('hidden');
+    if (mode === 'preview') editorPane.classList.add('hidden');
+  } else if (editorPane && previewPane) {
+    editorPane.classList.remove('hidden');
+    previewPane.classList.remove('hidden');
   }
 }
 
-function renderPurePreview(state) {
-  if (!previewBody) return;
-
-  try {
-    let html = '';
-    if (window.marked) {
-      window.marked.setOptions({ gfm: true, breaks: true });
-      const rawHtml = window.marked.parse(currentMarkdown);
-      html = window.DOMPurify ? window.DOMPurify.sanitize(rawHtml) : rawHtml;
-    } else {
-      html = escapeHtml(currentMarkdown);
-    }
-
-    previewBody.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
-    previewBody.innerHTML = html;
-  } catch (err) {
-    console.error('Markdown parse error:', err);
-    previewBody.innerText = currentMarkdown;
+function updateHealthScore(sections, markdown) {
+  const health = calculateReadmeScore(sections, markdown);
+  const badge = document.getElementById('health-score-badge');
+  const text = document.getElementById('health-score-text');
+  const tipsEl = document.getElementById('health-score-tips');
+  if (badge && text) {
+    badge.style.borderColor = health.color;
+    badge.style.color = health.color;
+    text.textContent = `${health.score}% ${health.label}`;
+  }
+  if (tipsEl) {
+    tipsEl.innerHTML = health.tips.slice(0, 3).map(t => `<li>${t}</li>`).join('');
   }
 }
 
-// --- 5. IMPORT EXISTING README MODAL ---
-function setupImportModal() {
-  const importBtn = document.getElementById('nav-import-btn');
-  const modal = document.getElementById('import-readme-modal');
-  const cancelBtn = document.getElementById('close-import-modal-btn');
-  const applyBtn = document.getElementById('apply-import-btn');
-  const importTextarea = document.getElementById('import-markdown-textarea');
-  const fileInput = document.getElementById('import-file-input');
+let saveIndicatorTimer = null;
+function updateSaveIndicator() {
+  const dot = document.getElementById('save-state-dot');
+  const text = document.getElementById('save-state-text');
+  if (!dot || !text) return;
+  dot.classList.add('dirty');
+  dot.classList.remove('saved');
+  text.textContent = 'Saving...';
+  if (saveIndicatorTimer) clearTimeout(saveIndicatorTimer);
+  saveIndicatorTimer = setTimeout(() => {
+    dot.classList.remove('dirty');
+    dot.classList.add('saved');
+    text.textContent = 'Saved';
+  }, 600);
+}
 
-  if (!importBtn || !modal) return;
+function setupHeaderControls() {
+  document.getElementById('nav-add-section-btn')?.addEventListener('click', () => openSectionLibrary());
 
-  importBtn.addEventListener('click', () => {
-    modal.classList.remove('hidden');
+  document.getElementById('nav-photos-btn')?.addEventListener('click', () => {
+    const hero = store.getState().sections.find(s => s.type === SECTION_TYPES.HERO);
+    if (hero) scrollToSection(hero.id);
   });
 
-  cancelBtn?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  document.getElementById('nav-badges-btn')?.addEventListener('click', () => {
+    const id = store.addSectionFromType(SECTION_TYPES.BADGES);
+    scrollToSection(id);
   });
 
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.add('hidden');
+  document.querySelectorAll('.view-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => store.setViewMode(btn.dataset.mode));
   });
 
-  fileInput?.addEventListener('change', (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        if (importTextarea) importTextarea.value = evt.target.result;
-      };
-      reader.readAsText(file);
-    }
+  previewTabBtn?.addEventListener('click', () => switchPreviewTab('preview'));
+  rawTabBtn?.addEventListener('click', () => switchPreviewTab('raw'));
+
+  document.getElementById('nav-download-btn')?.addEventListener('click', () => {
+    downloadReadmeFile(currentMarkdown, 'README.md');
   });
 
-  // Drag & drop .md/.txt files onto import modal + textarea
-  const dropZone = modal.querySelector('.bg-card');
-  const handleFile = (file) => {
-    if (!file) return;
-    if (!/(\.md|\.markdown|\.txt)$/i.test(file.name) && file.type !== 'text/markdown' && !file.type.startsWith('text/')) {
-      showToast('Drop a .md / .txt file', 'error');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (evt) => { if (importTextarea) importTextarea.value = evt.target.result; };
-    reader.readAsText(file);
-  };
-  ['dragover', 'dragenter'].forEach(ev => modal.addEventListener(ev, (e) => {
-    e.preventDefault();
-    dropZone?.classList.add('drag-over');
-  }));
-  ['dragleave', 'drop'].forEach(ev => modal.addEventListener(ev, (e) => {
-    if (ev === 'drop') {
-      e.preventDefault();
-      const f = e.dataTransfer?.files?.[0];
-      if (f) handleFile(f);
-    }
-    dropZone?.classList.remove('drag-over');
-  }));
-  importTextarea?.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const f = e.dataTransfer?.files?.[0];
-    if (f) handleFile(f);
-  });
+  const exportBtn = document.getElementById('export-menu-btn');
+  const exportMenu = document.getElementById('export-menu');
+  const overflowBtn = document.getElementById('nav-overflow-btn');
+  const overflowMenu = document.getElementById('nav-overflow-menu');
 
-  applyBtn?.addEventListener('click', () => {
-    const text = importTextarea?.value || '';
-    if (!text.trim()) {
-      showToast('Please paste or upload markdown content first', 'error');
-      return;
-    }
+  exportBtn?.addEventListener('click', (e) => { e.stopPropagation(); overflowMenu?.classList.add('hidden'); exportMenu?.classList.toggle('hidden'); });
+  overflowBtn?.addEventListener('click', (e) => { e.stopPropagation(); exportMenu?.classList.add('hidden'); overflowMenu?.classList.toggle('hidden'); });
+  document.addEventListener('click', () => { exportMenu?.classList.add('hidden'); overflowMenu?.classList.add('hidden'); });
 
-    store.batchUpdate(sections => {
-      sections.forEach(s => s.enabled = false);
-      const customSec = sections.find(s => s.id === 'sec-imported');
-      if (customSec) {
-        customSec.enabled = true;
-        customSec.data.markdown = text;
-      } else {
-        sections.unshift({
-          id: 'sec-imported',
-          type: 'custom',
-          title: 'Imported README',
-          enabled: true,
-          data: {
-            heading: 'Imported Content',
-            markdown: text
-          }
-        });
+  document.getElementById('export-menu-copy')?.addEventListener('click', () => copyToClipboard(currentMarkdown));
+  document.getElementById('export-menu-download')?.addEventListener('click', () => downloadReadmeFile(currentMarkdown, 'README.md'));
+
+  overflowMenu?.querySelectorAll('[data-overflow]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.dataset.overflow;
+      if (action === 'guide') openWizard();
+      else if (action === 'import') document.getElementById('import-modal')?.classList.remove('hidden');
+      else if (action === 'theme') {
+        const next = store.getState().previewTheme === 'dark' ? 'light' : 'dark';
+        store.setPreviewTheme(next);
+        showToast(`Switched to ${next} preview theme`, 'info');
+      } else if (action === 'copy') copyToClipboard(currentMarkdown);
+      else if (action === 'reset') {
+        if (confirm('Reset your README to the default template? This clears your current sections.')) store.resetToDefault();
       }
     });
-
-    modal.classList.add('hidden');
-    showToast('Imported README successfully!', 'success');
   });
 }
 
-// Robust DOM Ready execution
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
-} else {
-  initApp();
+function switchPreviewTab(tab) {
+  previewTabBtn?.classList.toggle('active', tab === 'preview');
+  rawTabBtn?.classList.toggle('active', tab === 'raw');
+  document.getElementById('preview-body-wrap')?.classList.toggle('hidden', tab !== 'preview');
+  rawView?.classList.toggle('hidden', tab !== 'raw');
 }
 
-// Robust DOM Ready execution
+function scrollToSection(sectionId) {
+  store.setViewMode('editor');
+  setTimeout(() => {
+    const card = document.querySelector(`[data-card-id="${sectionId}"]`);
+    card?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    card?.classList.add('section-card-flash');
+    setTimeout(() => card?.classList.remove('section-card-flash'), 1200);
+  }, 50);
+}
+
+function setupImportModal() {
+  const modal = document.getElementById('import-modal');
+  if (!modal) return;
+  const textarea = document.getElementById('import-textarea');
+  const applyBtn = document.getElementById('import-apply-btn');
+  const cancelBtn = document.getElementById('import-cancel-btn');
+
+  cancelBtn?.addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.add('hidden'); });
+
+  applyBtn?.addEventListener('click', () => {
+    const text = textarea?.value?.trim();
+    if (!text) { showToast('Paste some markdown first', 'error'); return; }
+    store.state.sections = [{ id: `custom-${Date.now()}`, type: SECTION_TYPES.CUSTOM, title: 'Imported README', enabled: true, data: { heading: '', markdown: text } }];
+    store.notify({ type: 'IMPORT' });
+    modal.classList.add('hidden');
+    showToast('Imported! Edit it as a Custom section.', 'success');
+  });
+}
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp);
 } else {
