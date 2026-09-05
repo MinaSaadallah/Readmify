@@ -1,11 +1,11 @@
-/** Readmify Bundle - Universal Offline & GitHub Pages Compatibility */
+/** Readmify v2 Bundle - Universal Offline & GitHub Pages Compatibility */
 
 (function() {
 
   'use strict';
 
 /**
- * Readmify - Tech Stack Badge Catalog
+ * Readmify - Tech Stack Badge Catalog with SkillIcons & Shields.io Support
  * 130+ popular languages, frameworks, databases, cloud providers, and developer tools
  */
 
@@ -21,125 +21,108 @@ const TECH_CATEGORIES = [
 
 const TECH_CATALOG = [
   // --- LANGUAGES ---
-  { id: 'typescript', name: 'TypeScript', category: 'languages', color: '3178C6', logo: 'typescript', logoColor: 'white' },
-  { id: 'javascript', name: 'JavaScript', category: 'languages', color: 'F7DF1E', logo: 'javascript', logoColor: 'black' },
-  { id: 'python', name: 'Python', category: 'languages', color: '3776AB', logo: 'python', logoColor: 'white' },
-  { id: 'rust', name: 'Rust', category: 'languages', color: '000000', logo: 'rust', logoColor: 'white' },
-  { id: 'go', name: 'Go', category: 'languages', color: '00ADD8', logo: 'go', logoColor: 'white' },
-  { id: 'java', name: 'Java', category: 'languages', color: 'ED8B00', logo: 'openjdk', logoColor: 'white' },
-  { id: 'csharp', name: 'C#', category: 'languages', color: '239120', logo: 'csharp', logoColor: 'white' },
-  { id: 'cpp', name: 'C++', category: 'languages', color: '00599C', logo: 'cplusplus', logoColor: 'white' },
-  { id: 'c', name: 'C', category: 'languages', color: 'A8B9CC', logo: 'c', logoColor: 'black' },
-  { id: 'php', name: 'PHP', category: 'languages', color: '777BB4', logo: 'php', logoColor: 'white' },
-  { id: 'swift', name: 'Swift', category: 'languages', color: 'F05138', logo: 'swift', logoColor: 'white' },
-  { id: 'kotlin', name: 'Kotlin', category: 'languages', color: '7F52FF', logo: 'kotlin', logoColor: 'white' },
-  { id: 'dart', name: 'Dart', category: 'languages', color: '0175C2', logo: 'dart', logoColor: 'white' },
-  { id: 'ruby', name: 'Ruby', category: 'languages', color: 'CC342D', logo: 'ruby', logoColor: 'white' },
-  { id: 'html5', name: 'HTML5', category: 'languages', color: 'E34F26', logo: 'html5', logoColor: 'white' },
-  { id: 'css3', name: 'CSS3', category: 'languages', color: '1572B6', logo: 'css3', logoColor: 'white' },
-  { id: 'r', name: 'R', category: 'languages', color: '276DC3', logo: 'r', logoColor: 'white' },
-  { id: 'scala', name: 'Scala', category: 'languages', color: 'DC322F', logo: 'scala', logoColor: 'white' },
-  { id: 'elixir', name: 'Elixir', category: 'languages', color: '4B275F', logo: 'elixir', logoColor: 'white' },
-  { id: 'lua', name: 'Lua', category: 'languages', color: '2C2D72', logo: 'lua', logoColor: 'white' },
-  { id: 'shell', name: 'Bash / Shell', category: 'languages', color: '4EAA25', logo: 'gnubash', logoColor: 'white' },
-  { id: 'solidity', name: 'Solidity', category: 'languages', color: '363636', logo: 'solidity', logoColor: 'white' },
+  { id: 'typescript', name: 'TypeScript', category: 'languages', color: '3178C6', logo: 'typescript', logoColor: 'white', skillSlug: 'ts' },
+  { id: 'javascript', name: 'JavaScript', category: 'languages', color: 'F7DF1E', logo: 'javascript', logoColor: 'black', skillSlug: 'js' },
+  { id: 'python', name: 'Python', category: 'languages', color: '3776AB', logo: 'python', logoColor: 'white', skillSlug: 'py' },
+  { id: 'rust', name: 'Rust', category: 'languages', color: '000000', logo: 'rust', logoColor: 'white', skillSlug: 'rust' },
+  { id: 'go', name: 'Go', category: 'languages', color: '00ADD8', logo: 'go', logoColor: 'white', skillSlug: 'go' },
+  { id: 'java', name: 'Java', category: 'languages', color: 'ED8B00', logo: 'openjdk', logoColor: 'white', skillSlug: 'java' },
+  { id: 'csharp', name: 'C#', category: 'languages', color: '239120', logo: 'csharp', logoColor: 'white', skillSlug: 'cs' },
+  { id: 'cpp', name: 'C++', category: 'languages', color: '00599C', logo: 'cplusplus', logoColor: 'white', skillSlug: 'cpp' },
+  { id: 'c', name: 'C', category: 'languages', color: 'A8B9CC', logo: 'c', logoColor: 'black', skillSlug: 'c' },
+  { id: 'php', name: 'PHP', category: 'languages', color: '777BB4', logo: 'php', logoColor: 'white', skillSlug: 'php' },
+  { id: 'swift', name: 'Swift', category: 'languages', color: 'F05138', logo: 'swift', logoColor: 'white', skillSlug: 'swift' },
+  { id: 'kotlin', name: 'Kotlin', category: 'languages', color: '7F52FF', logo: 'kotlin', logoColor: 'white', skillSlug: 'kotlin' },
+  { id: 'dart', name: 'Dart', category: 'languages', color: '0175C2', logo: 'dart', logoColor: 'white', skillSlug: 'dart' },
+  { id: 'ruby', name: 'Ruby', category: 'languages', color: 'CC342D', logo: 'ruby', logoColor: 'white', skillSlug: 'ruby' },
+  { id: 'html5', name: 'HTML5', category: 'languages', color: 'E34F26', logo: 'html5', logoColor: 'white', skillSlug: 'html' },
+  { id: 'css3', name: 'CSS3', category: 'languages', color: '1572B6', logo: 'css3', logoColor: 'white', skillSlug: 'css' },
+  { id: 'r', name: 'R', category: 'languages', color: '276DC3', logo: 'r', logoColor: 'white', skillSlug: 'r' },
+  { id: 'scala', name: 'Scala', category: 'languages', color: 'DC322F', logo: 'scala', logoColor: 'white', skillSlug: 'scala' },
+  { id: 'elixir', name: 'Elixir', category: 'languages', color: '4B275F', logo: 'elixir', logoColor: 'white', skillSlug: 'elixir' },
+  { id: 'lua', name: 'Lua', category: 'languages', color: '2C2D72', logo: 'lua', logoColor: 'white', skillSlug: 'lua' },
+  { id: 'shell', name: 'Bash / Shell', category: 'languages', color: '4EAA25', logo: 'gnubash', logoColor: 'white', skillSlug: 'bash' },
+  { id: 'solidity', name: 'Solidity', category: 'languages', color: '363636', logo: 'solidity', logoColor: 'white', skillSlug: 'solidity' },
 
   // --- FRONTEND & MOBILE ---
-  { id: 'react', name: 'React', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB' },
-  { id: 'nextjs', name: 'Next.js', category: 'frontend', color: '000000', logo: 'nextdotjs', logoColor: 'white' },
-  { id: 'vue', name: 'Vue.js', category: 'frontend', color: '4FC08D', logo: 'vuedotjs', logoColor: 'white' },
-  { id: 'nuxtjs', name: 'Nuxt.js', category: 'frontend', color: '00DC82', logo: 'nuxtdotjs', logoColor: 'white' },
-  { id: 'svelte', name: 'Svelte', category: 'frontend', color: 'FF3E00', logo: 'svelte', logoColor: 'white' },
-  { id: 'angular', name: 'Angular', category: 'frontend', color: 'DD0031', logo: 'angular', logoColor: 'white' },
-  { id: 'tailwind', name: 'Tailwind CSS', category: 'frontend', color: '38B2AC', logo: 'tailwind-css', logoColor: 'white' },
-  { id: 'vite', name: 'Vite', category: 'frontend', color: '646CFF', logo: 'vite', logoColor: 'FFD62E' },
-  { id: 'astro', name: 'Astro', category: 'frontend', color: 'BC52EE', logo: 'astro', logoColor: 'white' },
-  { id: 'redux', name: 'Redux', category: 'frontend', color: '593D88', logo: 'redux', logoColor: 'white' },
-  { id: 'flutter', name: 'Flutter', category: 'frontend', color: '02569B', logo: 'flutter', logoColor: 'white' },
-  { id: 'reactnative', name: 'React Native', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB' },
-  { id: 'bootstrap', name: 'Bootstrap', category: 'frontend', color: '563D7C', logo: 'bootstrap', logoColor: 'white' },
-  { id: 'sass', name: 'Sass', category: 'frontend', color: 'CC6699', logo: 'sass', logoColor: 'white' },
-  { id: 'shadcn', name: 'shadcn/ui', category: 'frontend', color: '000000', logo: 'shadcnui', logoColor: 'white' },
-  { id: 'chakra', name: 'Chakra UI', category: 'frontend', color: '319795', logo: 'chakraui', logoColor: 'white' },
-  { id: 'electron', name: 'Electron', category: 'frontend', color: '47848F', logo: 'electron', logoColor: 'white' },
-  { id: 'tauri', name: 'Tauri', category: 'frontend', color: 'FFC131', logo: 'tauri', logoColor: 'black' },
-  { id: 'threejs', name: 'Three.js', category: 'frontend', color: '000000', logo: 'threedotjs', logoColor: 'white' },
+  { id: 'react', name: 'React', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB', skillSlug: 'react' },
+  { id: 'nextjs', name: 'Next.js', category: 'frontend', color: '000000', logo: 'nextdotjs', logoColor: 'white', skillSlug: 'nextjs' },
+  { id: 'vue', name: 'Vue.js', category: 'frontend', color: '4FC08D', logo: 'vuedotjs', logoColor: 'white', skillSlug: 'vue' },
+  { id: 'nuxtjs', name: 'Nuxt.js', category: 'frontend', color: '00DC82', logo: 'nuxtdotjs', logoColor: 'white', skillSlug: 'nuxtjs' },
+  { id: 'svelte', name: 'Svelte', category: 'frontend', color: 'FF3E00', logo: 'svelte', logoColor: 'white', skillSlug: 'svelte' },
+  { id: 'angular', name: 'Angular', category: 'frontend', color: 'DD0031', logo: 'angular', logoColor: 'white', skillSlug: 'angular' },
+  { id: 'tailwind', name: 'Tailwind CSS', category: 'frontend', color: '38B2AC', logo: 'tailwind-css', logoColor: 'white', skillSlug: 'tailwind' },
+  { id: 'vite', name: 'Vite', category: 'frontend', color: '646CFF', logo: 'vite', logoColor: 'FFD62E', skillSlug: 'vite' },
+  { id: 'astro', name: 'Astro', category: 'frontend', color: 'BC52EE', logo: 'astro', logoColor: 'white', skillSlug: 'astro' },
+  { id: 'redux', name: 'Redux', category: 'frontend', color: '593D88', logo: 'redux', logoColor: 'white', skillSlug: 'redux' },
+  { id: 'flutter', name: 'Flutter', category: 'frontend', color: '02569B', logo: 'flutter', logoColor: 'white', skillSlug: 'flutter' },
+  { id: 'reactnative', name: 'React Native', category: 'frontend', color: '20232A', logo: 'react', logoColor: '61DAFB', skillSlug: 'react' },
+  { id: 'bootstrap', name: 'Bootstrap', category: 'frontend', color: '563D7C', logo: 'bootstrap', logoColor: 'white', skillSlug: 'bootstrap' },
+  { id: 'sass', name: 'Sass', category: 'frontend', color: 'CC6699', logo: 'sass', logoColor: 'white', skillSlug: 'sass' },
+  { id: 'threejs', name: 'Three.js', category: 'frontend', color: '000000', logo: 'threedotjs', logoColor: 'white', skillSlug: 'threejs' },
+  { id: 'electron', name: 'Electron', category: 'frontend', color: '47848F', logo: 'electron', logoColor: 'white', skillSlug: 'electron' },
 
   // --- BACKEND & APIS ---
-  { id: 'nodejs', name: 'Node.js', category: 'backend', color: '43853D', logo: 'nodedotjs', logoColor: 'white' },
-  { id: 'express', name: 'Express.js', category: 'backend', color: '404D59', logo: 'express', logoColor: 'white' },
-  { id: 'fastify', name: 'Fastify', category: 'backend', color: '000000', logo: 'fastify', logoColor: 'white' },
-  { id: 'nestjs', name: 'NestJS', category: 'backend', color: 'E0234E', logo: 'nestjs', logoColor: 'white' },
-  { id: 'django', name: 'Django', category: 'backend', color: '092E20', logo: 'django', logoColor: 'white' },
-  { id: 'fastapi', name: 'FastAPI', category: 'backend', color: '009688', logo: 'fastapi', logoColor: 'white' },
-  { id: 'flask', name: 'Flask', category: 'backend', color: '000000', logo: 'flask', logoColor: 'white' },
-  { id: 'springboot', name: 'Spring Boot', category: 'backend', color: '6DB33F', logo: 'springboot', logoColor: 'white' },
-  { id: 'rails', name: 'Ruby on Rails', category: 'backend', color: 'CC0000', logo: 'rubyonrails', logoColor: 'white' },
-  { id: 'laravel', name: 'Laravel', category: 'backend', color: 'FF2D20', logo: 'laravel', logoColor: 'white' },
-  { id: 'dotnet', name: '.NET', category: 'backend', color: '512BD4', logo: 'dotnet', logoColor: 'white' },
-  { id: 'graphql', name: 'GraphQL', category: 'backend', color: 'E10098', logo: 'graphql', logoColor: 'white' },
-  { id: 'trpc', name: 'tRPC', category: 'backend', color: '2596BE', logo: 'trpc', logoColor: 'white' },
-  { id: 'apollo', name: 'Apollo GraphQL', category: 'backend', color: '311C87', logo: 'apollographql', logoColor: 'white' },
-  { id: 'grpc', name: 'gRPC', category: 'backend', color: '244C5A', logo: 'grpc', logoColor: 'white' },
-  { id: 'socketio', name: 'Socket.io', category: 'backend', color: '010101', logo: 'socketdotio', logoColor: 'white' },
+  { id: 'nodejs', name: 'Node.js', category: 'backend', color: '43853D', logo: 'nodedotjs', logoColor: 'white', skillSlug: 'nodejs' },
+  { id: 'express', name: 'Express.js', category: 'backend', color: '404D59', logo: 'express', logoColor: 'white', skillSlug: 'express' },
+  { id: 'fastify', name: 'Fastify', category: 'backend', color: '000000', logo: 'fastify', logoColor: 'white', skillSlug: 'fastify' },
+  { id: 'nestjs', name: 'NestJS', category: 'backend', color: 'E0234E', logo: 'nestjs', logoColor: 'white', skillSlug: 'nestjs' },
+  { id: 'django', name: 'Django', category: 'backend', color: '092E20', logo: 'django', logoColor: 'white', skillSlug: 'django' },
+  { id: 'fastapi', name: 'FastAPI', category: 'backend', color: '009688', logo: 'fastapi', logoColor: 'white', skillSlug: 'fastapi' },
+  { id: 'flask', name: 'Flask', category: 'backend', color: '000000', logo: 'flask', logoColor: 'white', skillSlug: 'flask' },
+  { id: 'springboot', name: 'Spring Boot', category: 'backend', color: '6DB33F', logo: 'springboot', logoColor: 'white', skillSlug: 'spring' },
+  { id: 'rails', name: 'Ruby on Rails', category: 'backend', color: 'CC0000', logo: 'rubyonrails', logoColor: 'white', skillSlug: 'rails' },
+  { id: 'laravel', name: 'Laravel', category: 'backend', color: 'FF2D20', logo: 'laravel', logoColor: 'white', skillSlug: 'laravel' },
+  { id: 'dotnet', name: '.NET', category: 'backend', color: '512BD4', logo: 'dotnet', logoColor: 'white', skillSlug: 'dotnet' },
+  { id: 'graphql', name: 'GraphQL', category: 'backend', color: 'E10098', logo: 'graphql', logoColor: 'white', skillSlug: 'graphql' },
 
   // --- DATABASES & STORAGE ---
-  { id: 'postgres', name: 'PostgreSQL', category: 'database', color: '316192', logo: 'postgresql', logoColor: 'white' },
-  { id: 'mongodb', name: 'MongoDB', category: 'database', color: '4EA94B', logo: 'mongodb', logoColor: 'white' },
-  { id: 'redis', name: 'Redis', category: 'database', color: 'DC382D', logo: 'redis', logoColor: 'white' },
-  { id: 'mysql', name: 'MySQL', category: 'database', color: '005C84', logo: 'mysql', logoColor: 'white' },
-  { id: 'sqlite', name: 'SQLite', category: 'database', color: '07405E', logo: 'sqlite', logoColor: 'white' },
-  { id: 'supabase', name: 'Supabase', category: 'database', color: '3ECF8E', logo: 'supabase', logoColor: 'black' },
-  { id: 'firebase', name: 'Firebase', category: 'database', color: 'FFCA28', logo: 'firebase', logoColor: 'black' },
-  { id: 'prisma', name: 'Prisma', category: 'database', color: '2D3748', logo: 'prisma', logoColor: 'white' },
-  { id: 'drizzle', name: 'Drizzle ORM', category: 'database', color: 'C5F74F', logo: 'drizzle', logoColor: 'black' },
-  { id: 'cassandra', name: 'Cassandra', category: 'database', color: '1287B1', logo: 'apachecassandra', logoColor: 'white' },
-  { id: 'elasticsearch', name: 'Elasticsearch', category: 'database', color: '005571', logo: 'elasticsearch', logoColor: 'white' },
-  { id: 'neo4j', name: 'Neo4j', category: 'database', color: '008CC1', logo: 'neo4j', logoColor: 'white' },
-  { id: 'dynamodb', name: 'DynamoDB', category: 'database', color: '4053D6', logo: 'amazondynamodb', logoColor: 'white' },
+  { id: 'postgres', name: 'PostgreSQL', category: 'database', color: '316192', logo: 'postgresql', logoColor: 'white', skillSlug: 'postgres' },
+  { id: 'mongodb', name: 'MongoDB', category: 'database', color: '4EA94B', logo: 'mongodb', logoColor: 'white', skillSlug: 'mongodb' },
+  { id: 'redis', name: 'Redis', category: 'database', color: 'DC382D', logo: 'redis', logoColor: 'white', skillSlug: 'redis' },
+  { id: 'mysql', name: 'MySQL', category: 'database', color: '005C84', logo: 'mysql', logoColor: 'white', skillSlug: 'mysql' },
+  { id: 'sqlite', name: 'SQLite', category: 'database', color: '07405E', logo: 'sqlite', logoColor: 'white', skillSlug: 'sqlite' },
+  { id: 'supabase', name: 'Supabase', category: 'database', color: '3ECF8E', logo: 'supabase', logoColor: 'black', skillSlug: 'supabase' },
+  { id: 'firebase', name: 'Firebase', category: 'database', color: 'FFCA28', logo: 'firebase', logoColor: 'black', skillSlug: 'firebase' },
+  { id: 'prisma', name: 'Prisma', category: 'database', color: '2D3748', logo: 'prisma', logoColor: 'white', skillSlug: 'prisma' },
 
   // --- CLOUD & DEVOPS ---
-  { id: 'docker', name: 'Docker', category: 'devops', color: '2496ED', logo: 'docker', logoColor: 'white' },
-  { id: 'kubernetes', name: 'Kubernetes', category: 'devops', color: '326CE5', logo: 'kubernetes', logoColor: 'white' },
-  { id: 'aws', name: 'AWS', category: 'devops', color: '232F3E', logo: 'amazonaws', logoColor: 'FF9900' },
-  { id: 'gcp', name: 'Google Cloud', category: 'devops', color: '4285F4', logo: 'googlecloud', logoColor: 'white' },
-  { id: 'azure', name: 'Azure', category: 'devops', color: '0078D4', logo: 'microsoftazure', logoColor: 'white' },
-  { id: 'vercel', name: 'Vercel', category: 'devops', color: '000000', logo: 'vercel', logoColor: 'white' },
-  { id: 'netlify', name: 'Netlify', category: 'devops', color: '00C7B7', logo: 'netlify', logoColor: 'white' },
-  { id: 'cloudflare', name: 'Cloudflare', category: 'devops', color: 'F38020', logo: 'cloudflare', logoColor: 'white' },
-  { id: 'githubactions', name: 'GitHub Actions', category: 'devops', color: '2088FF', logo: 'githubactions', logoColor: 'white' },
-  { id: 'terraform', name: 'Terraform', category: 'devops', color: '7B42BC', logo: 'terraform', logoColor: 'white' },
-  { id: 'nginx', name: 'Nginx', category: 'devops', color: '009639', logo: 'nginx', logoColor: 'white' },
-  { id: 'linux', name: 'Linux', category: 'devops', color: 'FCC624', logo: 'linux', logoColor: 'black' },
-  { id: 'gitlab', name: 'GitLab CI', category: 'devops', color: 'FC6D26', logo: 'gitlab', logoColor: 'white' },
+  { id: 'docker', name: 'Docker', category: 'devops', color: '2496ED', logo: 'docker', logoColor: 'white', skillSlug: 'docker' },
+  { id: 'kubernetes', name: 'Kubernetes', category: 'devops', color: '326CE5', logo: 'kubernetes', logoColor: 'white', skillSlug: 'kubernetes' },
+  { id: 'aws', name: 'AWS', category: 'devops', color: '232F3E', logo: 'amazonaws', logoColor: 'FF9900', skillSlug: 'aws' },
+  { id: 'gcp', name: 'Google Cloud', category: 'devops', color: '4285F4', logo: 'googlecloud', logoColor: 'white', skillSlug: 'gcp' },
+  { id: 'azure', name: 'Azure', category: 'devops', color: '0078D4', logo: 'microsoftazure', logoColor: 'white', skillSlug: 'azure' },
+  { id: 'vercel', name: 'Vercel', category: 'devops', color: '000000', logo: 'vercel', logoColor: 'white', skillSlug: 'vercel' },
+  { id: 'netlify', name: 'Netlify', category: 'devops', color: '00C7B7', logo: 'netlify', logoColor: 'white', skillSlug: 'netlify' },
+  { id: 'cloudflare', name: 'Cloudflare', category: 'devops', color: 'F38020', logo: 'cloudflare', logoColor: 'white', skillSlug: 'cloudflare' },
+  { id: 'githubactions', name: 'GitHub Actions', category: 'devops', color: '2088FF', logo: 'githubactions', logoColor: 'white', skillSlug: 'githubactions' },
+  { id: 'terraform', name: 'Terraform', category: 'devops', color: '7B42BC', logo: 'terraform', logoColor: 'white', skillSlug: 'terraform' },
+  { id: 'nginx', name: 'Nginx', category: 'devops', color: '009639', logo: 'nginx', logoColor: 'white', skillSlug: 'nginx' },
+  { id: 'linux', name: 'Linux', category: 'devops', color: 'FCC624', logo: 'linux', logoColor: 'black', skillSlug: 'linux' },
 
-  // --- TOOLS, AI & TESTING ---
-  { id: 'git', name: 'Git', category: 'tools', color: 'F05032', logo: 'git', logoColor: 'white' },
-  { id: 'github', name: 'GitHub', category: 'tools', color: '181717', logo: 'github', logoColor: 'white' },
-  { id: 'openai', name: 'OpenAI', category: 'tools', color: '412991', logo: 'openai', logoColor: 'white' },
-  { id: 'huggingface', name: 'Hugging Face', category: 'tools', color: 'FFD21E', logo: 'huggingface', logoColor: 'black' },
-  { id: 'pytorch', name: 'PyTorch', category: 'tools', color: 'EE4C2C', logo: 'pytorch', logoColor: 'white' },
-  { id: 'tensorflow', name: 'TensorFlow', category: 'tools', color: 'FF6F00', logo: 'tensorflow', logoColor: 'white' },
-  { id: 'jest', name: 'Jest', category: 'tools', color: 'C21325', logo: 'jest', logoColor: 'white' },
-  { id: 'vitest', name: 'Vitest', category: 'tools', color: '6E9F18', logo: 'vitest', logoColor: 'white' },
-  { id: 'cypress', name: 'Cypress', category: 'tools', color: '17202C', logo: 'cypress', logoColor: 'white' },
-  { id: 'playwright', name: 'Playwright', category: 'tools', color: '2EAD33', logo: 'playwright', logoColor: 'white' },
-  { id: 'postman', name: 'Postman', category: 'tools', color: 'FF6C37', logo: 'postman', logoColor: 'white' },
-  { id: 'figma', name: 'Figma', category: 'tools', color: 'F24E1E', logo: 'figma', logoColor: 'white' },
-  { id: 'eslint', name: 'ESLint', category: 'tools', color: '4B32C3', logo: 'eslint', logoColor: 'white' },
-  { id: 'prettier', name: 'Prettier', category: 'tools', color: 'F7B93E', logo: 'prettier', logoColor: 'black' },
-  { id: 'npm', name: 'NPM', category: 'tools', color: 'CB3837', logo: 'npm', logoColor: 'white' },
-  { id: 'pnpm', name: 'PNPM', category: 'tools', color: 'F69220', logo: 'pnpm', logoColor: 'white' },
-  { id: 'yarn', name: 'Yarn', category: 'tools', color: '2C8EBB', logo: 'yarn', logoColor: 'white' },
-  { id: 'bun', name: 'Bun', category: 'tools', color: 'FBF0DF', logo: 'bun', logoColor: 'black' }
+  // --- TOOLS & AI ---
+  { id: 'git', name: 'Git', category: 'tools', color: 'F05032', logo: 'git', logoColor: 'white', skillSlug: 'git' },
+  { id: 'github', name: 'GitHub', category: 'tools', color: '181717', logo: 'github', logoColor: 'white', skillSlug: 'github' },
+  { id: 'figma', name: 'Figma', category: 'tools', color: 'F24E1E', logo: 'figma', logoColor: 'white', skillSlug: 'figma' },
+  { id: 'postman', name: 'Postman', category: 'tools', color: 'FF6C37', logo: 'postman', logoColor: 'white', skillSlug: 'postman' },
+  { id: 'jest', name: 'Jest', category: 'tools', color: 'C21325', logo: 'jest', logoColor: 'white', skillSlug: 'jest' },
+  { id: 'vitest', name: 'Vitest', category: 'tools', color: '6E9F18', logo: 'vitest', logoColor: 'white', skillSlug: 'vitest' },
+  { id: 'pytorch', name: 'PyTorch', category: 'tools', color: 'EE4C2C', logo: 'pytorch', logoColor: 'white', skillSlug: 'pytorch' },
+  { id: 'tensorflow', name: 'TensorFlow', category: 'tools', color: 'FF6F00', logo: 'tensorflow', logoColor: 'white', skillSlug: 'tensorflow' }
 ];
 
-/**
- * Builds a shields.io badge URL for a given tech item
- */
 function getBadgeUrl(item, style = 'for-the-badge') {
   const encodedName = encodeURIComponent(item.name.replace(/-/g, '--'));
   return `https://img.shields.io/badge/${encodedName}-${item.color}?style=${style}&logo=${item.logo}&logoColor=${item.logoColor}`;
+}
+
+function getSkillIconsUrl(techIds, theme = 'dark') {
+  const slugs = techIds
+    .map(id => TECH_CATALOG.find(t => t.id === id)?.skillSlug)
+    .filter(Boolean);
+  
+  if (slugs.length === 0) return null;
+  return `https://skillicons.dev/icons?i=${slugs.join(',')}&theme=${theme}`;
 }
 
 
@@ -984,6 +967,117 @@ const TEMPLATES = [
 
 
 /**
+ * Readmify - GitHub Public API Service
+ * Free, zero-auth public repository and language detection
+ */
+
+const GITHUB_TO_TECH_MAP = {
+  'typescript': { id: 'typescript', skill: 'ts' },
+  'javascript': { id: 'javascript', skill: 'js' },
+  'python': { id: 'python', skill: 'py' },
+  'rust': { id: 'rust', skill: 'rust' },
+  'go': { id: 'go', skill: 'go' },
+  'java': { id: 'java', skill: 'java' },
+  'c++': { id: 'cpp', skill: 'cpp' },
+  'c': { id: 'c', skill: 'c' },
+  'c#': { id: 'csharp', skill: 'cs' },
+  'php': { id: 'php', skill: 'php' },
+  'swift': { id: 'swift', skill: 'swift' },
+  'kotlin': { id: 'kotlin', skill: 'kotlin' },
+  'dart': { id: 'dart', skill: 'dart' },
+  'ruby': { id: 'ruby', skill: 'ruby' },
+  'html': { id: 'html5', skill: 'html' },
+  'css': { id: 'css3', skill: 'css' },
+  'scss': { id: 'sass', skill: 'sass' },
+  'shell': { id: 'shell', skill: 'bash' },
+  'vue': { id: 'vue', skill: 'vue' },
+  'svelte': { id: 'svelte', skill: 'svelte' },
+  'solidity': { id: 'solidity', skill: 'solidity' },
+  'elixir': { id: 'elixir', skill: 'elixir' },
+  'lua': { id: 'lua', skill: 'lua' },
+  'r': { id: 'r', skill: 'r' },
+  'scala': { id: 'scala', skill: 'scala' },
+  'dockerfile': { id: 'docker', skill: 'docker' }
+};
+
+function parseGitHubRepoInput(input) {
+  if (!input || typeof input !== 'string') return null;
+  const clean = input.trim().replace(/\/$/, '');
+
+  // Format: https://github.com/owner/repo or http://...
+  const urlMatch = clean.match(/github\.com\/([^\/]+)\/([^\/\?#]+)/);
+  if (urlMatch) {
+    return { owner: urlMatch[1], repo: urlMatch[2].replace(/\.git$/, '') };
+  }
+
+  // Format: owner/repo
+  const slashMatch = clean.match(/^([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/);
+  if (slashMatch) {
+    return { owner: slashMatch[1], repo: slashMatch[2].replace(/\.git$/, '') };
+  }
+
+  return null;
+}
+
+async function fetchGitHubRepoDetails(owner, repo) {
+  try {
+    const [repoRes, langRes] = await Promise.all([
+      fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`),
+      fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`)
+    ]);
+
+    if (!repoRes.ok) {
+      if (repoRes.status === 404) {
+        throw new Error(`Repository "${owner}/${repo}" was not found or is private.`);
+      } else if (repoRes.status === 403) {
+        throw new Error('GitHub API rate limit exceeded. Please try again in a few minutes.');
+      }
+      throw new Error(`GitHub API returned status ${repoRes.status}`);
+    }
+
+    const repoData = await repoRes.json();
+    const langData = langRes.ok ? await langRes.json() : {};
+
+    // Calculate language percentages
+    const totalBytes = Object.values(langData).reduce((a, b) => a + b, 0);
+    const languages = [];
+    const matchedTechIds = [];
+    const skillSlugs = [];
+
+    for (const [langName, bytes] of Object.entries(langData)) {
+      const pct = totalBytes > 0 ? Math.round((bytes / totalBytes) * 100) : 0;
+      languages.push({ name: langName, bytes, percentage: pct });
+
+      const mapped = GITHUB_TO_TECH_MAP[langName.toLowerCase()];
+      if (mapped) {
+        matchedTechIds.push(mapped.id);
+        if (mapped.skill) skillSlugs.push(mapped.skill);
+      }
+    }
+
+    return {
+      owner: repoData.owner?.login || owner,
+      repo: repoData.name || repo,
+      description: repoData.description || '',
+      stars: repoData.stargazers_count || 0,
+      forks: repoData.forks_count || 0,
+      openIssues: repoData.open_issues_count || 0,
+      license: repoData.license?.spdx_id || repoData.license?.name || 'MIT',
+      topics: repoData.topics || [],
+      defaultBranch: repoData.default_branch || 'main',
+      homepage: repoData.homepage || '',
+      languages,
+      matchedTechIds,
+      skillSlugs
+    };
+  } catch (err) {
+    console.error('Failed to fetch from GitHub API:', err);
+    throw err;
+  }
+}
+
+
+/**
  * Readmify - Export & Notification Utilities
  */
 
@@ -1077,6 +1171,7 @@ function fireConfetti() {
 /**
  * Readmify - Markdown Generator Engine
  * Converts the structured sections state into clean GitHub Flavored Markdown
+ * Supports SkillIcons, Shields.io, GitHub Stats, Contributors, and Star History
  */
 
 function generateMarkdown(sections) {
@@ -1096,7 +1191,6 @@ function generateMarkdown(sections) {
     }
   }
 
-  // Join sections with double newlines
   return chunks.join('\n\n') + '\n';
 }
 
@@ -1108,7 +1202,7 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.HERO: {
       const isCentered = data.align === 'center';
       const logoTag = data.showLogo && data.logoUrl
-        ? `<img src="${data.logoUrl}" alt="${data.projectName} Logo" width="120" />\n  <br/>`
+        ? `<img src="${data.logoUrl}" alt="${data.projectName} Banner" width="100%" style="border-radius: 8px; margin-bottom: 1rem;" />\n  <br/>`
         : '';
 
       if (isCentered) {
@@ -1118,7 +1212,7 @@ function generateSectionMarkdown(section, context) {
   <p>${data.tagline || ''}</p>
 </div>`;
       } else {
-        const logo = data.showLogo && data.logoUrl ? `![Logo](${data.logoUrl})\n\n` : '';
+        const logo = data.showLogo && data.logoUrl ? `![Banner](${data.logoUrl})\n\n` : '';
         return `${logo}# ${data.projectName || 'Project Title'}\n\n> ${data.tagline || ''}`;
       }
     }
@@ -1164,19 +1258,36 @@ function generateSectionMarkdown(section, context) {
     }
 
     case SECTION_TYPES.TECH_STACK: {
-      const style = data.style || 'for-the-badge';
-      const items = (data.technologies || [])
-        .map(id => TECH_CATALOG.find(t => t.id === id))
-        .filter(Boolean);
+      const style = data.style || 'skillicons';
+      const techIds = data.technologies || [];
 
-      if (items.length === 0) {
+      if (techIds.length === 0) {
         return `## ${data.heading || 'Built With'}\n\n*(No technologies selected yet)*`;
       }
 
-      const badgeMarkdown = items
-        .map(item => `![${item.name}](${getBadgeUrl(item, style)})`)
-        .join(' ');
+      // 1. SkillIcons Style
+      if (style === 'skillicons') {
+        const skillUrl = getSkillIconsUrl(techIds, 'dark');
+        if (skillUrl) {
+          return `## ${data.heading || 'Built With'}\n\n<p align="center">\n  <a href="https://skillicons.dev">\n    <img src="${skillUrl}" alt="Tech Stack" />\n  </a>\n</p>`;
+        }
+      }
 
+      // 2. GitHub Top Languages Card
+      if (style === 'github-stats') {
+        return `## ${data.heading || 'Languages & Tech'}\n\n<p align="center">\n  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${repoOwner}&repo=${repoName}&layout=compact&theme=radical" alt="Top Languages" />\n</p>`;
+      }
+
+      // 3. Devicon Logo Grid
+      if (style === 'devicon-grid') {
+        const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+        const rows = items.map(item => `  <img src="https://cdn.simpleicons.org/${item.logo}" alt="${item.name}" width="36" height="36" style="margin: 6px;" title="${item.name}" />`).join('\n');
+        return `## ${data.heading || 'Built With'}\n\n<p align="center">\n${rows}\n</p>`;
+      }
+
+      // 4. Default: Shields.io Badges
+      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+      const badgeMarkdown = items.map(item => `![${item.name}](${getBadgeUrl(item, style)})`).join(' ');
       return `## ${data.heading || 'Built With'}\n\n${badgeMarkdown}`;
     }
 
@@ -1184,7 +1295,7 @@ function generateSectionMarkdown(section, context) {
       const items = data.items || [];
       if (items.length === 0) return '';
       const list = items.map(item => {
-        const icon = item.icon ? `${item.icon} ` : '? ';
+        const icon = item.icon ? `${item.icon} ` : '✨ ';
         return `- ${icon}**${item.title || ''}**: ${item.desc || ''}`;
       }).join('\n');
 
@@ -1194,8 +1305,8 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.DEMO: {
       const caption = data.caption || 'Project Preview';
       const imageMd = data.imageUrl ? `![${caption}](${data.imageUrl})` : '';
-      const linkMd = data.liveUrl ? `\n\n?? **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
-      return `## ${data.heading || 'Demo'}\n\n${imageMd}${linkMd}`;
+      const linkMd = data.liveUrl ? `\n\n🔗 **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
+      return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${linkMd}`;
     }
 
     case SECTION_TYPES.INSTALLATION: {
@@ -1216,8 +1327,8 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.ENV_VARS: {
       const vars = data.variables || [];
       if (vars.length === 0) return '';
-      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? '? Yes' : '? No'} |`).join('\n');
-      return `## ${data.heading || 'Environment Variables'}\n\nTo run this project, you will need to add the following environment variables to your \`.env\` file:\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
+      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? '✅ Yes' : '❌ No'} |`).join('\n');
+      return `## ${data.heading || 'Environment Variables'}\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
     }
 
     case SECTION_TYPES.USAGE: {
@@ -1235,9 +1346,10 @@ function generateSectionMarkdown(section, context) {
     }
 
     case SECTION_TYPES.CONTRIBUTING: {
-      const guide = data.guidelines || 'Contributions are welcome! Please follow the steps below:';
+      const guide = data.guidelines || 'Contributions are what make open source great!';
       const steps = (data.steps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
-      return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}`;
+      const contribAvatars = `<p align="center">\n  <a href="https://github.com/${repoOwner}/${repoName}/graphs/contributors">\n    <img src="https://contrib.rocks/image?repo=${repoOwner}/${repoName}" alt="Contributors" />\n  </a>\n</p>`;
+      return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}\n\n${contribAvatars}`;
     }
 
     case SECTION_TYPES.LICENSE: {
@@ -1262,7 +1374,7 @@ function generateSectionMarkdown(section, context) {
       const badgeStr = badges.length > 0 ? `\n\n${badges.join(' ')}` : '';
       const emailStr = data.email ? `\n\nEmail: [${data.email}](mailto:${data.email})` : '';
 
-      return `## ${data.heading || 'Author'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
+      return `## ${data.heading || 'Author & Acknowledgements'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
     }
 
     case SECTION_TYPES.CUSTOM: {
@@ -1561,6 +1673,237 @@ const store = new ReadmifyStore();
 
 
 /**
+ * Readmify - Photo, Banner & Screenshot Hub (shadcn/ui style)
+ * Local image uploader, curated developer banners, and multi-screenshot galleries
+ */
+
+const BANNER_PRESETS = [
+  {
+    id: 'minimal-grid',
+    title: 'Minimal Dark Grid',
+    category: 'Minimal',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'cyber-circuit',
+    title: 'Cyber Circuit Glow',
+    category: 'Cyberpunk',
+    url: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'cosmic-mesh',
+    title: 'Deep Cosmic Gradient',
+    category: 'Gradients',
+    url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1200&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'modern-abstract',
+    title: 'Modern Purple Wave',
+    category: 'Abstract',
+    url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1200&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'terminal-code',
+    title: 'Developer Terminal',
+    category: 'Code',
+    url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1200&auto=format&fit=crop&q=80'
+  },
+  {
+    id: 'blueprint',
+    title: 'System Architecture',
+    category: 'Tech',
+    url: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&auto=format&fit=crop&q=80'
+  }
+];
+
+function renderPhotoModal(targetField = 'hero') {
+  let modal = document.getElementById('photo-hub-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'photo-hub-modal';
+    modal.className = 'fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden';
+    document.body.appendChild(modal);
+  }
+
+  modal.innerHTML = `
+    <div class="bg-card border border-border rounded-lg w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 border-b border-border flex items-center justify-between bg-card">
+        <div>
+          <h3 class="text-sm font-semibold text-foreground flex items-center gap-2">
+            <span>🖼️</span> Photos, Banners & Screenshots
+          </h3>
+          <p class="text-[11px] text-muted-foreground mt-0.5">Choose a curated banner preset, or upload your own screenshots</p>
+        </div>
+        <button id="close-photo-modal-btn" class="p-1 text-muted-foreground hover:text-foreground text-xs">✕</button>
+      </div>
+
+      <!-- Tab Controls -->
+      <div class="px-5 py-2.5 border-b border-border bg-background/50 flex gap-2">
+        <button id="tab-banners-btn" class="px-3 py-1 text-xs font-medium rounded-md bg-primary text-primary-foreground shadow-xs">
+          Banner Presets
+        </button>
+        <button id="tab-upload-btn" class="px-3 py-1 text-xs font-medium rounded-md bg-muted text-muted-foreground hover:text-foreground">
+          Local Image Upload
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="p-5 overflow-y-auto flex-1 space-y-4 bg-background">
+        <!-- BANNERS VIEW -->
+        <div id="view-banners" class="space-y-3">
+          <p class="text-xs text-muted-foreground">Select a high-resolution banner to automatically embed at the top of your project:</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            ${BANNER_PRESETS.map(preset => `
+              <div class="banner-card group relative border border-border rounded-md overflow-hidden bg-card cursor-pointer hover:border-foreground/50 transition select-none" data-url="${preset.url}">
+                <div class="h-24 w-full bg-cover bg-center" style="background-image: url('${preset.url}')"></div>
+                <div class="p-2.5 flex items-center justify-between bg-card">
+                  <span class="text-xs font-medium text-foreground">${preset.title}</span>
+                  <span class="text-[10px] text-muted-foreground group-hover:text-foreground transition">Use Preset →</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- UPLOAD VIEW -->
+        <div id="view-upload" class="hidden space-y-4">
+          <p class="text-xs text-muted-foreground">Drag & drop an image or screenshot from your device:</p>
+          <div id="drag-drop-zone" class="border-2 border-dashed border-border hover:border-zinc-500 rounded-lg p-8 text-center bg-card/40 cursor-pointer transition flex flex-col items-center justify-center gap-2">
+            <span class="text-2xl">📸</span>
+            <p class="text-xs font-medium text-foreground">Click to browse or drop an image file here</p>
+            <p class="text-[11px] text-muted-foreground">Supports PNG, JPG, GIF, SVG, WebP</p>
+            <input type="file" id="photo-file-input" accept="image/*" class="hidden" />
+          </div>
+
+          <div id="uploaded-preview-box" class="hidden p-3 bg-card border border-border rounded-md space-y-2">
+            <span class="text-[11px] font-medium text-foreground">Image Loaded:</span>
+            <img id="uploaded-img-preview" src="" class="max-h-40 rounded object-contain border border-border mx-auto" />
+            <div class="flex justify-end gap-2 pt-2">
+              <button id="apply-uploaded-hero-btn" class="btn-primary text-xs px-3 py-1.5">
+                Set as Project Logo / Banner
+              </button>
+              <button id="apply-uploaded-demo-btn" class="btn-secondary text-xs px-3 py-1.5">
+                Set as Preview Demo
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  modal.classList.remove('hidden');
+
+  modal.querySelector('#close-photo-modal-btn').addEventListener('click', () => modal.classList.add('hidden'));
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.add('hidden');
+  });
+
+  // Tab switching
+  const tabBannersBtn = modal.querySelector('#tab-banners-btn');
+  const tabUploadBtn = modal.querySelector('#tab-upload-btn');
+  const viewBanners = modal.querySelector('#view-banners');
+  const viewUpload = modal.querySelector('#view-upload');
+
+  tabBannersBtn.addEventListener('click', () => {
+    tabBannersBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-primary text-primary-foreground shadow-xs';
+    tabUploadBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-muted text-muted-foreground hover:text-foreground';
+    viewBanners.classList.remove('hidden');
+    viewUpload.classList.add('hidden');
+  });
+
+  tabUploadBtn.addEventListener('click', () => {
+    tabUploadBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-primary text-primary-foreground shadow-xs';
+    tabBannersBtn.className = 'px-3 py-1 text-xs font-medium rounded-md bg-muted text-muted-foreground hover:text-foreground';
+    viewUpload.classList.remove('hidden');
+    viewBanners.classList.add('hidden');
+  });
+
+  // Preset Selection
+  modal.querySelectorAll('.banner-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const url = card.dataset.url;
+      applyBannerUrl(url, targetField);
+      modal.classList.add('hidden');
+      showToast('Banner applied successfully!', 'success');
+    });
+  });
+
+  // File drop
+  const dropZone = modal.querySelector('#drag-drop-zone');
+  const fileInput = modal.querySelector('#photo-file-input');
+  const previewBox = modal.querySelector('#uploaded-preview-box');
+  const previewImg = modal.querySelector('#uploaded-img-preview');
+  let loadedDataUrl = '';
+
+  dropZone.addEventListener('click', () => fileInput.click());
+
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-zinc-400');
+  });
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-zinc-400');
+  });
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-zinc-400');
+    if (e.dataTransfer.files?.length > 0) {
+      handleImageFile(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    if (e.target.files?.length > 0) {
+      handleImageFile(e.target.files[0]);
+    }
+  });
+
+  function handleImageFile(file) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      loadedDataUrl = evt.target.result;
+      previewImg.src = loadedDataUrl;
+      previewBox.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  modal.querySelector('#apply-uploaded-hero-btn').addEventListener('click', () => {
+    if (loadedDataUrl) {
+      applyBannerUrl(loadedDataUrl, 'hero');
+      modal.classList.add('hidden');
+      showToast('Uploaded image set as Project Banner!', 'success');
+    }
+  });
+
+  modal.querySelector('#apply-uploaded-demo-btn').addEventListener('click', () => {
+    if (loadedDataUrl) {
+      applyBannerUrl(loadedDataUrl, 'demo');
+      modal.classList.add('hidden');
+      showToast('Uploaded image set as Demo Preview!', 'success');
+    }
+  });
+}
+
+function applyBannerUrl(url, targetField) {
+  if (targetField === 'demo') {
+    const demoSec = store.getState().sections.find(s => s.type === SECTION_TYPES.DEMO);
+    if (demoSec) {
+      store.updateSectionData(demoSec.id, { imageUrl: url });
+      store.toggleSection(demoSec.id, true);
+    }
+  } else {
+    const heroSec = store.getState().sections.find(s => s.type === SECTION_TYPES.HERO);
+    if (heroSec) {
+      store.updateSectionData(heroSec.id, { logoUrl: url, showLogo: true });
+    }
+  }
+}
+
+
+/**
  * Readmify - Interactive Tech Stack Badge Picker Modal (shadcn/ui style)
  */
 
@@ -1639,8 +1982,8 @@ function renderTechPickerModal() {
     `;
     document.body.appendChild(modal);
 
-    modal.querySelector('#close-tech-picker-btn').addEventListener('click', closeTechPicker);
-    modal.querySelector('#apply-tech-picker-btn').addEventListener('click', closeTechPicker);
+    modal.querySelector('#close-tech-picker-btn')?.addEventListener('click', closeTechPicker);
+    modal.querySelector('#apply-tech-picker-btn')?.addEventListener('click', closeTechPicker);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeTechPicker();
     });
@@ -1769,7 +2112,7 @@ function toggleTechItem(techId) {
 
 
 /**
- * Readmify - Dynamic Section Form Editor (shadcn/ui style)
+ * Readmify - Dynamic Section Form Editor (v2 with GitHub Auto-Detect & Multi-Style)
  */
 
 function renderSectionEditor(container) {
@@ -1817,8 +2160,8 @@ function renderSectionEditor(container) {
       </div>
 
       <!-- Form Body -->
-      <div id="section-form-fields" class="space-y-3.5">
-        ${renderFormFieldsByType(type, data)}
+      <div id="section-form-fields" class="space-y-4">
+        ${renderFormFieldsByType(type, data, state)}
       </div>
     </div>
   `;
@@ -1842,10 +2185,27 @@ function renderSectionEditor(container) {
   attachFieldListeners(container, id, type, data);
 }
 
-function renderFormFieldsByType(type, data) {
+function renderFormFieldsByType(type, data, state) {
   switch (type) {
     case SECTION_TYPES.HERO:
       return `
+        <!-- GitHub Auto-Detect Banner -->
+        <div class="p-3 bg-card border border-border rounded-lg space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <span>⚡</span> Free GitHub API Auto-Detect
+            </span>
+            <span class="text-[10px] text-muted-foreground">Zero auth required</span>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="github-autodetect-input" value="${data.repoOwner && data.repoName ? data.repoOwner + '/' + data.repoName : ''}" placeholder="Paste repo (e.g. facebook/react)" class="form-input text-xs flex-1" />
+            <button id="trigger-autodetect-btn" class="btn-primary text-xs px-3 py-1.5 whitespace-nowrap">
+              Fetch Info
+            </button>
+          </div>
+          <p class="text-[11px] text-muted-foreground">Automatically pulls languages, stars, description, license & topics.</p>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-foreground mb-1">Project Name</label>
@@ -1867,7 +2227,7 @@ function renderFormFieldsByType(type, data) {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Username / Org</label>
+            <label class="block text-xs font-medium text-foreground mb-1">GitHub Owner / Org</label>
             <input type="text" data-field="repoOwner" value="${data.repoOwner || ''}" class="form-input" placeholder="e.g. yourusername" />
           </div>
           <div>
@@ -1876,15 +2236,119 @@ function renderFormFieldsByType(type, data) {
           </div>
         </div>
 
+        <!-- Banner / Photo Section -->
         <div class="p-3.5 bg-card border border-border rounded-md space-y-2.5">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Display Logo Banner</label>
-            <input type="checkbox" data-field="showLogo" ${data.showLogo ? 'checked' : ''} class="rounded border-border text-foreground" />
+            <label class="text-xs font-medium text-foreground">Project Banner / Header Image</label>
+            <button id="open-banner-hub-btn" class="text-xs font-medium text-foreground hover:underline flex items-center gap-1">
+              <span>🖼️</span> Pick Preset / Upload
+            </button>
           </div>
-          <div id="logo-url-container" class="${data.showLogo ? '' : 'hidden'}">
-            <label class="block text-[11px] text-muted-foreground mb-1">Logo Image URL</label>
-            <input type="text" data-field="logoUrl" value="${data.logoUrl || ''}" class="form-input text-xs" placeholder="https://..." />
+          <input type="text" data-field="logoUrl" value="${data.logoUrl || ''}" class="form-input text-xs" placeholder="https://... image banner URL" />
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="show-logo-cb" data-field="showLogo" ${data.showLogo ? 'checked' : ''} class="rounded border-border" />
+            <label for="show-logo-cb" class="text-[11px] text-muted-foreground cursor-pointer">Display banner image in README</label>
           </div>
+        </div>
+      `;
+
+    case SECTION_TYPES.TECH_STACK: {
+      const selected = (data.technologies || [])
+        .map(id => TECH_CATALOG.find(t => t.id === id))
+        .filter(Boolean);
+      const style = data.style || 'skillicons';
+
+      return `
+        <!-- Language & Tech Style Switcher -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-medium text-foreground">Visual Style</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'skillicons' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="skillicons">
+              <span class="block font-medium">SkillIcons</span>
+              <span class="text-[10px] text-muted-foreground">Curved icon grid</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'for-the-badge' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="for-the-badge">
+              <span class="block font-medium">Shields Bold</span>
+              <span class="text-[10px] text-muted-foreground">Badge chips</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'github-stats' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="github-stats">
+              <span class="block font-medium">Language Card</span>
+              <span class="text-[10px] text-muted-foreground">Dynamic % graph</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'devicon-grid' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="devicon-grid">
+              <span class="block font-medium">Logo Grid</span>
+              <span class="text-[10px] text-muted-foreground">Centered icons</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <div>
+            <label class="block text-xs font-medium text-foreground">Selected Technologies & Languages</label>
+            <p class="text-[11px] text-muted-foreground">${selected.length} items configured</p>
+          </div>
+          <button id="open-tech-picker-btn" class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5">
+            <span>✨</span> Browse & Add Badges
+          </button>
+        </div>
+
+        <!-- Selected Badges Preview -->
+        <div class="p-3.5 bg-card border border-border rounded-md min-h-[90px] flex flex-wrap gap-1.5 items-center">
+          ${selected.length > 0 
+            ? selected.map(item => `
+                <div class="flex items-center gap-1.5 bg-muted border border-border px-2 py-1 rounded">
+                  <img src="${getBadgeUrl(item, 'flat')}" alt="${item.name}" class="h-3.5" />
+                  <button class="remove-tech-chip text-muted-foreground hover:text-rose-400 text-xs ml-1" data-tech-id="${item.id}">×</button>
+                </div>
+              `).join('')
+            : '<p class="text-xs text-muted-foreground py-3 w-full text-center">No technologies selected yet. Click "Browse & Add Badges" above or auto-detect from GitHub!</p>'
+          }
+        </div>
+      `;
+    }
+
+    case SECTION_TYPES.DEMO:
+      return `
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
+          <input type="text" data-field="heading" value="${data.heading || 'Preview & Screenshots'}" class="form-input" />
+        </div>
+
+        <div class="p-3.5 bg-card border border-border rounded-md space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-medium text-foreground">Demo Image / Screenshot</label>
+            <button id="open-demo-photo-btn" class="text-xs font-medium text-foreground hover:underline flex items-center gap-1">
+              <span>📸</span> Upload Screenshot / Presets
+            </button>
+          </div>
+          <input type="text" data-field="imageUrl" value="${data.imageUrl || ''}" class="form-input text-xs" placeholder="https://raw.githubusercontent.com/.../screenshot.png" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Caption</label>
+            <input type="text" data-field="caption" value="${data.caption || ''}" class="form-input" placeholder="App Walkthrough" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Live Demo URL</label>
+            <input type="text" data-field="liveUrl" value="${data.liveUrl || ''}" class="form-input" placeholder="https://myapp.vercel.app" />
+          </div>
+        </div>
+      `;
+
+    case SECTION_TYPES.CONTRIBUTING:
+      return `
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
+          <input type="text" data-field="heading" value="${data.heading || 'Contributing'}" class="form-input" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Welcome Message</label>
+          <textarea data-field="guidelines" rows="3" class="form-input text-xs">${data.guidelines || ''}</textarea>
+        </div>
+        <div class="p-3 bg-card border border-border rounded-md text-xs text-muted-foreground flex items-center gap-2">
+          <span>👥</span>
+          <span>Includes automated live contributor avatars from <strong class="text-foreground">contrib.rocks</strong></span>
         </div>
       `;
 
@@ -1941,36 +2405,6 @@ function renderFormFieldsByType(type, data) {
         </div>
       `;
 
-    case SECTION_TYPES.TECH_STACK: {
-      const selected = (data.technologies || [])
-        .map(id => TECH_CATALOG.find(t => t.id === id))
-        .filter(Boolean);
-
-      return `
-        <div class="flex items-center justify-between">
-          <div>
-            <label class="block text-xs font-medium text-foreground">Selected Technologies</label>
-            <p class="text-[11px] text-muted-foreground">${selected.length} technologies added</p>
-          </div>
-          <button id="open-tech-picker-btn" class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5">
-            <span>✨</span> Browse & Add Badges
-          </button>
-        </div>
-
-        <div class="p-3.5 bg-card border border-border rounded-md min-h-[90px] flex flex-wrap gap-1.5 items-center">
-          ${selected.length > 0 
-            ? selected.map(item => `
-                <div class="flex items-center gap-1.5 bg-muted border border-border px-2 py-1 rounded">
-                  <img src="${getBadgeUrl(item, 'flat')}" alt="${item.name}" class="h-3.5" />
-                  <button class="remove-tech-chip text-muted-foreground hover:text-rose-400 text-xs ml-1" data-tech-id="${item.id}">×</button>
-                </div>
-              `).join('')
-            : '<p class="text-xs text-muted-foreground py-3 w-full text-center">No technologies selected yet. Click "Browse & Add Badges" above!</p>'
-          }
-        </div>
-      `;
-    }
-
     case SECTION_TYPES.FEATURES:
       return `
         <div>
@@ -1997,28 +2431,6 @@ function renderFormFieldsByType(type, data) {
                 <button class="remove-feature-btn p-1 text-muted-foreground hover:text-rose-400 transition" title="Delete feature">✕</button>
               </div>
             `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.DEMO:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Preview & Demo'}" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Screenshot / GIF URL</label>
-          <input type="text" data-field="imageUrl" value="${data.imageUrl || ''}" class="form-input" placeholder="https://..." />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Caption</label>
-            <input type="text" data-field="caption" value="${data.caption || ''}" class="form-input" placeholder="Dashboard Walkthrough" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Live Demo URL</label>
-            <input type="text" data-field="liveUrl" value="${data.liveUrl || ''}" class="form-input" placeholder="https://..." />
           </div>
         </div>
       `;
@@ -2119,10 +2531,6 @@ function renderFormFieldsByType(type, data) {
           <label class="block text-xs font-medium text-foreground mb-1">Code Example</label>
           <textarea data-field="code" rows="5" class="form-input font-mono text-xs leading-relaxed" placeholder="// Code usage...">${data.code || ''}</textarea>
         </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Callout Note (Optional)</label>
-          <input type="text" data-field="note" value="${data.note || ''}" class="form-input" placeholder="Optional note" />
-        </div>
       `;
 
     case SECTION_TYPES.ROADMAP:
@@ -2131,7 +2539,6 @@ function renderFormFieldsByType(type, data) {
           <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
           <input type="text" data-field="heading" value="${data.heading || 'Roadmap'}" class="form-input" />
         </div>
-
         <div class="space-y-2.5">
           <div class="flex items-center justify-between">
             <label class="text-xs font-medium text-foreground">Roadmap Milestones</label>
@@ -2139,7 +2546,6 @@ function renderFormFieldsByType(type, data) {
               + Add Task
             </button>
           </div>
-
           <div id="roadmap-tasks-list" class="space-y-1.5">
             ${(data.tasks || []).map((t, idx) => `
               <div class="p-2 bg-card border border-border rounded-md flex items-center gap-2" data-task-index="${idx}">
@@ -2149,18 +2555,6 @@ function renderFormFieldsByType(type, data) {
               </div>
             `).join('')}
           </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.CONTRIBUTING:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Contributing'}" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Welcome Message</label>
-          <textarea data-field="guidelines" rows="3" class="form-input text-xs">${data.guidelines || ''}</textarea>
         </div>
       `;
 
@@ -2195,7 +2589,7 @@ function renderFormFieldsByType(type, data) {
       return `
         <div>
           <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Author & Contact'}" class="form-input" />
+          <input type="text" data-field="heading" value="${data.heading || 'Author & Acknowledgements'}" class="form-input" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -2247,6 +2641,7 @@ function renderFormFieldsByType(type, data) {
 }
 
 function attachFieldListeners(container, sectionId, type, currentData) {
+  // Generic inputs
   container.querySelectorAll('[data-field]').forEach(el => {
     const field = el.dataset.field;
     const isCheckbox = el.type === 'checkbox';
@@ -2254,16 +2649,89 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     el.addEventListener(isCheckbox ? 'change' : 'input', () => {
       const val = isCheckbox ? el.checked : el.value;
       store.updateSectionData(sectionId, { [field]: val });
-
-      if (field === 'showLogo') {
-        const logoContainer = container.querySelector('#logo-url-container');
-        if (logoContainer) {
-          logoContainer.className = val ? '' : 'hidden';
-        }
-      }
     });
   });
 
+  // GitHub Auto-Detect Trigger
+  const triggerAutoDetectBtn = container.querySelector('#trigger-autodetect-btn');
+  const autoDetectInput = container.querySelector('#github-autodetect-input');
+  if (triggerAutoDetectBtn && autoDetectInput) {
+    triggerAutoDetectBtn.addEventListener('click', async () => {
+      const parsed = parseGitHubRepoInput(autoDetectInput.value);
+      if (!parsed) {
+        showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
+        return;
+      }
+
+      triggerAutoDetectBtn.innerText = 'Fetching...';
+      triggerAutoDetectBtn.disabled = true;
+
+      try {
+        const info = await fetchGitHubRepoDetails(parsed.owner, parsed.repo);
+        store.batchUpdate(sections => {
+          const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
+          if (hero) {
+            hero.data.projectName = info.repo;
+            hero.data.tagline = info.description || hero.data.tagline;
+            hero.data.repoOwner = info.owner;
+            hero.data.repoName = info.repo;
+          }
+
+          const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+          if (tech && info.matchedTechIds.length > 0) {
+            // Merge detected languages
+            const set = new Set([...(tech.data.technologies || []), ...info.matchedTechIds]);
+            tech.data.technologies = Array.from(set);
+          }
+
+          const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE);
+          if (lic && info.license && info.license !== 'NOASSERTION') {
+            lic.data.type = info.license;
+            lic.data.holder = info.owner;
+          }
+
+          const auth = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
+          if (auth && info.owner) {
+            auth.data.github = info.owner;
+          }
+        });
+
+        const langCount = info.languages.length;
+        const langSummary = info.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
+        showToast(`Auto-detected ${langCount} languages! [${langSummary}]`, 'success');
+      } catch (err) {
+        showToast(err.message || 'Failed to fetch from GitHub API', 'error');
+      } finally {
+        triggerAutoDetectBtn.innerText = 'Fetch Info';
+        triggerAutoDetectBtn.disabled = false;
+      }
+    });
+  }
+
+  // Photo / Banner Hub Trigger
+  const openBannerBtn = container.querySelector('#open-banner-hub-btn');
+  if (openBannerBtn) {
+    openBannerBtn.addEventListener('click', () => {
+      renderPhotoModal('hero');
+    });
+  }
+
+  const openDemoPhotoBtn = container.querySelector('#open-demo-photo-btn');
+  if (openDemoPhotoBtn) {
+    openDemoPhotoBtn.addEventListener('click', () => {
+      renderPhotoModal('demo');
+    });
+  }
+
+  // Tech Style Switcher buttons
+  container.querySelectorAll('.tech-style-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const style = btn.dataset.style;
+      store.updateSectionData(sectionId, { style });
+    });
+  });
+
+  // Open Tech Stack Modal
   const openTechBtn = container.querySelector('#open-tech-picker-btn');
   if (openTechBtn) {
     openTechBtn.addEventListener('click', () => {
@@ -2271,6 +2739,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Remove individual tech chip
   container.querySelectorAll('.remove-tech-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       const techId = btn.dataset.techId;
@@ -2280,6 +2749,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   });
 
+  // Feature items
   const addFeatureBtn = container.querySelector('#add-feature-item-btn');
   if (addFeatureBtn) {
     addFeatureBtn.addEventListener('click', () => {
@@ -2316,6 +2786,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Installation steps
   const addStepBtn = container.querySelector('#add-install-step-btn');
   if (addStepBtn) {
     addStepBtn.addEventListener('click', () => {
@@ -2351,6 +2822,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Env vars
   const addVarBtn = container.querySelector('#add-env-var-btn');
   if (addVarBtn) {
     addVarBtn.addEventListener('click', () => {
@@ -2388,6 +2860,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Roadmap tasks
   const addTaskBtn = container.querySelector('#add-roadmap-task-btn');
   if (addTaskBtn) {
     addTaskBtn.addEventListener('click', () => {
@@ -2539,7 +3012,7 @@ function renderWizardStep() {
     </div>
   `;
 
-  modal.querySelector('#close-wizard-btn').addEventListener('click', closeWizard);
+  modal.querySelector('#close-wizard-btn')?.addEventListener('click', closeWizard);
 
   const prevBtn = modal.querySelector('#wizard-prev-btn');
   if (prevBtn) {
@@ -2852,8 +3325,8 @@ function applyWizardDataToStore() {
 
 
 /**
- * Readmify - Main Application Controller
- * Coordinates store state, sidebar, editor forms, preview rendering, and export actions
+ * Readmify - Main Application Controller (v2)
+ * Coordinates store state, sidebar, editor forms, preview rendering, GitHub API, and export actions
  */
 
 // DOM Elements
@@ -2862,12 +3335,6 @@ let sectionEditorContainer;
 let previewBody;
 let rawMarkdownTextarea;
 let currentMarkdown = '';
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
-} else {
-  initApp();
-}
 
 function initApp() {
   sectionListContainer = document.getElementById('section-list-items');
@@ -2910,30 +3377,28 @@ function renderSidebar(state) {
     const isActive = sec.id === activeSectionId;
     return `
       <div 
-        class="section-item group flex items-center justify-between px-3 py-2.5 rounded-xl border cursor-pointer select-none transition-all ${
+        class="section-item group flex items-center justify-between px-2.5 py-2 rounded-md border cursor-pointer select-none transition-all ${
           isActive 
-            ? 'active bg-indigo-950/40 border-indigo-500 shadow-sm text-white' 
-            : 'bg-slate-900/40 border-slate-800/80 text-slate-300 hover:border-slate-700 hover:bg-slate-800/40'
+            ? 'active bg-muted border-border text-foreground font-medium shadow-xs' 
+            : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
         } ${!sec.enabled ? 'opacity-50' : ''}"
         data-section-id="${sec.id}"
         data-index="${idx}"
       >
-        <div class="flex items-center gap-2.5 flex-1 min-w-0">
-          <span class="text-slate-500 text-xs font-mono w-4">${idx + 1}</span>
-          <span class="text-xs font-medium truncate">${sec.title}</span>
+        <div class="flex items-center gap-2 flex-1 min-w-0">
+          <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
+          <span class="text-xs truncate">${sec.title}</span>
         </div>
 
-        <div class="flex items-center gap-1 opacity-80 group-hover:opacity-100">
-          <!-- Move Up/Down Controls -->
+        <div class="flex items-center gap-1 opacity-70 group-hover:opacity-100">
           <div class="flex items-center">
-            <button class="move-up-btn p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 text-[10px] ${idx === 0 ? 'invisible' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
-            <button class="move-down-btn p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 text-[10px] ${idx === sections.length - 1 ? 'invisible' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
+            <button class="move-up-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === 0 ? 'invisible' : ''}" title="Move Up" data-id="${sec.id}">▲</button>
+            <button class="move-down-btn p-1 text-muted-foreground hover:text-foreground rounded text-[10px] ${idx === sections.length - 1 ? 'invisible' : ''}" title="Move Down" data-id="${sec.id}">▼</button>
           </div>
 
-          <!-- Enable/Disable Toggle -->
           <input 
             type="checkbox" 
-            class="toggle-section-cb rounded bg-slate-800 border-slate-700 text-indigo-600 focus:ring-0 cursor-pointer ml-1.5" 
+            class="toggle-section-cb rounded border-border text-foreground focus:ring-0 cursor-pointer ml-1" 
             ${sec.enabled ? 'checked' : ''} 
             data-id="${sec.id}" 
             title="Toggle section visibility" 
@@ -2943,17 +3408,14 @@ function renderSidebar(state) {
     `;
   }).join('');
 
-  // Attach click to activate
   sectionListContainer.querySelectorAll('.section-item').forEach(el => {
     el.addEventListener('click', (e) => {
-      // Don't switch if clicking buttons or checkboxes
       if (e.target.closest('button') || e.target.closest('input')) return;
       const id = el.dataset.sectionId;
       store.setActiveSection(id);
     });
   });
 
-  // Attach move up / down
   sectionListContainer.querySelectorAll('.move-up-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2968,7 +3430,6 @@ function renderSidebar(state) {
     });
   });
 
-  // Attach checkbox toggle
   sectionListContainer.querySelectorAll('.toggle-section-cb').forEach(cb => {
     cb.addEventListener('change', (e) => {
       e.stopPropagation();
@@ -2976,7 +3437,6 @@ function renderSidebar(state) {
     });
   });
 
-  // Attach Add Custom Section
   const addCustomBtn = document.getElementById('add-custom-sec-btn');
   if (addCustomBtn && !addCustomBtn.dataset.bound) {
     addCustomBtn.dataset.bound = 'true';
@@ -2988,7 +3448,6 @@ function renderSidebar(state) {
     });
   }
 
-  // Attach Reset to default
   const resetBtn = document.getElementById('reset-template-btn');
   if (resetBtn && !resetBtn.dataset.bound) {
     resetBtn.dataset.bound = 'true';
@@ -3005,14 +3464,11 @@ function renderSidebar(state) {
 function renderPreview(state) {
   currentMarkdown = generateMarkdown(state.sections);
 
-  // 1. Update rendered HTML
   if (previewBody) {
-    // Check GitHub theme class
     previewBody.className = `markdown-body ${state.previewTheme === 'light' ? 'github-light' : 'github-dark'}`;
 
     try {
       if (window.marked) {
-        // Configure marked with GFM tables and line breaks
         window.marked.setOptions({
           gfm: true,
           breaks: true
@@ -3029,17 +3485,14 @@ function renderPreview(state) {
     }
   }
 
-  // 2. Update Raw Code View
   if (rawMarkdownTextarea) {
     rawMarkdownTextarea.value = currentMarkdown;
   }
 
-  // 3. Update Health Score & Stats
   updateHealthAndStats(state.sections, currentMarkdown);
 }
 
 function updateHealthAndStats(sections, markdownText) {
-  // Stats
   const words = markdownText.trim() ? markdownText.trim().split(/\s+/).length : 0;
   const chars = markdownText.length;
   const readingTime = Math.max(1, Math.ceil(words / 200));
@@ -3052,7 +3505,6 @@ function updateHealthAndStats(sections, markdownText) {
   if (statsCharEl) statsCharEl.textContent = `${chars} chars`;
   if (statsTimeEl) statsTimeEl.textContent = `~${readingTime} min read`;
 
-  // Health Score
   const health = calculateReadmeScore(sections);
   const scoreBadge = document.getElementById('health-score-badge');
   const scoreText = document.getElementById('health-score-text');
@@ -3076,6 +3528,80 @@ function updateHealthAndStats(sections, markdownText) {
 
 // --- 3. NAVBAR CONTROLS ---
 function setupNavbarControls() {
+  // GitHub Auto-Detect Bar
+  const navGithubInput = document.getElementById('nav-github-input');
+  const navGithubDetectBtn = document.getElementById('nav-github-detect-btn');
+
+  async function handleNavAutoDetect() {
+    if (!navGithubInput) return;
+    const parsed = parseGitHubRepoInput(navGithubInput.value);
+    if (!parsed) {
+      showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
+      return;
+    }
+
+    navGithubDetectBtn.innerHTML = '<span>⏳</span> Fetching...';
+    navGithubDetectBtn.disabled = true;
+
+    try {
+      const info = await fetchGitHubRepoDetails(parsed.owner, parsed.repo);
+      store.batchUpdate(sections => {
+        const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
+        if (hero) {
+          hero.data.projectName = info.repo;
+          hero.data.tagline = info.description || hero.data.tagline;
+          hero.data.repoOwner = info.owner;
+          hero.data.repoName = info.repo;
+        }
+
+        const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+        if (tech && info.matchedTechIds.length > 0) {
+          const set = new Set([...(tech.data.technologies || []), ...info.matchedTechIds]);
+          tech.data.technologies = Array.from(set);
+        }
+
+        const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE);
+        if (lic && info.license && info.license !== 'NOASSERTION') {
+          lic.data.type = info.license;
+          lic.data.holder = info.owner;
+        }
+
+        const auth = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
+        if (auth && info.owner) {
+          auth.data.github = info.owner;
+        }
+      });
+
+      const langCount = info.languages.length;
+      const langSummary = info.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
+      fireConfetti();
+      showToast(`Detected ${info.repo}! [${langSummary}]`, 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to fetch from GitHub API', 'error');
+    } finally {
+      navGithubDetectBtn.innerHTML = '<span>⚡</span> Detect';
+      navGithubDetectBtn.disabled = false;
+    }
+  }
+
+  if (navGithubDetectBtn && navGithubInput) {
+    navGithubDetectBtn.addEventListener('click', handleNavAutoDetect);
+    navGithubInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleNavAutoDetect();
+      }
+    });
+  }
+
+  // Photo / Banner Hub Trigger
+  const navPhotosBtn = document.getElementById('nav-photos-btn');
+  if (navPhotosBtn) {
+    navPhotosBtn.addEventListener('click', () => {
+      renderPhotoModal('hero');
+    });
+  }
+
   // Wizard Launch Button
   const wizardBtn = document.getElementById('nav-wizard-btn');
   if (wizardBtn) {
@@ -3086,7 +3612,7 @@ function setupNavbarControls() {
   const templateSelect = document.getElementById('template-select');
   if (templateSelect) {
     templateSelect.innerHTML = `
-      <option value="" disabled selected>✨ Load 1-Click Starter...</option>
+      <option value="" disabled selected>✨ 1-Click Starters...</option>
       ${TEMPLATES.map(t => `
         <option value="${t.id}">${t.icon} ${t.name}</option>
       `).join('')}
@@ -3095,9 +3621,9 @@ function setupNavbarControls() {
     templateSelect.addEventListener('change', (e) => {
       const tplId = e.target.value;
       if (tplId) {
-        if (confirm('Load this template? Your current sections will be replaced.')) {
+        if (confirm('Load this starter template? Your current sections will be updated.')) {
           store.loadTemplate(tplId);
-          showToast(`Loaded ${TEMPLATES.find(t => t.id === tplId)?.name} template!`, 'success');
+          showToast(`Loaded ${TEMPLATES.find(t => t.id === tplId)?.name} starter!`, 'success');
         }
         templateSelect.value = '';
       }
@@ -3108,7 +3634,7 @@ function setupNavbarControls() {
   const copyBtn = document.getElementById('nav-copy-btn');
   if (copyBtn) {
     copyBtn.addEventListener('click', async () => {
-      await copyToClipboard(currentMarkdown, 'Markdown copied! Paste into GitHub README.md');
+      await copyToClipboard(currentMarkdown, 'Markdown copied! Paste directly into GitHub README.md');
     });
   }
 
@@ -3116,9 +3642,7 @@ function setupNavbarControls() {
   const downloadBtn = document.getElementById('nav-download-btn');
   if (downloadBtn) {
     downloadBtn.addEventListener('click', () => {
-      const hero = store.getState().sections.find(s => s.id === 'sec-hero');
-      const filename = 'README.md';
-      downloadReadmeFile(currentMarkdown, filename);
+      downloadReadmeFile(currentMarkdown, 'README.md');
     });
   }
 
@@ -3131,8 +3655,8 @@ function setupNavbarControls() {
       store.setPreviewTheme(nextTheme);
 
       themeToggleBtn.innerHTML = nextTheme === 'light' 
-        ? '<span>☀️ Light</span>' 
-        : '<span>🌙 Dark</span>';
+        ? '<span>☀️</span>' 
+        : '<span>🌙</span>';
       showToast(`Switched preview to GitHub ${nextTheme} mode`, 'info');
     });
   }
@@ -3152,9 +3676,9 @@ function setupViewModeSwitcher() {
       store.setViewMode(mode);
 
       modeBtns.forEach(b => {
-        b.className = 'view-mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-400 hover:text-white';
+        b.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all text-muted-foreground hover:text-foreground';
       });
-      btn.className = 'view-mode-btn px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-indigo-600 text-white shadow-sm';
+      btn.className = 'view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm';
 
       if (mode === 'split') {
         leftPane.classList.remove('hidden');
@@ -3179,7 +3703,6 @@ function setupViewModeSwitcher() {
     });
   });
 
-  // Allow live editing in raw markdown textarea
   if (rawMarkdownTextarea) {
     rawMarkdownTextarea.addEventListener('input', (e) => {
       currentMarkdown = e.target.value;
@@ -3232,7 +3755,6 @@ function setupImportModal() {
       return;
     }
 
-    // Add as a custom full markdown section or replace custom
     store.batchUpdate(sections => {
       sections.forEach(s => s.enabled = false);
       const customSec = sections.find(s => s.id === 'sec-imported');
@@ -3256,6 +3778,13 @@ function setupImportModal() {
     modal.classList.add('hidden');
     showToast('Imported README successfully!', 'success');
   });
+}
+
+// Robust DOM Ready execution
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
 }
 
 

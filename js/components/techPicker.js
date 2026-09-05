@@ -80,8 +80,8 @@ export function renderTechPickerModal() {
     `;
     document.body.appendChild(modal);
 
-    modal.querySelector('#close-tech-picker-btn').addEventListener('click', closeTechPicker);
-    modal.querySelector('#apply-tech-picker-btn').addEventListener('click', closeTechPicker);
+    modal.querySelector('#close-tech-picker-btn')?.addEventListener('click', closeTechPicker);
+    modal.querySelector('#apply-tech-picker-btn')?.addEventListener('click', closeTechPicker);
     modal.addEventListener('click', (e) => {
       if (e.target === modal) closeTechPicker();
     });

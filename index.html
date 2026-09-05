@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Readmify — GitHub README Builder</title>
-  <meta name="description" content="Minimal, beautiful, and ultra-easy GitHub README builder styled with shadcn/ui." />
+  <title>Readmify — Interactive GitHub README Builder</title>
+  <meta name="description" content="Ultra-easy, interactive GitHub README builder with free GitHub API language auto-detection, SkillIcons, and photo presets." />
   <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
 
   <!-- Tailwind CSS via CDN -->
@@ -55,7 +55,7 @@
 <body class="bg-background text-foreground flex flex-col h-screen overflow-hidden selection:bg-zinc-800 selection:text-zinc-100">
 
   <!-- TOP NAVBAR (shadcn Header) -->
-  <header class="h-13 border-b border-border bg-background/95 backdrop-blur px-4 py-2.5 flex items-center justify-between gap-3 select-none flex-shrink-0 z-30">
+  <header class="h-14 border-b border-border bg-background/95 backdrop-blur px-4 py-2.5 flex items-center justify-between gap-3 select-none flex-shrink-0 z-30">
     <!-- Brand Logo -->
     <div class="flex items-center gap-3">
       <div class="flex items-center gap-2">
@@ -67,19 +67,39 @@
           </svg>
         </div>
         <span class="text-sm font-semibold tracking-tight text-foreground">Readmify</span>
-        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded border border-border bg-muted text-muted-foreground">v1.0</span>
+        <span class="text-[10px] font-medium px-1.5 py-0.5 rounded border border-border bg-muted text-muted-foreground">v2.0</span>
       </div>
 
       <!-- Quick Template Selector -->
-      <div class="hidden md:block ml-3">
+      <div class="hidden xl:block ml-2">
         <select id="template-select" class="h-8 text-xs border border-border bg-background text-muted-foreground hover:text-foreground rounded-md px-2.5 focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer transition">
           <!-- Populated dynamically -->
         </select>
       </div>
     </div>
 
+    <!-- Free GitHub API Auto-Detect Bar (Center) -->
+    <div class="flex items-center flex-1 max-w-md mx-2">
+      <div class="relative w-full flex items-center">
+        <span class="absolute left-2.5 text-muted-foreground text-xs pointer-events-none">🐙</span>
+        <input 
+          type="text" 
+          id="nav-github-input" 
+          placeholder="Auto-detect repo (e.g. facebook/react)..." 
+          class="h-8 w-full pl-7 pr-20 text-xs border border-border bg-card text-foreground placeholder:text-muted-foreground rounded-md focus:outline-none focus:ring-1 focus:ring-ring transition"
+        />
+        <button 
+          id="nav-github-detect-btn" 
+          class="absolute right-1 h-6 px-2.5 bg-primary text-primary-foreground hover:bg-zinc-200 text-[11px] font-medium rounded transition flex items-center gap-1 shadow-xs"
+          title="Free GitHub API: Auto-fetch languages, description, topics, stars"
+        >
+          <span>⚡</span> Detect
+        </button>
+      </div>
+    </div>
+
     <!-- Center Segmented Tabs (shadcn Tabs) -->
-    <div class="hidden md:flex items-center bg-muted p-0.5 rounded-lg border border-border">
+    <div class="hidden lg:flex items-center bg-muted p-0.5 rounded-lg border border-border">
       <button class="view-mode-btn px-3 py-1 text-xs font-medium rounded-md transition-all bg-background text-foreground shadow-sm" data-mode="split">
         Split View
       </button>
@@ -91,21 +111,21 @@
       </button>
     </div>
 
-    <!-- Action Buttons (shadcn button variants) -->
+    <!-- Action Buttons -->
     <div class="flex items-center gap-2">
+      <!-- Photo Presets / Uploader -->
+      <button id="nav-photos-btn" class="h-8 px-2.5 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition hidden sm:inline-flex items-center gap-1.5" title="Curated Banners & Image Upload">
+        <span>🖼️</span> Banners
+      </button>
+
       <!-- 3-Min Wizard Button -->
-      <button id="nav-wizard-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:bg-zinc-200 transition flex items-center gap-1.5 shadow-sm">
+      <button id="nav-wizard-btn" class="h-8 px-3 text-xs font-medium rounded-md bg-muted text-foreground border border-border hover:bg-accent transition flex items-center gap-1.5 shadow-sm">
         <span>🪄</span> <span class="hidden sm:inline">3-Min</span> Wizard
       </button>
 
-      <!-- Import Button -->
-      <button id="nav-import-btn" class="h-8 px-2.5 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition hidden sm:inline-flex items-center gap-1">
-        <span>📥</span> Import
-      </button>
-
       <!-- Theme Switcher (Dark / Light) -->
-      <button id="theme-toggle-btn" class="h-8 px-2.5 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition flex items-center gap-1" title="Toggle GitHub Preview Light/Dark">
-        <span>🌙 Dark</span>
+      <button id="theme-toggle-btn" class="h-8 px-2 text-xs font-medium rounded-md border border-border bg-background hover:bg-accent text-muted-foreground hover:text-foreground transition flex items-center gap-1" title="Toggle GitHub Preview Light/Dark">
+        <span>🌙</span>
       </button>
 
       <!-- Copy Button -->
@@ -202,6 +222,9 @@
     </div>
 
   </main>
+
+  <!-- PHOTO / BANNER HUB MODAL CONTAINER -->
+  <div id="photo-hub-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden"></div>
 
   <!-- IMPORT README MODAL (shadcn Dialog) -->
   <div id="import-readme-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs hidden">

@@ -1,10 +1,13 @@
 /**
- * Readmify - Dynamic Section Form Editor (shadcn/ui style)
+ * Readmify - Dynamic Section Form Editor (v2 with GitHub Auto-Detect & Multi-Style)
  */
 import { store } from '../store.js';
 import { SECTION_TYPES } from '../data/defaultSections.js';
 import { renderTechPickerModal } from './techPicker.js';
-import { TECH_CATALOG, getBadgeUrl } from '../data/techCatalog.js';
+import { renderPhotoModal } from './photoUploader.js';
+import { fetchGitHubRepoDetails, parseGitHubRepoInput } from '../services/githubApi.js';
+import { TECH_CATALOG, getBadgeUrl, getSkillIconsUrl } from '../data/techCatalog.js';
+import { showToast } from '../utils/exportUtils.js';
 
 export function renderSectionEditor(container) {
   if (!container) return;
@@ -51,8 +54,8 @@ export function renderSectionEditor(container) {
       </div>
 
       <!-- Form Body -->
-      <div id="section-form-fields" class="space-y-3.5">
-        ${renderFormFieldsByType(type, data)}
+      <div id="section-form-fields" class="space-y-4">
+        ${renderFormFieldsByType(type, data, state)}
       </div>
     </div>
   `;
@@ -76,10 +79,27 @@ export function renderSectionEditor(container) {
   attachFieldListeners(container, id, type, data);
 }
 
-function renderFormFieldsByType(type, data) {
+function renderFormFieldsByType(type, data, state) {
   switch (type) {
     case SECTION_TYPES.HERO:
       return `
+        <!-- GitHub Auto-Detect Banner -->
+        <div class="p-3 bg-card border border-border rounded-lg space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-foreground flex items-center gap-1.5">
+              <span>⚡</span> Free GitHub API Auto-Detect
+            </span>
+            <span class="text-[10px] text-muted-foreground">Zero auth required</span>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="github-autodetect-input" value="${data.repoOwner && data.repoName ? data.repoOwner + '/' + data.repoName : ''}" placeholder="Paste repo (e.g. facebook/react)" class="form-input text-xs flex-1" />
+            <button id="trigger-autodetect-btn" class="btn-primary text-xs px-3 py-1.5 whitespace-nowrap">
+              Fetch Info
+            </button>
+          </div>
+          <p class="text-[11px] text-muted-foreground">Automatically pulls languages, stars, description, license & topics.</p>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-medium text-foreground mb-1">Project Name</label>
@@ -101,7 +121,7 @@ function renderFormFieldsByType(type, data) {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label class="block text-xs font-medium text-foreground mb-1">GitHub Username / Org</label>
+            <label class="block text-xs font-medium text-foreground mb-1">GitHub Owner / Org</label>
             <input type="text" data-field="repoOwner" value="${data.repoOwner || ''}" class="form-input" placeholder="e.g. yourusername" />
           </div>
           <div>
@@ -110,15 +130,119 @@ function renderFormFieldsByType(type, data) {
           </div>
         </div>
 
+        <!-- Banner / Photo Section -->
         <div class="p-3.5 bg-card border border-border rounded-md space-y-2.5">
           <div class="flex items-center justify-between">
-            <label class="text-xs font-medium text-foreground">Display Logo Banner</label>
-            <input type="checkbox" data-field="showLogo" ${data.showLogo ? 'checked' : ''} class="rounded border-border text-foreground" />
+            <label class="text-xs font-medium text-foreground">Project Banner / Header Image</label>
+            <button id="open-banner-hub-btn" class="text-xs font-medium text-foreground hover:underline flex items-center gap-1">
+              <span>🖼️</span> Pick Preset / Upload
+            </button>
           </div>
-          <div id="logo-url-container" class="${data.showLogo ? '' : 'hidden'}">
-            <label class="block text-[11px] text-muted-foreground mb-1">Logo Image URL</label>
-            <input type="text" data-field="logoUrl" value="${data.logoUrl || ''}" class="form-input text-xs" placeholder="https://..." />
+          <input type="text" data-field="logoUrl" value="${data.logoUrl || ''}" class="form-input text-xs" placeholder="https://... image banner URL" />
+          <div class="flex items-center gap-2">
+            <input type="checkbox" id="show-logo-cb" data-field="showLogo" ${data.showLogo ? 'checked' : ''} class="rounded border-border" />
+            <label for="show-logo-cb" class="text-[11px] text-muted-foreground cursor-pointer">Display banner image in README</label>
           </div>
+        </div>
+      `;
+
+    case SECTION_TYPES.TECH_STACK: {
+      const selected = (data.technologies || [])
+        .map(id => TECH_CATALOG.find(t => t.id === id))
+        .filter(Boolean);
+      const style = data.style || 'skillicons';
+
+      return `
+        <!-- Language & Tech Style Switcher -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-medium text-foreground">Visual Style</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'skillicons' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="skillicons">
+              <span class="block font-medium">SkillIcons</span>
+              <span class="text-[10px] text-muted-foreground">Curved icon grid</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'for-the-badge' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="for-the-badge">
+              <span class="block font-medium">Shields Bold</span>
+              <span class="text-[10px] text-muted-foreground">Badge chips</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'github-stats' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="github-stats">
+              <span class="block font-medium">Language Card</span>
+              <span class="text-[10px] text-muted-foreground">Dynamic % graph</span>
+            </button>
+            <button class="tech-style-btn p-2 rounded-md border text-xs text-left transition ${style === 'devicon-grid' ? 'bg-muted border-foreground/60 font-semibold text-foreground ring-1 ring-ring' : 'bg-card border-border text-muted-foreground hover:text-foreground'}" data-style="devicon-grid">
+              <span class="block font-medium">Logo Grid</span>
+              <span class="text-[10px] text-muted-foreground">Centered icons</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-2">
+          <div>
+            <label class="block text-xs font-medium text-foreground">Selected Technologies & Languages</label>
+            <p class="text-[11px] text-muted-foreground">${selected.length} items configured</p>
+          </div>
+          <button id="open-tech-picker-btn" class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5">
+            <span>✨</span> Browse & Add Badges
+          </button>
+        </div>
+
+        <!-- Selected Badges Preview -->
+        <div class="p-3.5 bg-card border border-border rounded-md min-h-[90px] flex flex-wrap gap-1.5 items-center">
+          ${selected.length > 0 
+            ? selected.map(item => `
+                <div class="flex items-center gap-1.5 bg-muted border border-border px-2 py-1 rounded">
+                  <img src="${getBadgeUrl(item, 'flat')}" alt="${item.name}" class="h-3.5" />
+                  <button class="remove-tech-chip text-muted-foreground hover:text-rose-400 text-xs ml-1" data-tech-id="${item.id}">×</button>
+                </div>
+              `).join('')
+            : '<p class="text-xs text-muted-foreground py-3 w-full text-center">No technologies selected yet. Click "Browse & Add Badges" above or auto-detect from GitHub!</p>'
+          }
+        </div>
+      `;
+    }
+
+    case SECTION_TYPES.DEMO:
+      return `
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
+          <input type="text" data-field="heading" value="${data.heading || 'Preview & Screenshots'}" class="form-input" />
+        </div>
+
+        <div class="p-3.5 bg-card border border-border rounded-md space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-medium text-foreground">Demo Image / Screenshot</label>
+            <button id="open-demo-photo-btn" class="text-xs font-medium text-foreground hover:underline flex items-center gap-1">
+              <span>📸</span> Upload Screenshot / Presets
+            </button>
+          </div>
+          <input type="text" data-field="imageUrl" value="${data.imageUrl || ''}" class="form-input text-xs" placeholder="https://raw.githubusercontent.com/.../screenshot.png" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Caption</label>
+            <input type="text" data-field="caption" value="${data.caption || ''}" class="form-input" placeholder="App Walkthrough" />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-foreground mb-1">Live Demo URL</label>
+            <input type="text" data-field="liveUrl" value="${data.liveUrl || ''}" class="form-input" placeholder="https://myapp.vercel.app" />
+          </div>
+        </div>
+      `;
+
+    case SECTION_TYPES.CONTRIBUTING:
+      return `
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
+          <input type="text" data-field="heading" value="${data.heading || 'Contributing'}" class="form-input" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-foreground mb-1">Welcome Message</label>
+          <textarea data-field="guidelines" rows="3" class="form-input text-xs">${data.guidelines || ''}</textarea>
+        </div>
+        <div class="p-3 bg-card border border-border rounded-md text-xs text-muted-foreground flex items-center gap-2">
+          <span>👥</span>
+          <span>Includes automated live contributor avatars from <strong class="text-foreground">contrib.rocks</strong></span>
         </div>
       `;
 
@@ -175,36 +299,6 @@ function renderFormFieldsByType(type, data) {
         </div>
       `;
 
-    case SECTION_TYPES.TECH_STACK: {
-      const selected = (data.technologies || [])
-        .map(id => TECH_CATALOG.find(t => t.id === id))
-        .filter(Boolean);
-
-      return `
-        <div class="flex items-center justify-between">
-          <div>
-            <label class="block text-xs font-medium text-foreground">Selected Technologies</label>
-            <p class="text-[11px] text-muted-foreground">${selected.length} technologies added</p>
-          </div>
-          <button id="open-tech-picker-btn" class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5">
-            <span>✨</span> Browse & Add Badges
-          </button>
-        </div>
-
-        <div class="p-3.5 bg-card border border-border rounded-md min-h-[90px] flex flex-wrap gap-1.5 items-center">
-          ${selected.length > 0 
-            ? selected.map(item => `
-                <div class="flex items-center gap-1.5 bg-muted border border-border px-2 py-1 rounded">
-                  <img src="${getBadgeUrl(item, 'flat')}" alt="${item.name}" class="h-3.5" />
-                  <button class="remove-tech-chip text-muted-foreground hover:text-rose-400 text-xs ml-1" data-tech-id="${item.id}">×</button>
-                </div>
-              `).join('')
-            : '<p class="text-xs text-muted-foreground py-3 w-full text-center">No technologies selected yet. Click "Browse & Add Badges" above!</p>'
-          }
-        </div>
-      `;
-    }
-
     case SECTION_TYPES.FEATURES:
       return `
         <div>
@@ -231,28 +325,6 @@ function renderFormFieldsByType(type, data) {
                 <button class="remove-feature-btn p-1 text-muted-foreground hover:text-rose-400 transition" title="Delete feature">✕</button>
               </div>
             `).join('')}
-          </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.DEMO:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Preview & Demo'}" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Screenshot / GIF URL</label>
-          <input type="text" data-field="imageUrl" value="${data.imageUrl || ''}" class="form-input" placeholder="https://..." />
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Caption</label>
-            <input type="text" data-field="caption" value="${data.caption || ''}" class="form-input" placeholder="Dashboard Walkthrough" />
-          </div>
-          <div>
-            <label class="block text-xs font-medium text-foreground mb-1">Live Demo URL</label>
-            <input type="text" data-field="liveUrl" value="${data.liveUrl || ''}" class="form-input" placeholder="https://..." />
           </div>
         </div>
       `;
@@ -353,10 +425,6 @@ function renderFormFieldsByType(type, data) {
           <label class="block text-xs font-medium text-foreground mb-1">Code Example</label>
           <textarea data-field="code" rows="5" class="form-input font-mono text-xs leading-relaxed" placeholder="// Code usage...">${data.code || ''}</textarea>
         </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Callout Note (Optional)</label>
-          <input type="text" data-field="note" value="${data.note || ''}" class="form-input" placeholder="Optional note" />
-        </div>
       `;
 
     case SECTION_TYPES.ROADMAP:
@@ -365,7 +433,6 @@ function renderFormFieldsByType(type, data) {
           <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
           <input type="text" data-field="heading" value="${data.heading || 'Roadmap'}" class="form-input" />
         </div>
-
         <div class="space-y-2.5">
           <div class="flex items-center justify-between">
             <label class="text-xs font-medium text-foreground">Roadmap Milestones</label>
@@ -373,7 +440,6 @@ function renderFormFieldsByType(type, data) {
               + Add Task
             </button>
           </div>
-
           <div id="roadmap-tasks-list" class="space-y-1.5">
             ${(data.tasks || []).map((t, idx) => `
               <div class="p-2 bg-card border border-border rounded-md flex items-center gap-2" data-task-index="${idx}">
@@ -383,18 +449,6 @@ function renderFormFieldsByType(type, data) {
               </div>
             `).join('')}
           </div>
-        </div>
-      `;
-
-    case SECTION_TYPES.CONTRIBUTING:
-      return `
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Contributing'}" class="form-input" />
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-foreground mb-1">Welcome Message</label>
-          <textarea data-field="guidelines" rows="3" class="form-input text-xs">${data.guidelines || ''}</textarea>
         </div>
       `;
 
@@ -429,7 +483,7 @@ function renderFormFieldsByType(type, data) {
       return `
         <div>
           <label class="block text-xs font-medium text-foreground mb-1">Section Heading</label>
-          <input type="text" data-field="heading" value="${data.heading || 'Author & Contact'}" class="form-input" />
+          <input type="text" data-field="heading" value="${data.heading || 'Author & Acknowledgements'}" class="form-input" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
@@ -481,6 +535,7 @@ function renderFormFieldsByType(type, data) {
 }
 
 function attachFieldListeners(container, sectionId, type, currentData) {
+  // Generic inputs
   container.querySelectorAll('[data-field]').forEach(el => {
     const field = el.dataset.field;
     const isCheckbox = el.type === 'checkbox';
@@ -488,16 +543,89 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     el.addEventListener(isCheckbox ? 'change' : 'input', () => {
       const val = isCheckbox ? el.checked : el.value;
       store.updateSectionData(sectionId, { [field]: val });
-
-      if (field === 'showLogo') {
-        const logoContainer = container.querySelector('#logo-url-container');
-        if (logoContainer) {
-          logoContainer.className = val ? '' : 'hidden';
-        }
-      }
     });
   });
 
+  // GitHub Auto-Detect Trigger
+  const triggerAutoDetectBtn = container.querySelector('#trigger-autodetect-btn');
+  const autoDetectInput = container.querySelector('#github-autodetect-input');
+  if (triggerAutoDetectBtn && autoDetectInput) {
+    triggerAutoDetectBtn.addEventListener('click', async () => {
+      const parsed = parseGitHubRepoInput(autoDetectInput.value);
+      if (!parsed) {
+        showToast('Please enter a valid repo (e.g. facebook/react or GitHub URL)', 'error');
+        return;
+      }
+
+      triggerAutoDetectBtn.innerText = 'Fetching...';
+      triggerAutoDetectBtn.disabled = true;
+
+      try {
+        const info = await fetchGitHubRepoDetails(parsed.owner, parsed.repo);
+        store.batchUpdate(sections => {
+          const hero = sections.find(s => s.type === SECTION_TYPES.HERO);
+          if (hero) {
+            hero.data.projectName = info.repo;
+            hero.data.tagline = info.description || hero.data.tagline;
+            hero.data.repoOwner = info.owner;
+            hero.data.repoName = info.repo;
+          }
+
+          const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK);
+          if (tech && info.matchedTechIds.length > 0) {
+            // Merge detected languages
+            const set = new Set([...(tech.data.technologies || []), ...info.matchedTechIds]);
+            tech.data.technologies = Array.from(set);
+          }
+
+          const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE);
+          if (lic && info.license && info.license !== 'NOASSERTION') {
+            lic.data.type = info.license;
+            lic.data.holder = info.owner;
+          }
+
+          const auth = sections.find(s => s.type === SECTION_TYPES.AUTHOR);
+          if (auth && info.owner) {
+            auth.data.github = info.owner;
+          }
+        });
+
+        const langCount = info.languages.length;
+        const langSummary = info.languages.slice(0, 3).map(l => `${l.name} (${l.percentage}%)`).join(', ');
+        showToast(`Auto-detected ${langCount} languages! [${langSummary}]`, 'success');
+      } catch (err) {
+        showToast(err.message || 'Failed to fetch from GitHub API', 'error');
+      } finally {
+        triggerAutoDetectBtn.innerText = 'Fetch Info';
+        triggerAutoDetectBtn.disabled = false;
+      }
+    });
+  }
+
+  // Photo / Banner Hub Trigger
+  const openBannerBtn = container.querySelector('#open-banner-hub-btn');
+  if (openBannerBtn) {
+    openBannerBtn.addEventListener('click', () => {
+      renderPhotoModal('hero');
+    });
+  }
+
+  const openDemoPhotoBtn = container.querySelector('#open-demo-photo-btn');
+  if (openDemoPhotoBtn) {
+    openDemoPhotoBtn.addEventListener('click', () => {
+      renderPhotoModal('demo');
+    });
+  }
+
+  // Tech Style Switcher buttons
+  container.querySelectorAll('.tech-style-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const style = btn.dataset.style;
+      store.updateSectionData(sectionId, { style });
+    });
+  });
+
+  // Open Tech Stack Modal
   const openTechBtn = container.querySelector('#open-tech-picker-btn');
   if (openTechBtn) {
     openTechBtn.addEventListener('click', () => {
@@ -505,6 +633,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Remove individual tech chip
   container.querySelectorAll('.remove-tech-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       const techId = btn.dataset.techId;
@@ -514,6 +643,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   });
 
+  // Feature items
   const addFeatureBtn = container.querySelector('#add-feature-item-btn');
   if (addFeatureBtn) {
     addFeatureBtn.addEventListener('click', () => {
@@ -550,6 +680,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Installation steps
   const addStepBtn = container.querySelector('#add-install-step-btn');
   if (addStepBtn) {
     addStepBtn.addEventListener('click', () => {
@@ -585,6 +716,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Env vars
   const addVarBtn = container.querySelector('#add-env-var-btn');
   if (addVarBtn) {
     addVarBtn.addEventListener('click', () => {
@@ -622,6 +754,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
     });
   }
 
+  // Roadmap tasks
   const addTaskBtn = container.querySelector('#add-roadmap-task-btn');
   if (addTaskBtn) {
     addTaskBtn.addEventListener('click', () => {

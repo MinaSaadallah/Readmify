@@ -116,7 +116,7 @@ function renderWizardStep() {
     </div>
   `;
 
-  modal.querySelector('#close-wizard-btn').addEventListener('click', closeWizard);
+  modal.querySelector('#close-wizard-btn')?.addEventListener('click', closeWizard);
 
   const prevBtn = modal.querySelector('#wizard-prev-btn');
   if (prevBtn) {

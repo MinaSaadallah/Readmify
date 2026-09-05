@@ -1,9 +1,10 @@
 /**
  * Readmify - Markdown Generator Engine
  * Converts the structured sections state into clean GitHub Flavored Markdown
+ * Supports SkillIcons, Shields.io, GitHub Stats, Contributors, and Star History
  */
 import { SECTION_TYPES } from '../data/defaultSections.js';
-import { TECH_CATALOG, getBadgeUrl } from '../data/techCatalog.js';
+import { TECH_CATALOG, getBadgeUrl, getSkillIconsUrl } from '../data/techCatalog.js';
 
 export function generateMarkdown(sections) {
   if (!sections || !Array.isArray(sections)) return '';
@@ -22,7 +23,6 @@ export function generateMarkdown(sections) {
     }
   }
 
-  // Join sections with double newlines
   return chunks.join('\n\n') + '\n';
 }
 
@@ -34,7 +34,7 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.HERO: {
       const isCentered = data.align === 'center';
       const logoTag = data.showLogo && data.logoUrl
-        ? `<img src="${data.logoUrl}" alt="${data.projectName} Logo" width="120" />\n  <br/>`
+        ? `<img src="${data.logoUrl}" alt="${data.projectName} Banner" width="100%" style="border-radius: 8px; margin-bottom: 1rem;" />\n  <br/>`
         : '';
 
       if (isCentered) {
@@ -44,7 +44,7 @@ function generateSectionMarkdown(section, context) {
   <p>${data.tagline || ''}</p>
 </div>`;
       } else {
-        const logo = data.showLogo && data.logoUrl ? `![Logo](${data.logoUrl})\n\n` : '';
+        const logo = data.showLogo && data.logoUrl ? `![Banner](${data.logoUrl})\n\n` : '';
         return `${logo}# ${data.projectName || 'Project Title'}\n\n> ${data.tagline || ''}`;
       }
     }
@@ -90,19 +90,36 @@ function generateSectionMarkdown(section, context) {
     }
 
     case SECTION_TYPES.TECH_STACK: {
-      const style = data.style || 'for-the-badge';
-      const items = (data.technologies || [])
-        .map(id => TECH_CATALOG.find(t => t.id === id))
-        .filter(Boolean);
+      const style = data.style || 'skillicons';
+      const techIds = data.technologies || [];
 
-      if (items.length === 0) {
+      if (techIds.length === 0) {
         return `## ${data.heading || 'Built With'}\n\n*(No technologies selected yet)*`;
       }
 
-      const badgeMarkdown = items
-        .map(item => `![${item.name}](${getBadgeUrl(item, style)})`)
-        .join(' ');
+      // 1. SkillIcons Style
+      if (style === 'skillicons') {
+        const skillUrl = getSkillIconsUrl(techIds, 'dark');
+        if (skillUrl) {
+          return `## ${data.heading || 'Built With'}\n\n<p align="center">\n  <a href="https://skillicons.dev">\n    <img src="${skillUrl}" alt="Tech Stack" />\n  </a>\n</p>`;
+        }
+      }
 
+      // 2. GitHub Top Languages Card
+      if (style === 'github-stats') {
+        return `## ${data.heading || 'Languages & Tech'}\n\n<p align="center">\n  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${repoOwner}&repo=${repoName}&layout=compact&theme=radical" alt="Top Languages" />\n</p>`;
+      }
+
+      // 3. Devicon Logo Grid
+      if (style === 'devicon-grid') {
+        const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+        const rows = items.map(item => `  <img src="https://cdn.simpleicons.org/${item.logo}" alt="${item.name}" width="36" height="36" style="margin: 6px;" title="${item.name}" />`).join('\n');
+        return `## ${data.heading || 'Built With'}\n\n<p align="center">\n${rows}\n</p>`;
+      }
+
+      // 4. Default: Shields.io Badges
+      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+      const badgeMarkdown = items.map(item => `![${item.name}](${getBadgeUrl(item, style)})`).join(' ');
       return `## ${data.heading || 'Built With'}\n\n${badgeMarkdown}`;
     }
 
@@ -110,7 +127,7 @@ function generateSectionMarkdown(section, context) {
       const items = data.items || [];
       if (items.length === 0) return '';
       const list = items.map(item => {
-        const icon = item.icon ? `${item.icon} ` : '? ';
+        const icon = item.icon ? `${item.icon} ` : '✨ ';
         return `- ${icon}**${item.title || ''}**: ${item.desc || ''}`;
       }).join('\n');
 
@@ -120,8 +137,8 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.DEMO: {
       const caption = data.caption || 'Project Preview';
       const imageMd = data.imageUrl ? `![${caption}](${data.imageUrl})` : '';
-      const linkMd = data.liveUrl ? `\n\n?? **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
-      return `## ${data.heading || 'Demo'}\n\n${imageMd}${linkMd}`;
+      const linkMd = data.liveUrl ? `\n\n🔗 **Live Demo**: [${data.liveUrl}](${data.liveUrl})` : '';
+      return `## ${data.heading || 'Preview & Screenshots'}\n\n${imageMd}${linkMd}`;
     }
 
     case SECTION_TYPES.INSTALLATION: {
@@ -142,8 +159,8 @@ function generateSectionMarkdown(section, context) {
     case SECTION_TYPES.ENV_VARS: {
       const vars = data.variables || [];
       if (vars.length === 0) return '';
-      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? '? Yes' : '? No'} |`).join('\n');
-      return `## ${data.heading || 'Environment Variables'}\n\nTo run this project, you will need to add the following environment variables to your \`.env\` file:\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
+      const rows = vars.map(v => `| \`${v.key}\` | ${v.desc || '-'} | \`${v.default || '-'}\` | ${v.required ? '✅ Yes' : '❌ No'} |`).join('\n');
+      return `## ${data.heading || 'Environment Variables'}\n\n| Variable | Description | Default | Required |\n| :--- | :--- | :--- | :--- |\n${rows}`;
     }
 
     case SECTION_TYPES.USAGE: {
@@ -161,9 +178,10 @@ function generateSectionMarkdown(section, context) {
     }
 
     case SECTION_TYPES.CONTRIBUTING: {
-      const guide = data.guidelines || 'Contributions are welcome! Please follow the steps below:';
+      const guide = data.guidelines || 'Contributions are what make open source great!';
       const steps = (data.steps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
-      return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}`;
+      const contribAvatars = `<p align="center">\n  <a href="https://github.com/${repoOwner}/${repoName}/graphs/contributors">\n    <img src="https://contrib.rocks/image?repo=${repoOwner}/${repoName}" alt="Contributors" />\n  </a>\n</p>`;
+      return `## ${data.heading || 'Contributing'}\n\n${guide}\n\n${steps}\n\n${contribAvatars}`;
     }
 
     case SECTION_TYPES.LICENSE: {
@@ -188,7 +206,7 @@ function generateSectionMarkdown(section, context) {
       const badgeStr = badges.length > 0 ? `\n\n${badges.join(' ')}` : '';
       const emailStr = data.email ? `\n\nEmail: [${data.email}](mailto:${data.email})` : '';
 
-      return `## ${data.heading || 'Author'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
+      return `## ${data.heading || 'Author & Acknowledgements'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
     }
 
     case SECTION_TYPES.CUSTOM: {
