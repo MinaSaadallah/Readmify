@@ -416,10 +416,32 @@ function synthesizeSmartFeatures(analysis) {
  * - Project directory structure
  * - Generates tailored installation, usage, environment variables, features, and badges
  */
+async function fetchJsonSafe(url) {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+function getScanCache(key) {
+  try {
+    const raw = localStorage.getItem('readmify_last_scan:' + key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (Date.now() - (parsed.at || 0) > 1000 * 60 * 30) return null;
+    return parsed.data;
+  } catch (e) { return null; }
+}
+
+function setScanCache(key, data) {
+  try { localStorage.setItem('readmify_last_scan:' + key, JSON.stringify({ at: Date.now(), data })); } catch (e) {}
+}
+
 export async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () => {}) {
   onProgress({ step: 1, message: `Connecting to GitHub API for ${owner}/${repo}...` });
 
-  // 1. Fetch Repo Metadata & Languages in parallel
+  // 1. Fetch Repo Metadata & Languages in parallel (+ contributors, release, last commit — all optional)
   const [repoRes, langRes] = await Promise.all([
     fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`),
     fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`)
@@ -720,9 +742,30 @@ export async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () =>
     repoName: repoData.name || repo
   });
 
+  onProgress({ step: 7, message: 'Fetching contributors, releases & social card…' });
+
+  // 9. Optional enrichment (never blocks offline fallback)
+  const cacheKey = `${owner}/${repo}`;
+  let extra = getScanCache(cacheKey);
+  if (!extra) {
+    const [contribs, latestRelease, lastCommit] = await Promise.all([
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contributors?per_page=5`),
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/releases/latest`),
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits?per_page=1`)
+    ]);
+    extra = {
+      topContributors: Array.isArray(contribs) ? contribs.slice(0, 5).map(c => ({ login: c.login, url: c.html_url, contributions: c.contributions })) : [],
+      latestRelease: latestRelease?.tag_name || '',
+      lastCommitDate: lastCommit?.[0]?.commit?.committer?.date || ''
+    };
+    setScanCache(cacheKey, extra);
+  }
+
   onProgress({ step: 7, message: 'Analysis complete! Ready to generate README.' });
 
-  return {
+  const ogImage = `https://opengraph.githubassets.com/1/${encodeURIComponent(repoData.owner?.login || owner)}/${encodeURIComponent(repoData.name || repo)}`;
+
+  const result = {
     owner: repoData.owner?.login || owner,
     repo: repoData.name || repo,
     description: repoData.description || packageJsonData?.description || '',
@@ -745,8 +788,14 @@ export async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () =>
     workflowBadges,
     hasDocker,
     totalFiles: filePaths.length,
-    rawFilesScanned: (hasPackageJson ? 1 : 0) + (hasEnvExample ? 1 : 0) + (hasCargo ? 1 : 0) + (hasGoMod ? 1 : 0) + (hasRequirements ? 1 : 0)
+    rawFilesScanned: (hasPackageJson ? 1 : 0) + (hasEnvExample ? 1 : 0) + (hasCargo ? 1 : 0) + (hasGoMod ? 1 : 0) + (hasRequirements ? 1 : 0),
+    topContributors: extra.topContributors || [],
+    latestRelease: extra.latestRelease || '',
+    lastCommitDate: extra.lastCommitDate || '',
+    ogImage
   };
+  setScanCache(cacheKey + ':full', result);
+  return result;
 }
 
 /**

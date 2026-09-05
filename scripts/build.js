@@ -15,6 +15,7 @@ const MODULE_FILES = [
   'data/defaultSections.js',
   'data/templates.js',
   'services/githubApi.js',
+  'services/npmApi.js',
   'utils/exportUtils.js',
   'utils/markdownGenerator.js',
   'components/healthScore.js',
@@ -25,6 +26,7 @@ const MODULE_FILES = [
   'components/sectionEditor.js',
   'components/interactiveCanvas.js',
   'components/wizard.js',
+  'components/palette.js',
   'app.js'
 ];
 
@@ -44,7 +46,7 @@ function cleanModuleContent(content) {
 
 function build() {
   console.log('Building Readmify bundle...');
-  let bundleContent = `/** Readmify v2 Bundle - Universal Offline & GitHub Pages Compatibility */\n\n(function() {\n  'use strict';\n\n`;
+  let bundleContent = `/** Readmify v4 Bundle - GitHub Pages + offline cache compatible */\n\n(function() {\n  'use strict';\n\n`;
 
   for (const relPath of MODULE_FILES) {
     const fullPath = path.join(JS_DIR, relPath);
@@ -59,6 +61,10 @@ function build() {
   }
 
   bundleContent += `\n// Robust DOM Ready execution\nif (document.readyState === 'loading') {\n  document.addEventListener('DOMContentLoaded', initApp);\n} else {\n  initApp();\n}\n\n})();\n`;
+
+  // Light safe minify: strip block comments + collapse 3+ blank lines (keeps URLs/strings intact)
+  bundleContent = bundleContent.replace(/\/\*\*[\s\S]*?\*\//g, '');
+  bundleContent = bundleContent.replace(/\n{3,}/g, '\n\n');
 
   fs.writeFileSync(OUTPUT_BUNDLE, bundleContent, 'utf8');
   const size = fs.statSync(OUTPUT_BUNDLE).size;

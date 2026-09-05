@@ -11,6 +11,17 @@ class ReadmifyStore {
   constructor() {
     this.listeners = new Set();
     this.state = this.loadInitialState();
+    this._saveTimer = null;
+    this.lastSavedAt = Date.now();
+    this._undoStack = [];
+  }
+
+  flushSave() {
+    if (this._saveTimer) {
+      clearTimeout(this._saveTimer);
+      this._saveTimer = null;
+    }
+    this.saveToStorage(true);
   }
 
   loadInitialState() {
@@ -41,10 +52,25 @@ class ReadmifyStore {
     };
   }
 
-  saveToStorage() {
+  saveToStorage(immediate = false) {
+    // Debounced persist: big base64 images make JSON.stringify expensive.
+    // Coalesce rapid typing into one write ~700ms after last change.
+    if (!immediate) {
+      if (this._saveTimer) return;
+      this._saveTimer = setTimeout(() => {
+        this._saveTimer = null;
+        this.saveToStorage(true);
+      }, 700);
+      return;
+    }
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        this.lastSavedAt = Date.now();
+        // Notify save indicator without full re-render
+        try {
+          window.dispatchEvent(new CustomEvent('readmify:saved', { detail: { at: this.lastSavedAt } }));
+        } catch (e) { /* noop */ }
       }
     } catch (e) {
       console.warn('Could not persist state to localStorage:', e);
@@ -202,12 +228,27 @@ class ReadmifyStore {
   removeSection(sectionId) {
     const idx = this.state.sections.findIndex(s => s.id === sectionId);
     if (idx !== -1) {
-      this.state.sections.splice(idx, 1);
+      const [removed] = this.state.sections.splice(idx, 1);
+      // Keep small undo stack (max 10) for toast-undo, no confirm() friction
+      this._undoStack.push({ section: removed, index: idx });
+      if (this._undoStack.length > 10) this._undoStack.shift();
       if (this.state.activeSectionId === sectionId) {
         this.state.activeSectionId = this.state.sections[0]?.id || null;
       }
       this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
+      return removed;
     }
+    return null;
+  }
+
+  undoRemoveSection() {
+    const entry = this._undoStack.pop();
+    if (!entry) return null;
+    const target = Math.min(entry.index, this.state.sections.length);
+    this.state.sections.splice(target, 0, entry.section);
+    this.state.activeSectionId = entry.section.id;
+    this.notify({ type: 'UNDO_REMOVE', sectionId: entry.section.id, force: true });
+    return entry.section.id;
   }
 
   loadTemplate(templateId) {
@@ -353,6 +394,26 @@ class ReadmifyStore {
           author.data.name = analysis.owner;
           author.data.github = analysis.owner;
         }
+      }
+
+      // 11. Hero OG banner prefill (only if no custom banner yet)
+      if (hero && analysis.ogImage && !hero.data.logoUrl) {
+        hero.data.logoUrl = analysis.ogImage;
+        hero.data.showLogo = false; // keep off by default, user enables with 1 click
+        hero.data.logoLinkUrl = analysis.homepage || '';
+      }
+
+      // 12. Badges: contributors + release enrichment
+      if (badges) {
+        if (analysis.topContributors?.length > 0) badges.data.showContributors = true;
+        if (analysis.latestRelease) badges.data.showRelease = true;
+      }
+
+      // 13. Stats visuals (opt-in, enable if repo has traction)
+      const stats = sections.find(s => s.type === SECTION_TYPES.STATS);
+      if (stats && (analysis.stars > 0 || (analysis.topContributors?.length || 0) > 0)) {
+        stats.enabled = false; // stay opt-in, but prefill user
+        stats.data.githubUser = analysis.owner || '';
       }
     });
 

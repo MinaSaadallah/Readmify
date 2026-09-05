@@ -177,6 +177,13 @@ export const SECTION_CATALOG = [
     tags: ['author', 'creator', 'contact', 'socials', 'email']
   },
   {
+    type: SECTION_TYPES.STATS,
+    title: 'GitHub Visuals & Stats',
+    category: 'features',
+    desc: 'Activity graph, contributor wall, star history, streak — all opt-in online visuals.',
+    tags: ['stats', 'graphs', 'activity', 'contributors', 'stars', 'visuals']
+  },
+  {
     type: SECTION_TYPES.CUSTOM,
     title: 'Custom Section',
     category: 'community',
@@ -291,7 +298,7 @@ function renderLibraryModal() {
               const isMultiple = item.type === SECTION_TYPES.CUSTOM;
 
               return `
-                <div class="group p-3.5 bg-card border border-border hover:border-foreground/40 rounded-lg flex flex-col justify-between transition space-y-3 select-none">
+                <div class="group p-3.5 bg-card border border-border hover:border-foreground/40 rounded-lg flex flex-col justify-between transition space-y-3 select-none" draggable="true" data-section-type="${item.type}" title="Drag onto canvas dividers to insert">
                   <div class="space-y-1.5">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
@@ -342,17 +349,23 @@ function renderLibraryModal() {
     if (e.target === modal) closeSectionLibrary();
   });
 
-  // Search input
+  // Search input (debounced to avoid re-render jank + focus loss)
   const searchInput = modal.querySelector('#lib-search-input');
+  let searchTimer = null;
   searchInput?.addEventListener('input', (e) => {
-    catalogSearchQuery = e.target.value;
-    renderLibraryModal();
-    // Maintain focus
-    const updatedInput = modal.querySelector('#lib-search-input');
-    if (updatedInput) {
-      updatedInput.focus();
-      updatedInput.setSelectionRange(catalogSearchQuery.length, catalogSearchQuery.length);
-    }
+    const val = e.target.value;
+    const pos = e.target.selectionStart || val.length;
+    if (searchTimer) clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      catalogSearchQuery = val;
+      // Lightweight list-only update: re-render then restore focus
+      renderLibraryModal();
+      const updatedInput = modal.querySelector('#lib-search-input');
+      if (updatedInput) {
+        updatedInput.focus();
+        try { updatedInput.setSelectionRange(pos, pos); } catch (err) {}
+      }
+    }, 180);
   });
 
   modal.querySelector('#lib-clear-search-btn')?.addEventListener('click', () => {
@@ -365,6 +378,14 @@ function renderLibraryModal() {
     btn.addEventListener('click', () => {
       catalogCategory = btn.dataset.cat;
       renderLibraryModal();
+    });
+  });
+
+  // Drag library cards onto canvas (native HTML5)
+  modal.querySelectorAll('[data-section-type]').forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/readmify-section-type', card.dataset.sectionType);
+      e.dataTransfer.effectAllowed = 'copy';
     });
   });
 

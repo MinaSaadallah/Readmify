@@ -7,6 +7,15 @@ import { SECTION_TYPES } from '../data/defaultSections.js';
 import { TECH_CATALOG, TECH_CATEGORIES, getBadgeUrl, getSkillIconsUrl, getTechDocUrl } from '../data/techCatalog.js';
 import { getLicenseById } from '../data/licenses.js';
 
+const techByIdCache = new Map();
+function techById(id) {
+  if (techByIdCache.has(id)) return techByIdCache.get(id);
+  const found = TECH_CATALOG.find(t => t.id === id) || null;
+  if (techByIdCache.size > 500) techByIdCache.clear();
+  techByIdCache.set(id, found);
+  return found;
+}
+
 export function generateMarkdown(sections) {
   if (!sections || !Array.isArray(sections)) return '';
 
@@ -43,18 +52,36 @@ function generateSectionMarkdown(section, context) {
         const wrappedImg = data.logoLinkUrl ? `<a href="${data.logoLinkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
         logoTag = `${wrappedImg}\n  <br/>`;
       }
+      // Optional capsule-render banner (opt-in, online-only progressive enhancement)
+      let capsuleTag = '';
+      if (data.showCapsuleBanner) {
+        const cType = data.capsuleType || 'wave';
+        const cColor = data.capsuleColor || 'auto';
+        const cText = encodeURIComponent(data.projectName || 'Project');
+        const cDesc = encodeURIComponent(data.tagline || '');
+        capsuleTag = `<img src="https://capsule-render.vercel.app/api?type=${cType}&color=${cColor}&height=220&section=header&text=${cText}&fontSize=60&desc=${cDesc}&descSize=16" alt="${data.projectName || 'Project'} banner" width="100%" />\n  <br/>`;
+      }
+      // Optional typing-SVG animated tagline (opt-in)
+      let taglineTag = `<p>${data.tagline || ''}</p>`;
+      if (data.animateTagline && data.tagline) {
+        const lines = String(data.tagline).split(/[.;|\n]+/).map(s => s.trim()).filter(Boolean).slice(0, 3);
+        if (lines.length > 0) {
+          const q = encodeURIComponent(lines.join(';'));
+          taglineTag = `<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=600&lines=${q}" alt="${data.tagline}" /></a>`;
+        }
+      }
 
       if (isCentered) {
         return `<div align="center">
-  ${logoTag}
+  ${capsuleTag}${logoTag}
   <h1>${data.projectName || 'Project Title'}</h1>
-  <p>${data.tagline || ''}</p>
+  ${taglineTag}
 </div>`;
       } else if (align === 'right') {
         return `<div align="right">
-  ${logoTag}
+  ${capsuleTag}${logoTag}
   <h1>${data.projectName || 'Project Title'}</h1>
-  <p>${data.tagline || ''}</p>
+  ${taglineTag}
 </div>`;
       } else {
         const logo = data.showLogo && data.logoUrl
@@ -167,7 +194,7 @@ function generateSectionMarkdown(section, context) {
 
       const sizeMap = { small: 28, medium: 40, large: 52, xlarge: 64 };
       const iconPx = sizeMap[data.iconSize] || (parseInt(data.iconSize, 10) || 40);
-      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+      const items = techIds.map(id => techById(id)).filter(Boolean);
 
       // 1. Categorized Layout (Real-world industry standard)
       if (layout === 'categorized') {
@@ -418,6 +445,33 @@ function generateSectionMarkdown(section, context) {
       const emailStr = data.email ? `\n\nEmail: [${data.email}](mailto:${data.email})` : '';
 
       return `## ${data.heading || 'Author & Acknowledgements'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
+    }
+
+    case SECTION_TYPES.STATS: {
+      const user = (data.githubUser || repoOwner || '').trim();
+      const repo = `${repoOwner}/${repoName}`;
+      const theme = data.theme === 'light' ? 'default' : 'github_dark';
+      const imgs = [];
+      if (data.showActivityGraph && user) {
+        imgs.push(`[![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=${encodeURIComponent(user)}&theme=github-compact)](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showContributors) {
+        imgs.push(`<a href="https://github.com/${repo}/graphs/contributors"><img src="https://contrib.rocks/image?repo=${repo}" alt="Contributors" /></a>`);
+      }
+      if (data.showStarHistory) {
+        imgs.push(`[![Star History](https://api.star-history.com/svg?repos=${repo}&type=Date)](https://star-history.com/#${repo}&Date)`);
+      }
+      if (data.showTopLangs && user) {
+        imgs.push(`[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=${encodeURIComponent(user)}&layout=compact&theme=${theme})](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showStreak && user) {
+        imgs.push(`[![Streak](https://streak-stats.demolab.com?user=${encodeURIComponent(user)}&theme=${theme === 'default' ? 'default' : 'dark'})](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showVisitors && user) {
+        imgs.push(`![Visitors](https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&style=flat-square)`);
+      }
+      if (imgs.length === 0) return `## ${data.heading || 'Stats & Activity'}\n\n*(Enable visuals in section settings — all optional, online-only)*`;
+      return `## ${data.heading || 'Stats & Activity'}\n\n<p align="center">\n  ${imgs.join('\n  <br/>\n  ')}\n</p>`;
     }
 
     case SECTION_TYPES.CUSTOM: {

@@ -3,7 +3,7 @@
  * Based on the iconic Zinc / Neutral palette
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap&font-display=swap');
 
 :root {
   --background: #09090b;
@@ -250,7 +250,6 @@ body {
 }
 
 .image-control-strip {
-  backdrop-filter: blur(12px);
   box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.7);
   z-index: 20;
 }
@@ -258,4 +257,72 @@ body {
 .kid-dropzone-box {
   border-style: dashed;
 }
+
+/* ===== Perf + Smoothness (v4) ===== */
+.canvas-document,
+#interactive-canvas-body,
+#github-preview-body {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+.interactive-section-block {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
+  will-change: transform;
+}
+.interactive-section-block img {
+  max-width: 100%;
+  height: auto;
+}
+#canvas-scroll-viewport {
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* ===== Drag & Drop affordances ===== */
+.interactive-section-block.dragging { opacity: 0.45; outline: 1px dashed #52525b; }
+.add-section-divider.drop-target .divider-line { background: #e4e4e7 !important; height: 2px; }
+.add-section-divider.drop-target .insert-section-btn { opacity: 1 !important; }
+.interactive-section-block.drop-target-above { box-shadow: 0 -2px 0 0 #e4e4e7; }
+.interactive-section-block.drop-target-below { box-shadow: 0 2px 0 0 #e4e4e7; }
+.section-item.dragging, .tech-card.dragging, .tile-chip.dragging { opacity: 0.5; }
+.kid-dropzone-box.drag-over, .direct-image-editor-container.drag-over,
+#import-readme-modal .drag-over, #canvas-scroll-viewport.global-drag-over {
+  border-color: #e4e4e7 !important; background: rgba(39,39,42,0.6) !important;
+}
+.drag-grip { cursor: grab; touch-action: none; }
+.drag-grip:active { cursor: grabbing; }
+
+/* ===== Customizable tiles ===== */
+.tile-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tile-grid.tile-size-small { gap: 0.35rem; }
+.tile-grid.tile-size-large { gap: 0.75rem; }
+.tile-grid.tile-size-xlarge { gap: 1rem; }
+.tile-chip {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  border: 1px solid #27272a; background: #18181b; border-radius: 0.5rem;
+  padding: 0.35rem 0.6rem; font-size: 12px; cursor: grab; user-select: none;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.tile-chip:hover { border-color: #52525b; background: #1f1f23; }
+.tile-chip img { display: block; pointer-events: none; }
+.tile-grid.tile-style-compact .tile-chip { padding: 0.25rem 0.5rem; border-radius: 0.375rem; }
+.tile-grid.tile-style-cards .tile-chip { padding: 0.6rem 0.8rem; flex-direction: column; min-width: 96px; text-align: center; }
+
+/* ===== Command palette + overflow ===== */
+#cmd-palette-backdrop { backdrop-filter: blur(4px); }
+#cmd-palette input:focus { outline: none; }
+.cmd-item.active, .cmd-item:hover { background: #27272a; }
+#nav-overflow-menu { box-shadow: 0 18px 50px -12px rgba(0,0,0,.7); }
+#export-menu { box-shadow: 0 18px 50px -12px rgba(0,0,0,.7); }
+#save-state-dot.dirty { background: #f59e0b; }
+#save-state-dot.saved { background: #10b981; }
+
+/* ===== Suggestion bar ===== */
+#health-suggest-btn { cursor: pointer; }
+#health-suggest-btn:hover { background: #27272a; }
 

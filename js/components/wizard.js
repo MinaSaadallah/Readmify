@@ -296,6 +296,16 @@ function getGuideBodyHtml() {
               `).join('')}
             </div>
           </div>
+
+          <!-- Smart extras: social card, contributors, release -->
+          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5 text-[11px] text-muted-foreground">
+            <span class="text-xs font-medium text-foreground">Smart extras (auto-filled, all optional)</span>
+            ${a.ogImage ? `<div class="flex items-center gap-2 pt-1"><img src="${a.ogImage}" alt="Social card" loading="lazy" class="h-10 rounded border border-border" /><span>GitHub social card will prefill your banner (off by default).</span></div>` : ''}
+            ${(a.topContributors?.length || 0) > 0 ? `<div>Top contributors: ${(a.topContributors || []).map(c => `<a href="${c.url}" class="underline">${c.login}</a>`).join(', ')}</div>` : ''}
+            ${a.latestRelease ? `<div>Latest release: <span class="text-foreground font-medium">${a.latestRelease}</span></div>` : ''}
+            ${a.homepage ? `<div>Homepage: <a href="${a.homepage}" class="underline break-all">${a.homepage}</a></div>` : ''}
+            <div class="pt-1">Tip: after Generate, open Tiles to resize, drag to reorder, or press Ctrl+K for actions.</div>
+          </div>
         </div>
       `;
 

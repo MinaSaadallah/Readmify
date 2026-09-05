@@ -22,6 +22,7 @@ export const SECTION_TYPES = {
   CHANGELOG: 'changelog',
   LICENSE: 'license',
   AUTHOR: 'author',
+  STATS: 'stats',
   CUSTOM: 'custom'
 };
 
@@ -96,6 +97,8 @@ export const INITIAL_SECTIONS = [
       skilliconsPerline: 10,
       showDocLinks: true,
       showLabels: true,
+      tileSize: 'medium',
+      tileStyle: 'badges',
       technologies: ['javascript', 'html5', 'css3', 'git', 'github']
     }
   },
@@ -259,7 +262,11 @@ export function createSection(type, customTitle) {
           logoAlign: 'center',
           logoRadius: '8px',
           repoOwner: 'username',
-          repoName: 'my-project'
+          repoName: 'my-project',
+          animateTagline: false,
+          showCapsuleBanner: false,
+          capsuleType: 'wave',
+          capsuleColor: 'auto'
         }
       };
 
@@ -321,6 +328,8 @@ export function createSection(type, customTitle) {
           skilliconsPerline: 10,
           showDocLinks: true,
           showLabels: true,
+          tileSize: 'medium',
+          tileStyle: 'badges',
           technologies: ['javascript', 'typescript', 'html5', 'css3', 'git']
         }
       };
@@ -566,6 +575,25 @@ export function createSection(type, customTitle) {
           linkedin: '',
           email: '',
           buyMeACoffee: ''
+        }
+      };
+
+    case SECTION_TYPES.STATS:
+      return {
+        id: uid,
+        type,
+        title: customTitle || 'GitHub Visuals & Stats',
+        enabled: true,
+        data: {
+          heading: customTitle || 'Stats & Activity',
+          showStreak: false,
+          showTopLangs: false,
+          showActivityGraph: true,
+          showContributors: true,
+          showStarHistory: false,
+          showVisitors: false,
+          theme: 'dark',
+          tileSize: 'medium'
         }
       };
 

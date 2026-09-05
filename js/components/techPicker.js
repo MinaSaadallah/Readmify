@@ -160,21 +160,24 @@ function updateTechGrid() {
   grid.innerHTML = filtered.map(item => {
     const isSelected = selectedTechs.has(item.id);
     const badgeUrl = getBadgeUrl(item, style);
+    const noSkill = !item.skillSlug ? `<span class="text-[9px] text-amber-400/80" title="No SkillIcons — use Shields layout">no-icon</span>` : '';
 
     return `
-      <div 
+      <div
         class="tech-card p-2.5 rounded-md border transition-all cursor-pointer flex flex-col justify-between gap-2 select-none ${
-          isSelected 
-            ? 'bg-muted border-foreground/60 shadow-xs ring-1 ring-ring' 
+          isSelected
+            ? 'bg-muted border-foreground/60 shadow-xs ring-1 ring-ring'
             : 'bg-card border-border hover:border-zinc-700 hover:bg-muted/50'
         }"
         data-tech-id="${item.id}"
+        draggable="true"
+        title="Click to toggle · drag onto canvas tiles"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-1">
           <span class="text-xs font-medium text-foreground truncate">${item.name}</span>
-          <span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+          <span class="flex items-center gap-1">${noSkill}<span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
             isSelected ? 'bg-primary text-primary-foreground font-bold' : 'border border-border text-transparent'
-          }">✓</span>
+          }">✓</span></span>
         </div>
         <div class="h-5 flex items-center overflow-hidden">
           <img src="${badgeUrl}" alt="${item.name}" class="h-4 object-contain pointer-events-none" loading="lazy" />
@@ -188,6 +191,13 @@ function updateTechGrid() {
       const techId = card.dataset.techId;
       toggleTechItem(techId);
     });
+    card.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/readmify-tech-id', card.dataset.techId);
+      e.dataTransfer.setData('text/readmify-tech-from', 'picker');
+      e.dataTransfer.effectAllowed = 'copy';
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
   });
 }
 

@@ -13,6 +13,7 @@ import { openSectionLibrary } from './components/sectionLibrary.js';
 import { calculateReadmeScore } from './components/healthScore.js';
 import { parseGitHubRepoInput } from './services/githubApi.js';
 import { SECTION_TYPES } from './data/defaultSections.js';
+import { initPalette, openPalette } from './components/palette.js';
 
 function escapeHtml(str) {
   if (!str) return '';
@@ -36,6 +37,9 @@ let previewBody;
 let rawMarkdownTextarea;
 let currentMarkdown = '';
 
+let markdownDebounceTimer = null;
+let pendingMarkdownState = null;
+
 function initApp() {
   canvasViewContainer = document.getElementById('canvas-view-container');
   canvasBodyContainer = document.getElementById('interactive-canvas-body');
@@ -57,9 +61,32 @@ function initApp() {
   setupNavbarControls();
   setupViewModeSwitcher();
   setupImportModal();
+  setupOverflowAndExport();
+  setupGlobalDrop();
+  setupSavedIndicator();
+  try { initPalette(); } catch (e) { console.warn('palette init failed', e); }
 
-  // Subscribe to store updates
-  store.subscribe(renderApp);
+  // Subscribe to store updates (debounce typing path for smoothness)
+  store.subscribe((state, meta) => {
+    if (meta && meta.type === 'UPDATE_SECTION_DATA' && !meta.force) {
+      pendingMarkdownState = { state, meta };
+      if (markdownDebounceTimer) return;
+      markdownDebounceTimer = setTimeout(() => {
+        markdownDebounceTimer = null;
+        const p = pendingMarkdownState;
+        pendingMarkdownState = null;
+        if (p) renderApp(p.state, p.meta);
+      }, 220);
+      // Instant lightweight pill-active update only (no full rebuild)
+      return;
+    }
+    if (markdownDebounceTimer) {
+      clearTimeout(markdownDebounceTimer);
+      markdownDebounceTimer = null;
+      pendingMarkdownState = null;
+    }
+    renderApp(state, meta);
+  });
 
   // Initial render
   renderApp(store.getState(), { force: true });
@@ -78,10 +105,12 @@ function renderApp(state, meta = {}) {
 
   // 1. Always update markdown representation & health score
   currentMarkdown = generateMarkdown(state.sections);
-  updateHealthAndStats(state.sections, currentMarkdown);
-  if (rawMarkdownTextarea) {
+  try { window.__readmifyMarkdown = currentMarkdown; } catch (e) {}
+  // Only touch raw textarea when visible or forced (avoids layout thrash while typing)
+  if (rawMarkdownTextarea && (mode === 'raw' || meta.force)) {
     rawMarkdownTextarea.value = currentMarkdown;
   }
+  updateHealthAndStats(state.sections, currentMarkdown);
 
   // 2. Render Section Pills & Drawer
   renderSidebar(state, meta);
@@ -147,28 +176,33 @@ function renderSidebar(state, meta = {}) {
       });
     });
 
-    // Auto-scroll active pill into view
-    const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
-    if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    // Auto-scroll active pill into view only on explicit navigation (avoids scroll thrash while typing)
+    if (meta && (meta.type === 'SET_ACTIVE_SECTION' || meta.type === 'ADD_SECTION' || meta.force === true && meta.type !== 'UPDATE_SECTION_DATA')) {
+      const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
+      if (activePill) {
+        try { activePill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' }); } catch (e) {}
+      }
     }
   }
 
-  // 1B. Render Drawer List Items
+  // 1B. Render Drawer List Items (draggable outline)
   if (sectionListContainer) {
     sectionListContainer.innerHTML = sections.map((sec, idx) => {
       const isActive = sec.id === activeSectionId;
       return `
-        <div 
+        <div
           class="section-item group flex items-center justify-between px-2.5 py-1.5 rounded-md border cursor-pointer select-none transition-all ${
-            isActive 
-              ? 'active bg-muted border-border text-foreground font-medium shadow-xs' 
+            isActive
+              ? 'active bg-muted border-border text-foreground font-medium shadow-xs'
               : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
           } ${!sec.enabled ? 'opacity-50' : ''}"
           data-section-id="${sec.id}"
           data-index="${idx}"
+          draggable="true"
+          title="Drag to reorder"
         >
           <div class="flex items-center gap-2 flex-1 min-w-0">
+            <span class="drag-grip text-zinc-600 text-[10px] cursor-grab">⠿</span>
             <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
             <span class="text-xs truncate">${escapeHtml(sec.title)}</span>
           </div>
@@ -219,6 +253,37 @@ function renderSidebar(state, meta = {}) {
         store.toggleSection(cb.dataset.id, cb.checked);
       });
     });
+
+    // Drawer drag reorder (native, no deps)
+    if (!sectionListContainer.dataset.dndBound) {
+      sectionListContainer.dataset.dndBound = 'true';
+      let dragIdx = null;
+      sectionListContainer.addEventListener('dragstart', (e) => {
+        const row = e.target.closest?.('.section-item');
+        if (!row) return;
+        dragIdx = parseInt(row.dataset.index, 10);
+        e.dataTransfer.setData('text/readmify-drawer-index', String(dragIdx));
+        e.dataTransfer.setData('text/readmify-section-id', row.dataset.sectionId);
+        e.dataTransfer.effectAllowed = 'move';
+        row.classList.add('dragging');
+      });
+      sectionListContainer.addEventListener('dragend', () => {
+        dragIdx = null;
+        sectionListContainer.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+      });
+      sectionListContainer.addEventListener('dragover', (e) => {
+        if (e.target.closest?.('.section-item')) e.preventDefault();
+      });
+      sectionListContainer.addEventListener('drop', (e) => {
+        const over = e.target.closest?.('.section-item');
+        if (!over) return;
+        e.preventDefault();
+        const to = parseInt(over.dataset.index, 10);
+        const fromStr = e.dataTransfer.getData('text/readmify-drawer-index');
+        const from = fromStr !== '' ? parseInt(fromStr, 10) : dragIdx;
+        if (from !== null && !isNaN(from) && from !== to) store.reorderSections(from, to);
+      });
+    }
   }
 
   // 1C. Pill Bar & Drawer Buttons (Bind once)
@@ -327,12 +392,144 @@ function updateHealthAndStats(sections, markdownText) {
 
   if (scoreTip) {
     if (health.tips.length > 0) {
-      scoreTip.textContent = `Tip: ${health.tips[0]}`;
+      const top = health.tips[0];
+      scoreTip.innerHTML = '';
+      const tipSpan = document.createElement('span');
+      tipSpan.textContent = `Tip: ${typeof top === 'string' ? top : top.text} `;
+      scoreTip.appendChild(tipSpan);
+      // One-click suggestion: enable missing section directly
+      if (top && typeof top === 'object' && top.action) {
+        const btn = document.createElement('button');
+        btn.id = 'health-suggest-btn';
+        btn.className = 'ml-2 px-2 py-0.5 rounded border border-border bg-muted text-foreground text-[11px] font-medium';
+        btn.textContent = top.actionLabel || 'Fix it';
+        btn.addEventListener('click', () => {
+          try {
+            if (top.action.type === 'enable' && top.action.sectionType) {
+              store.addSectionFromType(top.action.sectionType);
+              showToast('Section enabled', 'success');
+            } else if (top.action.type === 'view' && top.action.mode) {
+              store.setViewMode(top.action.mode);
+            }
+          } catch (e) { console.warn(e); }
+        });
+        scoreTip.appendChild(btn);
+      }
       scoreTip.classList.remove('hidden');
     } else {
       scoreTip.textContent = 'Your README is in top-tier shape!';
     }
   }
+}
+
+function setupOverflowAndExport() {
+  const overflowBtn = document.getElementById('nav-overflow-btn');
+  const overflowMenu = document.getElementById('nav-overflow-menu');
+  const exportBtn = document.getElementById('export-menu-btn');
+  const exportMenu = document.getElementById('export-menu');
+  const toggle = (el) => el?.classList.toggle('hidden');
+  overflowBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    exportMenu?.classList.add('hidden');
+    toggle(overflowMenu);
+  });
+  exportBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    overflowMenu?.classList.add('hidden');
+    toggle(exportMenu);
+  });
+  document.addEventListener('click', () => {
+    overflowMenu?.classList.add('hidden');
+    exportMenu?.classList.add('hidden');
+  });
+  overflowMenu?.querySelectorAll('[data-overflow]')?.forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.overflow;
+      if (k === 'guide') document.getElementById('nav-wizard-btn')?.click();
+      else if (k === 'import') document.getElementById('nav-import-btn')?.click();
+      else if (k === 'theme') document.getElementById('theme-toggle-btn')?.click();
+      else if (k === 'copy') document.getElementById('nav-copy-btn')?.click();
+      else if (k === 'reset') document.getElementById('reset-template-btn')?.click();
+    });
+  });
+  document.getElementById('export-menu-copy')?.addEventListener('click', () => document.getElementById('nav-copy-btn')?.click());
+  document.getElementById('export-menu-download')?.addEventListener('click', () => document.getElementById('nav-download-btn')?.click());
+  document.getElementById('export-menu-license')?.addEventListener('click', () => {
+    // Trigger license download from inspector/canvas if present, else toast
+    const btn = document.querySelector('.download-canvas-lic-btn, #download-license-file-btn');
+    if (btn) btn.click();
+    else showToast('Open License section → Download LICENSE', 'info');
+  });
+}
+
+function setupSavedIndicator() {
+  const dot = document.getElementById('save-state-dot');
+  const txt = document.getElementById('save-state-text');
+  if (!dot && !txt) return;
+  const markDirty = () => {
+    if (dot) { dot.classList.remove('saved'); dot.classList.add('dirty'); }
+    if (txt) txt.textContent = 'Saving…';
+  };
+  const markSaved = () => {
+    if (dot) { dot.classList.remove('dirty'); dot.classList.add('saved'); }
+    if (txt) {
+      const d = new Date();
+      txt.textContent = `Saved ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+  };
+  // Any store notify => dirty, debounced save event => saved
+  const origNotify = store.notify.bind(store);
+  store.notify = (meta) => { try { markDirty(); } catch (e) {} return origNotify(meta); };
+  window.addEventListener('readmify:saved', markSaved);
+  // Flush on unload so no work is lost
+  window.addEventListener('beforeunload', () => { try { store.flushSave(); } catch (e) {} });
+}
+
+function setupGlobalDrop() {
+  const overlay = document.getElementById('global-drop-overlay');
+  const viewport = document.getElementById('canvas-scroll-viewport');
+  let dragDepth = 0;
+  const show = () => overlay && (overlay.classList.remove('hidden'), overlay.classList.add('flex'));
+  const hide = () => overlay && (overlay.classList.add('hidden'), overlay.classList.remove('flex'));
+  window.addEventListener('dragenter', (e) => {
+    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
+    dragDepth++;
+    show();
+    viewport?.classList.add('global-drag-over');
+  });
+  window.addEventListener('dragleave', () => {
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) { hide(); viewport?.classList.remove('global-drag-over'); }
+  });
+  window.addEventListener('dragover', (e) => { if (overlay && !overlay.classList.contains('hidden')) e.preventDefault(); });
+  window.addEventListener('drop', (e) => {
+    if (!overlay || overlay.classList.contains('hidden')) return;
+    // Only handle file drops here; section-type drops are handled on canvas dividers
+    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
+    e.preventDefault();
+    dragDepth = 0;
+    hide();
+    viewport?.classList.remove('global-drag-over');
+    const file = e.dataTransfer.files?.[0];
+    if (!file || !file.type.startsWith('image/')) {
+      if (file) showToast('Only images can be dropped as banners', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const url = evt.target.result;
+      const state = store.getState();
+      // Prefer hero, fallback to demo, else create hero
+      let target = state.sections.find(s => s.enabled && s.type === SECTION_TYPES.HERO)
+        || state.sections.find(s => s.enabled && s.type === 'demo')
+        || state.sections.find(s => s.type === SECTION_TYPES.HERO);
+      if (!target) return;
+      if (target.type === SECTION_TYPES.HERO) store.updateSectionData(target.id, { showLogo: true, logoUrl: url });
+      else store.updateSectionData(target.id, { imageUrl: url });
+      showToast('Banner added via drag & drop!', 'success');
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // --- 3. NAVBAR CONTROLS ---
@@ -528,6 +725,37 @@ function setupImportModal() {
       };
       reader.readAsText(file);
     }
+  });
+
+  // Drag & drop .md/.txt files onto import modal + textarea
+  const dropZone = modal.querySelector('.bg-card');
+  const handleFile = (file) => {
+    if (!file) return;
+    if (!/(\.md|\.markdown|\.txt)$/i.test(file.name) && file.type !== 'text/markdown' && !file.type.startsWith('text/')) {
+      showToast('Drop a .md / .txt file', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (evt) => { if (importTextarea) importTextarea.value = evt.target.result; };
+    reader.readAsText(file);
+  };
+  ['dragover', 'dragenter'].forEach(ev => modal.addEventListener(ev, (e) => {
+    e.preventDefault();
+    dropZone?.classList.add('drag-over');
+  }));
+  ['dragleave', 'drop'].forEach(ev => modal.addEventListener(ev, (e) => {
+    if (ev === 'drop') {
+      e.preventDefault();
+      const f = e.dataTransfer?.files?.[0];
+      if (f) handleFile(f);
+    }
+    dropZone?.classList.remove('drag-over');
+  }));
+  importTextarea?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const f = e.dataTransfer?.files?.[0];
+    if (f) handleFile(f);
   });
 
   applyBtn?.addEventListener('click', () => {

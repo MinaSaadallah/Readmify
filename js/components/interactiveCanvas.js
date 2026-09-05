@@ -93,14 +93,14 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
     const isFirst = idx === 0;
     const isLast = idx === sections.length - 1;
 
-    // Top In-between Section Add Divider
+    // Top In-between Section Add Divider (also a drop target for drag reorder + library cards)
     html += `
-      <div class="add-section-divider group/divider py-1.5 flex items-center justify-center relative select-none">
+      <div class="add-section-divider group/divider py-2 flex items-center justify-center relative select-none min-h-[20px]" data-drop-index="${idx}">
         <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
-        <button 
+        <button
           class="insert-section-btn absolute opacity-0 group-hover/divider:opacity-100 transition-all px-2.5 py-0.5 text-[10px] font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1 cursor-pointer"
           data-insert-index="${idx}"
-          title="Insert section here"
+          title="Insert section here (or drop a dragged section / library card)"
         >
           ${SVG_ICONS.plus}
           <span>Add Section</span>
@@ -108,16 +108,18 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
       </div>
     `;
 
-    // Section Block
+    // Section Block (draggable via grip handle)
     html += `
-      <section 
+      <section
         class="interactive-section-block group relative rounded-lg border border-transparent hover:border-zinc-700/80 p-3 sm:p-4 transition-all ${
           sec.id === activeSectionId ? 'canvas-section-focused' : ''
         }"
         data-section-id="${sec.id}"
+        draggable="false"
       >
         <!-- Floating Section Action Toolbar (Top Right on Hover) -->
-        <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
+        <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
+          <span class="drag-grip px-1 text-zinc-500 hover:text-zinc-100 cursor-grab" draggable="true" data-grip-id="${sec.id}" title="Drag to reorder">⠿</span>
           <span class="text-[10px] text-zinc-400 font-mono px-1 font-semibold">${idx + 1}</span>
           <button class="sec-move-up-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isFirst ? 'opacity-30 pointer-events-none' : ''}" title="Move Up" data-id="${sec.id}">
             ${SVG_ICONS.up}
@@ -144,9 +146,9 @@ export function renderInteractiveCanvas(container, state, meta = {}) {
     `;
   });
 
-  // Bottom In-between Add Divider
+  // Bottom In-between Add Divider (drop target)
   html += `
-    <div class="add-section-divider group/divider py-3 flex items-center justify-center relative select-none">
+    <div class="add-section-divider group/divider py-3 flex items-center justify-center relative select-none min-h-[24px]" data-drop-index="${sections.length}">
       <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
       <button 
         class="insert-section-btn px-3 py-1 text-xs font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition"
@@ -177,11 +179,12 @@ function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = '
     <div class="direct-image-editor-container group/imgctrl relative inline-block my-3 max-w-full" data-section-id="${sectionId}" data-image-type="${imageType}">
       <!-- Image Display Card -->
       <div class="relative inline-block max-w-full overflow-hidden transition-all shadow-md bg-zinc-900 border border-border/60" style="border-radius: ${radius};">
-        <img 
-          src="${imageUrl}" 
-          alt="Image" 
-          style="width: ${width}; ${ratioStyle}" 
-          class="max-w-full mx-auto block transition-all" 
+        <img
+          src="${imageUrl}"
+          alt="Image"
+          loading="lazy" decoding="async"
+          style="width: ${width}; ${ratioStyle}"
+          class="max-w-full mx-auto block transition-all"
         />
       </div>
 
@@ -321,7 +324,7 @@ function renderSectionInteractiveContent(section, state) {
         <div class="${alignClass} space-y-2 py-2">
           ${bannerHtml}
           <div>
-            <h1 
+            <h1
               class="canvas-editable-heading text-3xl font-bold tracking-tight text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-0.5 transition cursor-text inline-block min-w-[120px]"
               contenteditable="true"
               data-field="projectName"
@@ -330,13 +333,17 @@ function renderSectionInteractiveContent(section, state) {
             >${escapeHtml(data.projectName || 'Project Title')}</h1>
           </div>
           <div>
-            <p 
+            <p
               class="canvas-editable-text text-base text-zinc-400 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-1 transition cursor-text inline-block min-w-[200px]"
               contenteditable="true"
               data-field="tagline"
               data-section-id="${id}"
               title="Click to edit tagline"
             >${escapeHtml(data.tagline || 'A modern open-source project built with passion.')}</p>
+          </div>
+          <div class="flex items-center ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'} gap-1.5 pt-1 select-none">
+            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.animateTagline ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="animateTagline" title="Animated typing tagline (online)">✨ Typing</button>
+            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.showCapsuleBanner ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="showCapsuleBanner" title="Capsule-render header banner (online)">🌊 Banner</button>
           </div>
         </div>
       `;
@@ -350,19 +357,20 @@ function renderSectionInteractiveContent(section, state) {
       const style = data.style || 'for-the-badge';
 
       const badges = [];
-      if (data.showStars) badges.push('<img src="https://img.shields.io/github/stars/' + owner + '/' + repo + '?style=' + style + '" alt="Stars" class="h-5" />');
-      if (data.showForks) badges.push('<img src="https://img.shields.io/github/forks/' + owner + '/' + repo + '?style=' + style + '" alt="Forks" class="h-5" />');
-      if (data.showIssues) badges.push('<img src="https://img.shields.io/github/issues/' + owner + '/' + repo + '?style=' + style + '" alt="Issues" class="h-5" />');
-      if (data.showPRs) badges.push('<img src="https://img.shields.io/github/issues-pr/' + owner + '/' + repo + '?style=' + style + '" alt="PRs" class="h-5" />');
-      if (data.showLicense) badges.push('<img src="https://img.shields.io/badge/License-MIT-blue.svg?style=' + style + '" alt="License" class="h-5" />');
-      if (data.showRelease) badges.push('<img src="https://img.shields.io/github/v/release/' + owner + '/' + repo + '?style=' + style + '" alt="Release" class="h-5" />');
+      const lazy = 'loading="lazy" decoding="async"';
+      if (data.showStars) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/stars/' + owner + '/' + repo + '?style=' + style + '" alt="Stars" class="h-5" />');
+      if (data.showForks) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/forks/' + owner + '/' + repo + '?style=' + style + '" alt="Forks" class="h-5" />');
+      if (data.showIssues) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues/' + owner + '/' + repo + '?style=' + style + '" alt="Issues" class="h-5" />');
+      if (data.showPRs) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues-pr/' + owner + '/' + repo + '?style=' + style + '" alt="PRs" class="h-5" />');
+      if (data.showLicense) badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/License-MIT-blue.svg?style=' + style + '" alt="License" class="h-5" />');
+      if (data.showRelease) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/v/release/' + owner + '/' + repo + '?style=' + style + '" alt="Release" class="h-5" />');
 
       if (Array.isArray(data.customBadges)) {
         data.customBadges.forEach(cb => {
           const l = encodeURIComponent(cb.label || 'Badge');
           const m = encodeURIComponent(cb.message || 'Value');
           const c = encodeURIComponent(cb.color || 'blue');
-          badges.push('<img src="https://img.shields.io/badge/' + l + '-' + m + '-' + c + '?style=' + style + '" alt="' + cb.label + '" class="h-5" />');
+          badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/' + l + '-' + m + '-' + c + '?style=' + style + '" alt="' + cb.label + '" class="h-5" />');
         });
       }
 
@@ -414,12 +422,15 @@ function renderSectionInteractiveContent(section, state) {
       const techs = data.technologies || [];
       const style = data.style || 'for-the-badge';
       const align = data.align || 'center';
+      const tileSize = data.tileSize || 'medium';
+      const tileStyle = data.tileStyle || 'badges';
       const alignClass = align === 'center' ? 'justify-center' : (align === 'right' ? 'justify-end' : 'justify-start');
+      const imgH = tileSize === 'small' ? 'h-5' : tileSize === 'large' ? 'h-7' : tileSize === 'xlarge' ? 'h-8' : 'h-6';
 
       return `
         <div class="space-y-3">
           <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
+            <h2
               class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
               contenteditable="true"
               data-field="heading"
@@ -427,29 +438,35 @@ function renderSectionInteractiveContent(section, state) {
             >${escapeHtml(data.heading || 'Built With')}</h2>
 
             <div class="flex items-center gap-1.5 select-none">
+              <div class="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-md p-0.5 text-[10px]">
+                ${['small', 'medium', 'large'].map(sz => `
+                  <button class="tile-size-btn px-1.5 py-0.5 rounded transition cursor-pointer ${tileSize === sz ? 'bg-zinc-100 text-zinc-950 font-semibold' : 'text-zinc-400 hover:text-zinc-200'}" data-size="${sz}" data-id="${id}" title="Tile size ${sz}">${sz[0].toUpperCase()}</button>
+                `).join('')}
+              </div>
               <button class="open-tech-picker-canvas-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs cursor-pointer">
                 ${SVG_ICONS.plus}
-                <span>Add Technology</span>
+                <span>Tiles</span>
               </button>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center ${alignClass} gap-2 pt-1">
+          <div class="tile-grid tile-size-${tileSize} tile-style-${tileStyle} ${alignClass} pt-1" data-tech-dropzone="${id}">
             ${techs.map(tId => {
               const tech = TECH_CATALOG.find(t => t.id === tId) || { name: tId, logo: tId, color: 'blue' };
               const badgeUrl = getBadgeUrl(tech, style);
               return `
-                <div class="tech-badge-chip group/chip relative inline-flex items-center select-none" data-id="${tId}">
-                  <img src="${badgeUrl}" alt="${tech.name}" class="h-6 rounded shadow-xs" />
-                  <button 
-                    class="remove-canvas-tech-btn absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-600 text-white rounded-full text-[10px] opacity-0 group-hover/chip:opacity-100 transition flex items-center justify-center shadow-md cursor-pointer hover:bg-rose-500"
+                <div class="tile-chip tech-badge-chip group/chip" draggable="true" data-tech-id="${tId}" data-id="${tId}" title="Drag to reorder — hover to remove">
+                  <span class="drag-grip text-zinc-600 text-[10px]">⠿</span>
+                  <img src="${badgeUrl}" alt="${tech.name}" loading="lazy" decoding="async" class="${imgH} rounded shadow-xs pointer-events-none" />
+                  <button
+                    class="remove-canvas-tech-btn w-4 h-4 bg-rose-600/80 text-white rounded-full text-[10px] opacity-0 group-hover/chip:opacity-100 transition flex items-center justify-center cursor-pointer hover:bg-rose-500"
                     data-tech-id="${tId}"
                     title="Remove ${tech.name}"
                   >✕</button>
                 </div>
               `;
             }).join('')}
-            ${techs.length === 0 ? '<p class="text-xs text-muted-foreground italic">No technologies added yet. Click "+ Add Technology" above.</p>' : ''}
+            ${techs.length === 0 ? '<p class="text-xs text-muted-foreground italic w-full">No tiles yet. Click “Tiles” or drag from Tech Picker. Tip: drop images anywhere to set banners.</p>' : ''}
           </div>
         </div>
       `;
@@ -711,17 +728,51 @@ function renderSectionInteractiveContent(section, state) {
       `;
     }
 
+    case SECTION_TYPES.STATS: {
+      const toggles = [
+        { key: 'showActivityGraph', label: 'Activity graph' },
+        { key: 'showContributors', label: 'Contributors' },
+        { key: 'showStarHistory', label: 'Star history' },
+        { key: 'showTopLangs', label: 'Top langs' },
+        { key: 'showStreak', label: 'Streak' },
+        { key: 'showVisitors', label: 'Visitors' }
+      ];
+      return `
+        <div class="space-y-3">
+          <div class="border-b border-zinc-800 pb-1.5">
+            <h2
+              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
+              contenteditable="true"
+              data-field="heading"
+              data-section-id="${id}"
+            >${escapeHtml(data.heading || 'Stats & Activity')}</h2>
+            <p class="text-[11px] text-muted-foreground mt-0.5">Opt-in online visuals — README still works offline, images load on GitHub.</p>
+          </div>
+          <div class="flex flex-wrap gap-1.5 select-none">
+            ${toggles.map(t => `
+              <button class="stats-toggle-btn px-2.5 py-1 text-[11px] rounded-md border transition cursor-pointer ${data[t.key] ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="${t.key}" data-id="${id}">${data[t.key] ? '✓ ' : '+ '}${t.label}</button>
+            `).join('')}
+          </div>
+          <div
+            class="canvas-editable-text text-xs text-zinc-400 outline-none hover:bg-zinc-800/40 rounded px-1.5 py-0.5 cursor-text"
+            contenteditable="true" data-field="githubUser" data-section-id="${id}"
+            title="GitHub username for stats"
+          >${escapeHtml(data.githubUser || 'yourusername')}</div>
+        </div>
+      `;
+    }
+
     case SECTION_TYPES.CUSTOM: {
       return `
         <div class="space-y-2">
-          <h2 
+          <h2
             class="canvas-editable-heading text-xl font-semibold text-foreground border-b border-zinc-800 pb-1.5 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
             contenteditable="true"
             data-field="heading"
             data-section-id="${id}"
           >${escapeHtml(data.heading || 'Custom Section')}</h2>
 
-          <div 
+          <div
             class="canvas-editable-text font-mono text-xs text-zinc-300 bg-zinc-950/60 border border-zinc-800/80 rounded-lg p-3 outline-none hover:border-zinc-700 focus:border-zinc-600 transition cursor-text min-h-[100px] whitespace-pre-wrap leading-relaxed"
             contenteditable="true"
             data-field="markdown"
@@ -795,6 +846,94 @@ function renderBadgePopoverHtml(data, sectionId) {
       </div>
     </div>
   `;
+}
+
+/**
+ * Native drag-drop for sections: grip dragstart sets sectionId,
+ * dividers accept drops to reorder OR insert library cards.
+ */
+function setupCanvasDragDrop(container) {
+  if (container.dataset.dndBound === 'true') return;
+  container.dataset.dndBound = 'true';
+  let dragSectionId = null;
+
+  container.addEventListener('dragstart', (e) => {
+    const grip = e.target.closest?.('[data-grip-id]');
+    const block = e.target.closest?.('.interactive-section-block');
+    const chip = e.target.closest?.('.tile-chip[data-tech-id]');
+    if (grip) {
+      dragSectionId = grip.dataset.gripId;
+      e.dataTransfer.setData('text/readmify-section-id', dragSectionId);
+      e.dataTransfer.effectAllowed = 'move';
+      block?.classList.add('dragging');
+    } else if (chip && e.target.closest('.tile-grid')) {
+      e.dataTransfer.setData('text/readmify-tech-id', chip.dataset.techId);
+      e.dataTransfer.setData('text/readmify-tech-from', chip.closest('.interactive-section-block')?.dataset.sectionId || '');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+  });
+  container.addEventListener('dragend', () => {
+    dragSectionId = null;
+    container.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    container.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+  });
+  container.addEventListener('dragover', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    const block = e.target.closest?.('.interactive-section-block');
+    if (divider || block) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      divider?.classList.add('drop-target');
+    }
+  });
+  container.addEventListener('dragleave', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    if (divider && !divider.contains(e.relatedTarget)) divider.classList.remove('drop-target');
+  });
+  container.addEventListener('drop', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    if (!divider) return;
+    e.preventDefault();
+    divider.classList.remove('drop-target');
+    const dropIndex = parseInt(divider.dataset.dropIndex, 10);
+    const movingId = e.dataTransfer.getData('text/readmify-section-id');
+    const libType = e.dataTransfer.getData('text/readmify-section-type');
+    const techId = e.dataTransfer.getData('text/readmify-tech-id');
+    const state = store.getState();
+    if (movingId) {
+      const from = state.sections.findIndex(s => s.id === movingId);
+      if (from !== -1) {
+        let to = isNaN(dropIndex) ? state.sections.length : dropIndex;
+        // Adjust for removal shift when moving down
+        const without = state.sections.filter(s => s.id !== movingId);
+        to = Math.max(0, Math.min(to > from ? to - 1 : to, without.length));
+        const [item] = state.sections.splice(from, 1);
+        state.sections.splice(to, 0, item);
+        store.notify({ type: 'REORDER_SECTIONS', force: true });
+        showToast('Section reordered', 'success');
+      }
+      return;
+    }
+    if (libType) {
+      store.addSectionFromType(libType, null, isNaN(dropIndex) ? null : dropIndex);
+      showToast('Section added', 'success');
+      return;
+    }
+    if (techId) {
+      // Drop tech onto nearest tech section near divider
+      const all = store.getState().sections;
+      const techSec = all.slice(0, isNaN(dropIndex) ? all.length : dropIndex).reverse().find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled)
+        || all.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
+      if (techSec) {
+        const list = [...(techSec.data.technologies || [])];
+        if (!list.includes(techId)) {
+          list.push(techId);
+          store.updateSectionData(techSec.id, { technologies: list });
+          showToast('Tech added via drag & drop', 'success');
+        }
+      }
+    }
+  });
 }
 
 /**
@@ -886,12 +1025,24 @@ function attachCanvasEventListeners(container, state) {
   container.querySelectorAll('.sec-delete-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const sec = getSec(btn.dataset.id);
-      if (confirm(`Remove the section "${sec?.title || 'this section'}"?`)) {
-        store.removeSection(btn.dataset.id);
-        showToast('Section removed', 'info');
+      const removed = store.removeSection(btn.dataset.id);
+      if (removed) {
+        showToast(`Removed "${sec?.title || 'section'}" — Undo?`, 'info');
+        // One-click undo via toast click (no confirm friction)
+        const toasts = document.querySelectorAll('#readmify-toast-container > div');
+        const last = toasts[toasts.length - 1];
+        if (last) {
+          last.style.cursor = 'pointer';
+          last.title = 'Click to undo';
+          last.addEventListener('click', () => store.undoRemoveSection(), { once: true });
+          setTimeout(() => { try { last.style.cursor = ''; } catch (e) {} }, 4000);
+        }
       }
     });
   });
+
+  // 2b. Drag & drop reorder (grip -> section/divider). Native HTML5, no deps.
+  try { setupCanvasDragDrop(container); } catch (e) { console.warn('dnd setup failed', e); }
 
   // 3. In-between Section Adders
   container.querySelectorAll('.insert-section-btn').forEach(btn => {
@@ -1098,9 +1249,16 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 6. Tech Stack Handlers
+  // 6. Tech Stack Handlers (tiles: size, drag reorder, drop add)
   container.querySelectorAll('.open-tech-picker-canvas-btn').forEach(btn => {
     btn.addEventListener('click', () => renderTechPickerModal());
+  });
+
+  container.querySelectorAll('.tile-size-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (btn.dataset.id) store.updateSectionData(btn.dataset.id, { tileSize: btn.dataset.size });
+    });
   });
 
   container.querySelectorAll('.remove-canvas-tech-btn').forEach(btn => {
@@ -1112,6 +1270,55 @@ function attachCanvasEventListeners(container, state) {
         const sec = getSec(secId);
         const list = sec?.data?.technologies || [];
         store.updateSectionData(secId, { technologies: list.filter(t => t !== tId) });
+      }
+    });
+  });
+
+  // Tile drag reorder within + across tech sections
+  container.querySelectorAll('[data-tech-dropzone]').forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      if (e.dataTransfer.types?.includes('text/readmify-tech-id') || e.dataTransfer.types?.includes('text/readmify-section-type')) return;
+      // allow tech chips
+      if ([... (e.dataTransfer.types || [])].join(' ').includes('tech') || e.dataTransfer.getData) {
+        e.preventDefault();
+      } else {
+        // Fallback: allow any dragover so drop works in most browsers
+        try { e.preventDefault(); } catch (err) {}
+      }
+    });
+    zone.addEventListener('drop', (e) => {
+      const techId = e.dataTransfer.getData('text/readmify-tech-id');
+      const fromSec = e.dataTransfer.getData('text/readmify-tech-from');
+      const toSec = zone.dataset.techDropzone;
+      if (!techId || !toSec) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const toSection = getSec(toSec);
+      if (!toSection) return;
+      // Remove from source if different section
+      if (fromSec && fromSec !== toSec) {
+        const fromSection = getSec(fromSec);
+        if (fromSection) {
+          const fl = (fromSection.data.technologies || []).filter(t => t !== techId);
+          store.updateSectionData(fromSec, { technologies: fl });
+        }
+      } else if (fromSec === toSec) {
+        // Reorder to end (simple) — full positional reorder via drag order
+        const cur = [...(toSection.data.technologies || [])].filter(t => t !== techId);
+        // Insert near drop target chip if hovering one
+        const overChip = e.target.closest?.('.tile-chip');
+        if (overChip?.dataset.techId) {
+          const at = cur.indexOf(overChip.dataset.techId);
+          cur.splice(at >= 0 ? at : cur.length, 0, techId);
+        } else cur.push(techId);
+        store.updateSectionData(toSec, { technologies: cur });
+        return;
+      }
+      const list = [...(toSection.data.technologies || [])];
+      if (!list.includes(techId)) {
+        list.push(techId);
+        store.updateSectionData(toSec, { technologies: list });
+        showToast('Tile added', 'success');
       }
     });
   });
@@ -1280,6 +1487,28 @@ function attachCanvasEventListeners(container, state) {
     sel.addEventListener('change', () => {
       const secId = sel.closest('.interactive-section-block')?.dataset.sectionId;
       if (secId) store.updateSectionData(secId, { style: sel.value });
+    });
+  });
+
+  // 12. Stats toggles + hero visual toggles
+  container.querySelectorAll('.stats-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const secId = btn.dataset.id || btn.closest('.interactive-section-block')?.dataset.sectionId;
+      const flag = btn.dataset.flag;
+      if (!secId || !flag) return;
+      const sec = getSec(secId);
+      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
+    });
+  });
+  container.querySelectorAll('.hero-visual-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
+      const flag = btn.dataset.flag;
+      if (!secId || !flag) return;
+      const sec = getSec(secId);
+      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
     });
   });
 }

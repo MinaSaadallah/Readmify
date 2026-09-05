@@ -1,14 +1,10 @@
-/** Readmify v2 Bundle - Universal Offline & GitHub Pages Compatibility */
+
 
 (function() {
   'use strict';
 
-
 /* ==================== MODULE: data/techCatalog.js ==================== */
-/**
- * Readmify - Tech Stack Badge Catalog with SkillIcons & Shields.io Support
- * 130+ popular languages, frameworks, databases, cloud providers, and developer tools
- */const TECH_CATEGORIES = [
+const TECH_CATEGORIES = [
   { id: 'all', name: 'All Technologies' },
   { id: 'languages', name: 'Languages' },
   { id: 'frontend', name: 'Frontend & Mobile' },
@@ -206,12 +202,8 @@
   return TECH_DOC_MAP[id] || `https://github.com/topics/${encodeURIComponent(id)}`;
 }
 
-
 /* ==================== MODULE: data/licenses.js ==================== */
-/**
- * Readmify - Open Source Legal License Catalog & Agreement Generator
- * Definitions, permission matrices, and authentic standard legal texts
- */
+
 const LICENSE_CATALOG = [
   {
     id: 'MIT',
@@ -498,11 +490,8 @@ function getLicenseById(id) {
   }) || LICENSE_CATALOG[0];
 }
 
-
 /* ==================== MODULE: data/defaultSections.js ==================== */
-/**
- * Readmify - Standard Modular Sections Definition
- */
+
 const SECTION_TYPES = {
   HERO: 'hero',
   BADGES: 'badges',
@@ -523,6 +512,7 @@ const SECTION_TYPES = {
   CHANGELOG: 'changelog',
   LICENSE: 'license',
   AUTHOR: 'author',
+  STATS: 'stats',
   CUSTOM: 'custom'
 };
 const INITIAL_SECTIONS = [
@@ -596,6 +586,8 @@ const INITIAL_SECTIONS = [
       skilliconsPerline: 10,
       showDocLinks: true,
       showLabels: true,
+      tileSize: 'medium',
+      tileStyle: 'badges',
       technologies: ['javascript', 'html5', 'css3', 'git', 'github']
     }
   },
@@ -758,7 +750,11 @@ function createSection(type, customTitle) {
           logoAlign: 'center',
           logoRadius: '8px',
           repoOwner: 'username',
-          repoName: 'my-project'
+          repoName: 'my-project',
+          animateTagline: false,
+          showCapsuleBanner: false,
+          capsuleType: 'wave',
+          capsuleColor: 'auto'
         }
       };
 
@@ -820,6 +816,8 @@ function createSection(type, customTitle) {
           skilliconsPerline: 10,
           showDocLinks: true,
           showLabels: true,
+          tileSize: 'medium',
+          tileStyle: 'badges',
           technologies: ['javascript', 'typescript', 'html5', 'css3', 'git']
         }
       };
@@ -1068,6 +1066,25 @@ function createSection(type, customTitle) {
         }
       };
 
+    case SECTION_TYPES.STATS:
+      return {
+        id: uid,
+        type,
+        title: customTitle || 'GitHub Visuals & Stats',
+        enabled: true,
+        data: {
+          heading: customTitle || 'Stats & Activity',
+          showStreak: false,
+          showTopLangs: false,
+          showActivityGraph: true,
+          showContributors: true,
+          showStarHistory: false,
+          showVisitors: false,
+          theme: 'dark',
+          tileSize: 'medium'
+        }
+      };
+
     case SECTION_TYPES.CUSTOM:
     default:
       return {
@@ -1083,12 +1100,8 @@ function createSection(type, customTitle) {
   }
 }
 
-
 /* ==================== MODULE: data/templates.js ==================== */
-/**
- * Readmify - Pre-made Templates
- * 7 Curated starters for different project categories
- */
+
 const TEMPLATES = [
   {
     id: 'fullstack',
@@ -1717,12 +1730,7 @@ const TEMPLATES = [
   }
 ];
 
-
 /* ==================== MODULE: services/githubApi.js ==================== */
-/**
- * Readmify - GitHub Deep Repository Inspection Service
- * Free, zero-auth public repository, tree, manifest, and environment inspection
- */
 
 const GITHUB_TO_TECH_MAP = {
   'typescript': { id: 'typescript', skill: 'ts' },
@@ -1858,9 +1866,6 @@ function parseGitHubRepoInput(input) {
   return null;
 }
 
-/**
- * Fetch raw file text from repository (raw.githubusercontent.com or API fallback)
- */
 async function fetchRawFile(owner, repo, branch, filePath) {
   const rawUrl = `https://raw.githubusercontent.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${encodeURIComponent(branch)}/${filePath}`;
   try {
@@ -1887,9 +1892,6 @@ async function fetchRawFile(owner, repo, branch, filePath) {
   return null;
 }
 
-/**
- * Parse .env.example / .env.sample into structured variables
- */
 function parseEnvContent(envText) {
   if (!envText) return [];
   const lines = envText.split('\n');
@@ -1937,9 +1939,6 @@ function parseEnvContent(envText) {
   return vars;
 }
 
-/**
- * Generate a clean ASCII folder tree from repository file paths
- */
 function buildAsciiDirectoryTree(filePaths) {
   if (!filePaths || !filePaths.length) return '';
 
@@ -1988,9 +1987,6 @@ function buildAsciiDirectoryTree(filePaths) {
   return lines.slice(0, 35).join('\n'); // keep max 35 lines
 }
 
-/**
- * Synthesize intelligent features tailored to what was discovered in the repository
- */
 function synthesizeSmartFeatures(analysis) {
   const { languages, matchedTechIds, packageManager, hasDocker, hasCi, hasEnv, envVars, scripts, repoName } = analysis;
   const features = [];
@@ -2125,21 +2121,31 @@ function synthesizeSmartFeatures(analysis) {
   return features.slice(0, 6);
 }
 
-/**
- * Deep, comprehensive GitHub repository inspection
- * Inspects:
- * - Metadata (stars, forks, description, license, topics)
- * - Languages and percentage breakdown
- * - Full recursive git file tree
- * - package.json / requirements.txt / Cargo.toml / go.mod / docker-compose.yml / .env.example
- * - GitHub Actions workflows
- * - Project directory structure
- * - Generates tailored installation, usage, environment variables, features, and badges
- */
+async function fetchJsonSafe(url) {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+
+function getScanCache(key) {
+  try {
+    const raw = localStorage.getItem('readmify_last_scan:' + key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (Date.now() - (parsed.at || 0) > 1000 * 60 * 30) return null;
+    return parsed.data;
+  } catch (e) { return null; }
+}
+
+function setScanCache(key, data) {
+  try { localStorage.setItem('readmify_last_scan:' + key, JSON.stringify({ at: Date.now(), data })); } catch (e) {}
+}
 async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () => {}) {
   onProgress({ step: 1, message: `Connecting to GitHub API for ${owner}/${repo}...` });
 
-  // 1. Fetch Repo Metadata & Languages in parallel
+  // 1. Fetch Repo Metadata & Languages in parallel (+ contributors, release, last commit — all optional)
   const [repoRes, langRes] = await Promise.all([
     fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`),
     fetch(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/languages`)
@@ -2440,9 +2446,30 @@ async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () => {}) {
     repoName: repoData.name || repo
   });
 
+  onProgress({ step: 7, message: 'Fetching contributors, releases & social card…' });
+
+  // 9. Optional enrichment (never blocks offline fallback)
+  const cacheKey = `${owner}/${repo}`;
+  let extra = getScanCache(cacheKey);
+  if (!extra) {
+    const [contribs, latestRelease, lastCommit] = await Promise.all([
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contributors?per_page=5`),
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/releases/latest`),
+      fetchJsonSafe(`https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits?per_page=1`)
+    ]);
+    extra = {
+      topContributors: Array.isArray(contribs) ? contribs.slice(0, 5).map(c => ({ login: c.login, url: c.html_url, contributions: c.contributions })) : [],
+      latestRelease: latestRelease?.tag_name || '',
+      lastCommitDate: lastCommit?.[0]?.commit?.committer?.date || ''
+    };
+    setScanCache(cacheKey, extra);
+  }
+
   onProgress({ step: 7, message: 'Analysis complete! Ready to generate README.' });
 
-  return {
+  const ogImage = `https://opengraph.githubassets.com/1/${encodeURIComponent(repoData.owner?.login || owner)}/${encodeURIComponent(repoData.name || repo)}`;
+
+  const result = {
     owner: repoData.owner?.login || owner,
     repo: repoData.name || repo,
     description: repoData.description || packageJsonData?.description || '',
@@ -2465,22 +2492,65 @@ async function fetchGitHubRepoFullDetails(owner, repo, onProgress = () => {}) {
     workflowBadges,
     hasDocker,
     totalFiles: filePaths.length,
-    rawFilesScanned: (hasPackageJson ? 1 : 0) + (hasEnvExample ? 1 : 0) + (hasCargo ? 1 : 0) + (hasGoMod ? 1 : 0) + (hasRequirements ? 1 : 0)
+    rawFilesScanned: (hasPackageJson ? 1 : 0) + (hasEnvExample ? 1 : 0) + (hasCargo ? 1 : 0) + (hasGoMod ? 1 : 0) + (hasRequirements ? 1 : 0),
+    topContributors: extra.topContributors || [],
+    latestRelease: extra.latestRelease || '',
+    lastCommitDate: extra.lastCommitDate || '',
+    ogImage
   };
+  setScanCache(cacheKey + ':full', result);
+  return result;
 }
 
-/**
- * Backwards compatibility wrapper for fetchGitHubRepoDetails
- */
 async function fetchGitHubRepoDetails(owner, repo) {
   return await fetchGitHubRepoFullDetails(owner, repo);
 }
 
+/* ==================== MODULE: services/npmApi.js ==================== */
+
+const NPM_REGISTRY = 'https://registry.npmjs.org';
+const NPM_DOWNLOADS = 'https://api.npmjs.org/downloads/point/last-month';
+
+async function fetchJson(url, timeoutMs = 6000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: ctrl.signal });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (e) {
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+async function enrichNpmPackage(pkgName) {
+  if (!pkgName) return null;
+  const safe = encodeURIComponent(pkgName);
+  const [meta, dl] = await Promise.all([
+    fetchJson(`${NPM_REGISTRY}/${safe}/latest`),
+    fetchJson(`${NPM_DOWNLOADS}/${safe}`)
+  ]);
+  if (!meta && !dl) return null;
+  return {
+    name: pkgName,
+    version: meta?.version || '',
+    description: meta?.description || '',
+    homepage: meta?.homepage || '',
+    keywords: Array.isArray(meta?.keywords) ? meta.keywords.slice(0, 8) : [],
+    downloads: dl?.downloads || 0
+  };
+}
+function npmBadgeUrls(pkgName, style = 'for-the-badge') {
+  const safe = encodeURIComponent(pkgName);
+  return {
+    version: `https://img.shields.io/npm/v/${safe}?style=${style}`,
+    downloads: `https://img.shields.io/npm/dw/${safe}?style=${style}`
+  };
+}
 
 /* ==================== MODULE: utils/exportUtils.js ==================== */
-/**
- * Readmify - Export & Notification Utilities
- */
+
 async function copyToClipboard(text, successMessage = 'README copied to clipboard!') {
   try {
     if (navigator.clipboard && window.isSecureContext) {
@@ -2564,13 +2634,16 @@ function fireConfetti() {
   }
 }
 
-
 /* ==================== MODULE: utils/markdownGenerator.js ==================== */
-/**
- * Readmify - Markdown Generator Engine
- * Converts the structured sections state into clean GitHub Flavored Markdown
- * Supports SkillIcons, Shields.io, GitHub Stats, Contributors, and Star History
- */function generateMarkdown(sections) {
+
+const techByIdCache = new Map();
+function techById(id) {
+  if (techByIdCache.has(id)) return techByIdCache.get(id);
+  const found = TECH_CATALOG.find(t => t.id === id) || null;
+  if (techByIdCache.size > 500) techByIdCache.clear();
+  techByIdCache.set(id, found);
+  return found;
+}function generateMarkdown(sections) {
   if (!sections || !Array.isArray(sections)) return '';
 
   const chunks = [];
@@ -2606,18 +2679,36 @@ function generateSectionMarkdown(section, context) {
         const wrappedImg = data.logoLinkUrl ? `<a href="${data.logoLinkUrl}">\n    ${rawImg}\n  </a>` : rawImg;
         logoTag = `${wrappedImg}\n  <br/>`;
       }
+      // Optional capsule-render banner (opt-in, online-only progressive enhancement)
+      let capsuleTag = '';
+      if (data.showCapsuleBanner) {
+        const cType = data.capsuleType || 'wave';
+        const cColor = data.capsuleColor || 'auto';
+        const cText = encodeURIComponent(data.projectName || 'Project');
+        const cDesc = encodeURIComponent(data.tagline || '');
+        capsuleTag = `<img src="https://capsule-render.vercel.app/api?type=${cType}&color=${cColor}&height=220&section=header&text=${cText}&fontSize=60&desc=${cDesc}&descSize=16" alt="${data.projectName || 'Project'} banner" width="100%" />\n  <br/>`;
+      }
+      // Optional typing-SVG animated tagline (opt-in)
+      let taglineTag = `<p>${data.tagline || ''}</p>`;
+      if (data.animateTagline && data.tagline) {
+        const lines = String(data.tagline).split(/[.;|\n]+/).map(s => s.trim()).filter(Boolean).slice(0, 3);
+        if (lines.length > 0) {
+          const q = encodeURIComponent(lines.join(';'));
+          taglineTag = `<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=600&lines=${q}" alt="${data.tagline}" /></a>`;
+        }
+      }
 
       if (isCentered) {
         return `<div align="center">
-  ${logoTag}
+  ${capsuleTag}${logoTag}
   <h1>${data.projectName || 'Project Title'}</h1>
-  <p>${data.tagline || ''}</p>
+  ${taglineTag}
 </div>`;
       } else if (align === 'right') {
         return `<div align="right">
-  ${logoTag}
+  ${capsuleTag}${logoTag}
   <h1>${data.projectName || 'Project Title'}</h1>
-  <p>${data.tagline || ''}</p>
+  ${taglineTag}
 </div>`;
       } else {
         const logo = data.showLogo && data.logoUrl
@@ -2730,7 +2821,7 @@ function generateSectionMarkdown(section, context) {
 
       const sizeMap = { small: 28, medium: 40, large: 52, xlarge: 64 };
       const iconPx = sizeMap[data.iconSize] || (parseInt(data.iconSize, 10) || 40);
-      const items = techIds.map(id => TECH_CATALOG.find(t => t.id === id)).filter(Boolean);
+      const items = techIds.map(id => techById(id)).filter(Boolean);
 
       // 1. Categorized Layout (Real-world industry standard)
       if (layout === 'categorized') {
@@ -2983,6 +3074,33 @@ function generateSectionMarkdown(section, context) {
       return `## ${data.heading || 'Author & Acknowledgements'}\n\n**${data.name || 'Author'}**${emailStr}${badgeStr}`;
     }
 
+    case SECTION_TYPES.STATS: {
+      const user = (data.githubUser || repoOwner || '').trim();
+      const repo = `${repoOwner}/${repoName}`;
+      const theme = data.theme === 'light' ? 'default' : 'github_dark';
+      const imgs = [];
+      if (data.showActivityGraph && user) {
+        imgs.push(`[![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=${encodeURIComponent(user)}&theme=github-compact)](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showContributors) {
+        imgs.push(`<a href="https://github.com/${repo}/graphs/contributors"><img src="https://contrib.rocks/image?repo=${repo}" alt="Contributors" /></a>`);
+      }
+      if (data.showStarHistory) {
+        imgs.push(`[![Star History](https://api.star-history.com/svg?repos=${repo}&type=Date)](https://star-history.com/#${repo}&Date)`);
+      }
+      if (data.showTopLangs && user) {
+        imgs.push(`[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=${encodeURIComponent(user)}&layout=compact&theme=${theme})](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showStreak && user) {
+        imgs.push(`[![Streak](https://streak-stats.demolab.com?user=${encodeURIComponent(user)}&theme=${theme === 'default' ? 'default' : 'dark'})](https://github.com/${encodeURIComponent(user)})`);
+      }
+      if (data.showVisitors && user) {
+        imgs.push(`![Visitors](https://komarev.com/ghpvc/?username=${encodeURIComponent(user)}&style=flat-square)`);
+      }
+      if (imgs.length === 0) return `## ${data.heading || 'Stats & Activity'}\n\n*(Enable visuals in section settings — all optional, online-only)*`;
+      return `## ${data.heading || 'Stats & Activity'}\n\n<p align="center">\n  ${imgs.join('\n  <br/>\n  ')}\n</p>`;
+    }
+
     case SECTION_TYPES.CUSTOM: {
       return `## ${data.heading || 'Custom Section'}\n\n${data.markdown || ''}`;
     }
@@ -2992,121 +3110,144 @@ function generateSectionMarkdown(section, context) {
   }
 }
 
-
 /* ==================== MODULE: components/healthScore.js ==================== */
-/**
- * Readmify - README Health & Quality Analyzer
- * Evaluates completeness and provides tips for open-source excellence
- */
+
+function countWords(text) {
+  if (!text) return 0;
+  const t = String(text).replace(/[#*`>\-\[\]()!]/g, ' ').trim();
+  return t ? t.split(/\s+/).length : 0;
+}
+
+function fleschScore(text) {
+  if (!text || text.trim().length < 20) return null;
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length || 1;
+  const syllables = words.reduce((a, w) => {
+    const m = w.toLowerCase().replace(/[^a-z]/g, '').match(/[aeiouy]+/g);
+    return a + (m ? m.length : 1);
+  }, 0);
+  const wps = words.length / sentences;
+  const spw = syllables / Math.max(1, words.length);
+  return Math.max(0, Math.min(100, Math.round(206.835 - 1.015 * wps - 84.6 * spw)));
+}
 function calculateReadmeScore(sections) {
   if (!sections || !Array.isArray(sections)) {
-    return { score: 0, label: 'Empty', color: '#EF4444', tips: ['Start by configuring your project basics'] };
+    return { score: 0, label: 'Empty', color: '#EF4444', tips: ['Start by configuring your project basics'], readability: null };
   }
 
   let score = 0;
   const tips = [];
-
   const enabledTypes = new Set(sections.filter(s => s.enabled).map(s => s.type));
 
-  // 1. Title & Tagline
+  // 1. Title & Tagline (15)
   const hero = sections.find(s => s.type === SECTION_TYPES.HERO && s.enabled);
-  if (hero && hero.data?.projectName && hero.data?.projectName !== 'Project Title') {
-    score += 15;
-    if (!hero.data.tagline || hero.data.tagline.trim().length < 10) {
-      tips.push('Add a concise tagline describing what your project does');
-    }
+  if (hero && hero.data?.projectName && hero.data?.projectName !== 'Project Title' && hero.data.projectName.trim().length > 1) {
+    score += 12;
+    const tag = (hero.data.tagline || '').trim();
+    if (tag.length >= 20 && tag.length <= 140) score += 3;
+    else if (tag.length < 10) tips.push('Add a concise tagline (20–120 chars) describing what your project does');
+    else tips.push({ text: 'Keep tagline 20–120 chars for GitHub + SEO.', action: { type: 'view', mode: 'canvas' }, actionLabel: 'Edit hero' });
   } else {
-    tips.push('Add a clear project name in Header & Title');
+    tips.push({ text: 'Add a clear project name in Header & Title', action: { type: 'enable', sectionType: SECTION_TYPES.HERO }, actionLabel: 'Enable hero' });
   }
 
-  // 2. Badges
-  if (enabledTypes.has(SECTION_TYPES.BADGES)) {
-    score += 10;
-  } else {
-    tips.push('Enable badges (Stars, License, Build) for social proof');
-  }
+  // 2. Badges (8)
+  if (enabledTypes.has(SECTION_TYPES.BADGES)) score += 8;
+  else tips.push({ text: 'Enable badges (Stars, License, Build) for social proof', action: { type: 'enable', sectionType: SECTION_TYPES.BADGES }, actionLabel: 'Enable badges' });
 
-  // 3. About
+  // 3. About + readability (15)
   const about = sections.find(s => s.type === SECTION_TYPES.ABOUT && s.enabled);
-  if (about && about.data?.content && about.data.content.length > 20) {
-    score += 15;
+  const aboutWords = countWords(about?.data?.content || '');
+  if (about && aboutWords > 20) {
+    score += 10;
+    if (aboutWords >= 40) score += 5;
+    else tips.push('Expand About to 40+ words: problem → solution → who it helps');
   } else {
-    tips.push('Add an About section explaining the problem your project solves');
+    tips.push({ text: 'Add an About section explaining the problem your project solves', action: { type: 'enable', sectionType: SECTION_TYPES.ABOUT }, actionLabel: 'Enable about' });
   }
 
-  // 4. Tech Stack
+  // 4. Tech Stack (10)
   const tech = sections.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
-  if (tech && tech.data?.technologies && tech.data.technologies.length > 0) {
-    score += 15;
+  if (tech && tech.data?.technologies?.length > 0) {
+    score += 10;
+    if (!tech.data.technologies.length || tech.data.technologies.length < 3) tips.push('Pick 3+ technologies so auto-scan + badges look credible');
   } else {
-    tips.push('Select technologies in "Built With" to showcase your tech stack');
+    tips.push({ text: 'Select technologies in "Built With" to showcase your tech stack', action: { type: 'enable', sectionType: SECTION_TYPES.TECH_STACK }, actionLabel: 'Pick tech' });
   }
 
-  // 5. Features
+  // 5. Features (10)
   const features = sections.find(s => s.type === SECTION_TYPES.FEATURES && s.enabled);
-  if (features && features.data?.items && features.data.items.length >= 2) {
-    score += 15;
-  } else {
-    tips.push('Highlight 2 or more key features to attract users');
-  }
+  if (features && features.data?.items?.length >= 2) score += 10;
+  else tips.push({ text: 'Highlight 2+ key features to attract users', action: { type: 'enable', sectionType: SECTION_TYPES.FEATURES }, actionLabel: 'Add features' });
 
-  // 6. Installation & Quickstart
+  // 6. Installation (12)
   const install = sections.find(s => s.type === SECTION_TYPES.INSTALLATION && s.enabled);
-  if (install && install.data?.steps && install.data.steps.length > 0) {
-    score += 15;
+  if (install && install.data?.steps?.length > 0) {
+    score += 12;
+    const hasCode = (install.data.steps || []).some(st => (st.cmd || '').includes('\n') || (st.cmd || '').length > 8);
+    if (!hasCode) tips.push('Make install steps copy-pasteable (clone → install → run)');
   } else {
-    tips.push('Provide step-by-step Installation instructions');
+    tips.push({ text: 'Provide step-by-step Installation instructions', action: { type: 'enable', sectionType: SECTION_TYPES.INSTALLATION }, actionLabel: 'Add install' });
   }
 
-  // 7. License
+  // 7. Demo / preview bonus (5)
+  const demo = sections.find(s => s.type === SECTION_TYPES.DEMO && s.enabled);
+  if (demo && (demo.data?.imageUrl || demo.data?.liveUrl)) score += 5;
+  else if (hero?.data?.repoOwner && hero.data.repoOwner !== 'username') tips.push('Add a demo screenshot or live link — repos with visuals get more stars');
+
+  // 8. License (7)
   if (enabledTypes.has(SECTION_TYPES.LICENSE)) {
-    score += 10;
+    score += 7;
+    const lic = sections.find(s => s.type === SECTION_TYPES.LICENSE && s.enabled);
+    if (lic && (!lic.data?.holder || lic.data.holder === 'Your Name')) tips.push('Set License holder to your name/org (not "Your Name")');
   } else {
-    tips.push('Add a License section to define open-source permissions');
+    tips.push({ text: 'Add a License section to define open-source permissions', action: { type: 'enable', sectionType: SECTION_TYPES.LICENSE }, actionLabel: 'Add license' });
   }
 
-  // 8. Author or Contributing
-  if (enabledTypes.has(SECTION_TYPES.AUTHOR) || enabledTypes.has(SECTION_TYPES.CONTRIBUTING)) {
-    score += 10;
-  } else {
-    tips.push('Add Author or Contributing guidelines so people know who built it');
-  }
+  // 9. Author/Contributing (6)
+  if (enabledTypes.has(SECTION_TYPES.AUTHOR) || enabledTypes.has(SECTION_TYPES.CONTRIBUTING)) score += 6;
+  else tips.push('Add Author or Contributing so people know who built it');
 
-  // Classification
+  // 10. Env vars conditional (up to 2 bonus, no penalty)
+  const env = sections.find(s => s.type === SECTION_TYPES.ENV_VARS && s.enabled);
+  if (env && env.data?.variables?.length > 0) score += 2;
+
+  // SEO hygiene (no extra points, just tips)
+  const allText = sections.filter(s => s.enabled).map(s => JSON.stringify(s.data || '')).join(' ');
+  if (/(TODO|FIXME|XXX)/i.test(allText)) tips.push('Remove TODO/FIXME placeholders before publishing');
+  if (/localhost|127\.0\.0\.1/.test(allText)) tips.push('Replace localhost URLs with public links for GitHub readers');
+
+  const readability = fleschScore(about?.data?.content || hero?.data?.tagline || '');
+  if (readability !== null && readability < 40) tips.push('Simplify About sentences — aim for grade-8 readability');
+
   let label = 'Needs Work';
-  let color = '#EF4444'; // red
+  let color = '#EF4444';
+  if (score >= 90) { label = 'Outstanding'; color = '#10B981'; }
+  else if (score >= 75) { label = 'Great'; color = '#06B6D4'; }
+  else if (score >= 50) { label = 'Good'; color = '#F59E0B'; }
 
-  if (score >= 90) {
-    label = 'Outstanding';
-    color = '#10B981'; // emerald
-  } else if (score >= 75) {
-    label = 'Great';
-    color = '#06B6D4'; // cyan
-  } else if (score >= 50) {
-    label = 'Good';
-    color = '#F59E0B'; // amber
-  }
-
-  return {
-    score: Math.min(score, 100),
-    label,
-    color,
-    tips
-  };
+  return { score: Math.min(score, 100), label, color, tips, readability };
 }
 
-
 /* ==================== MODULE: store.js ==================== */
-/**
- * Readmify - Central Reactive State Store
- * Manages section order, user edits, templates, and localStorage persistence
- */
+
 const STORAGE_KEY = 'readmify_v1_state';
 
 class ReadmifyStore {
   constructor() {
     this.listeners = new Set();
     this.state = this.loadInitialState();
+    this._saveTimer = null;
+    this.lastSavedAt = Date.now();
+    this._undoStack = [];
+  }
+
+  flushSave() {
+    if (this._saveTimer) {
+      clearTimeout(this._saveTimer);
+      this._saveTimer = null;
+    }
+    this.saveToStorage(true);
   }
 
   loadInitialState() {
@@ -3137,10 +3278,25 @@ class ReadmifyStore {
     };
   }
 
-  saveToStorage() {
+  saveToStorage(immediate = false) {
+    // Debounced persist: big base64 images make JSON.stringify expensive.
+    // Coalesce rapid typing into one write ~700ms after last change.
+    if (!immediate) {
+      if (this._saveTimer) return;
+      this._saveTimer = setTimeout(() => {
+        this._saveTimer = null;
+        this.saveToStorage(true);
+      }, 700);
+      return;
+    }
     try {
       if (typeof localStorage !== 'undefined') {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+        this.lastSavedAt = Date.now();
+        // Notify save indicator without full re-render
+        try {
+          window.dispatchEvent(new CustomEvent('readmify:saved', { detail: { at: this.lastSavedAt } }));
+        } catch (e) { /* noop */ }
       }
     } catch (e) {
       console.warn('Could not persist state to localStorage:', e);
@@ -3298,12 +3454,27 @@ class ReadmifyStore {
   removeSection(sectionId) {
     const idx = this.state.sections.findIndex(s => s.id === sectionId);
     if (idx !== -1) {
-      this.state.sections.splice(idx, 1);
+      const [removed] = this.state.sections.splice(idx, 1);
+      // Keep small undo stack (max 10) for toast-undo, no confirm() friction
+      this._undoStack.push({ section: removed, index: idx });
+      if (this._undoStack.length > 10) this._undoStack.shift();
       if (this.state.activeSectionId === sectionId) {
         this.state.activeSectionId = this.state.sections[0]?.id || null;
       }
       this.notify({ type: 'REMOVE_SECTION', sectionId, force: true });
+      return removed;
     }
+    return null;
+  }
+
+  undoRemoveSection() {
+    const entry = this._undoStack.pop();
+    if (!entry) return null;
+    const target = Math.min(entry.index, this.state.sections.length);
+    this.state.sections.splice(target, 0, entry.section);
+    this.state.activeSectionId = entry.section.id;
+    this.notify({ type: 'UNDO_REMOVE', sectionId: entry.section.id, force: true });
+    return entry.section.id;
   }
 
   loadTemplate(templateId) {
@@ -3450,6 +3621,26 @@ class ReadmifyStore {
           author.data.github = analysis.owner;
         }
       }
+
+      // 11. Hero OG banner prefill (only if no custom banner yet)
+      if (hero && analysis.ogImage && !hero.data.logoUrl) {
+        hero.data.logoUrl = analysis.ogImage;
+        hero.data.showLogo = false; // keep off by default, user enables with 1 click
+        hero.data.logoLinkUrl = analysis.homepage || '';
+      }
+
+      // 12. Badges: contributors + release enrichment
+      if (badges) {
+        if (analysis.topContributors?.length > 0) badges.data.showContributors = true;
+        if (analysis.latestRelease) badges.data.showRelease = true;
+      }
+
+      // 13. Stats visuals (opt-in, enable if repo has traction)
+      const stats = sections.find(s => s.type === SECTION_TYPES.STATS);
+      if (stats && (analysis.stars > 0 || (analysis.topContributors?.length || 0) > 0)) {
+        stats.enabled = false; // stay opt-in, but prefill user
+        stats.data.githubUser = analysis.owner || '';
+      }
     });
 
     if (this.state.sections[0]) {
@@ -3459,12 +3650,8 @@ class ReadmifyStore {
   }
 }const store = new ReadmifyStore();
 
-
 /* ==================== MODULE: components/photoUploader.js ==================== */
-/**
- * Readmify - Image Studio (Cropper, Resizer & Banner Hub)
- * Zero-dependency interactive canvas cropper, dimension scaler, presets, and markdown styling
- */
+
 const BANNER_PRESETS = [
   {
     id: 'minimal-grid',
@@ -4220,9 +4407,6 @@ function setCropBoxFromRatio(ratio) {
   }
 }
 
-/**
- * Interactive HTML5 Canvas Cropper
- */
 function initCanvasCrop() {
   const canvas = document.getElementById('studio-crop-canvas');
   if (!canvas || !studioState.originalImage) return;
@@ -4517,14 +4701,7 @@ function applyImageToTarget(url, targetField, styleOptions = {}) {
   }
 }
 
-
 /* ==================== MODULE: components/sectionLibrary.js ==================== */
-/**
- * Readmify - Visual Section Library Catalog (shadcn/ui style)
- * Rich catalog of 16+ predefined modular section templates
- */
-
-
 
 let catalogCategory = 'all';
 let catalogSearchQuery = '';
@@ -4695,6 +4872,13 @@ const SECTION_CATALOG = [
     tags: ['author', 'creator', 'contact', 'socials', 'email']
   },
   {
+    type: SECTION_TYPES.STATS,
+    title: 'GitHub Visuals & Stats',
+    category: 'features',
+    desc: 'Activity graph, contributor wall, star history, streak — all opt-in online visuals.',
+    tags: ['stats', 'graphs', 'activity', 'contributors', 'stars', 'visuals']
+  },
+  {
     type: SECTION_TYPES.CUSTOM,
     title: 'Custom Section',
     category: 'community',
@@ -4807,7 +4991,7 @@ function renderLibraryModal() {
               const isMultiple = item.type === SECTION_TYPES.CUSTOM;
 
               return `
-                <div class="group p-3.5 bg-card border border-border hover:border-foreground/40 rounded-lg flex flex-col justify-between transition space-y-3 select-none">
+                <div class="group p-3.5 bg-card border border-border hover:border-foreground/40 rounded-lg flex flex-col justify-between transition space-y-3 select-none" draggable="true" data-section-type="${item.type}" title="Drag onto canvas dividers to insert">
                   <div class="space-y-1.5">
                     <div class="flex items-center justify-between">
                       <div class="flex items-center gap-2">
@@ -4858,17 +5042,23 @@ function renderLibraryModal() {
     if (e.target === modal) closeSectionLibrary();
   });
 
-  // Search input
+  // Search input (debounced to avoid re-render jank + focus loss)
   const searchInput = modal.querySelector('#lib-search-input');
+  let searchTimer = null;
   searchInput?.addEventListener('input', (e) => {
-    catalogSearchQuery = e.target.value;
-    renderLibraryModal();
-    // Maintain focus
-    const updatedInput = modal.querySelector('#lib-search-input');
-    if (updatedInput) {
-      updatedInput.focus();
-      updatedInput.setSelectionRange(catalogSearchQuery.length, catalogSearchQuery.length);
-    }
+    const val = e.target.value;
+    const pos = e.target.selectionStart || val.length;
+    if (searchTimer) clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      catalogSearchQuery = val;
+      // Lightweight list-only update: re-render then restore focus
+      renderLibraryModal();
+      const updatedInput = modal.querySelector('#lib-search-input');
+      if (updatedInput) {
+        updatedInput.focus();
+        try { updatedInput.setSelectionRange(pos, pos); } catch (err) {}
+      }
+    }, 180);
   });
 
   modal.querySelector('#lib-clear-search-btn')?.addEventListener('click', () => {
@@ -4881,6 +5071,14 @@ function renderLibraryModal() {
     btn.addEventListener('click', () => {
       catalogCategory = btn.dataset.cat;
       renderLibraryModal();
+    });
+  });
+
+  // Drag library cards onto canvas (native HTML5)
+  modal.querySelectorAll('[data-section-type]').forEach(card => {
+    card.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/readmify-section-type', card.dataset.sectionType);
+      e.dataTransfer.effectAllowed = 'copy';
     });
   });
 
@@ -4908,11 +5106,8 @@ function renderLibraryModal() {
   });
 }
 
-
 /* ==================== MODULE: components/techPicker.js ==================== */
-/**
- * Readmify - Interactive Tech Stack Badge Picker Modal (shadcn/ui style)
- */
+
 let currentCategory = 'all';
 let searchQuery = '';function renderTechPickerModal() {
   let modal = document.getElementById('tech-picker-modal');
@@ -5064,21 +5259,24 @@ function updateTechGrid() {
   grid.innerHTML = filtered.map(item => {
     const isSelected = selectedTechs.has(item.id);
     const badgeUrl = getBadgeUrl(item, style);
+    const noSkill = !item.skillSlug ? `<span class="text-[9px] text-amber-400/80" title="No SkillIcons — use Shields layout">no-icon</span>` : '';
 
     return `
-      <div 
+      <div
         class="tech-card p-2.5 rounded-md border transition-all cursor-pointer flex flex-col justify-between gap-2 select-none ${
-          isSelected 
-            ? 'bg-muted border-foreground/60 shadow-xs ring-1 ring-ring' 
+          isSelected
+            ? 'bg-muted border-foreground/60 shadow-xs ring-1 ring-ring'
             : 'bg-card border-border hover:border-zinc-700 hover:bg-muted/50'
         }"
         data-tech-id="${item.id}"
+        draggable="true"
+        title="Click to toggle · drag onto canvas tiles"
       >
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-1">
           <span class="text-xs font-medium text-foreground truncate">${item.name}</span>
-          <span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
+          <span class="flex items-center gap-1">${noSkill}<span class="w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px] ${
             isSelected ? 'bg-primary text-primary-foreground font-bold' : 'border border-border text-transparent'
-          }">✓</span>
+          }">✓</span></span>
         </div>
         <div class="h-5 flex items-center overflow-hidden">
           <img src="${badgeUrl}" alt="${item.name}" class="h-4 object-contain pointer-events-none" loading="lazy" />
@@ -5092,6 +5290,13 @@ function updateTechGrid() {
       const techId = card.dataset.techId;
       toggleTechItem(techId);
     });
+    card.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/readmify-tech-id', card.dataset.techId);
+      e.dataTransfer.setData('text/readmify-tech-from', 'picker');
+      e.dataTransfer.effectAllowed = 'copy';
+      card.classList.add('dragging');
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
   });
 }
 
@@ -5112,11 +5317,8 @@ function toggleTechItem(techId) {
   updateTechGrid();
 }
 
-
 /* ==================== MODULE: components/sectionEditor.js ==================== */
-/**
- * Readmify - Dynamic Section Form Editor (v3 with Image Studio, Section Library & Full Customizability)
- */
+
 let currentRenderedSectionId = null;function renderSectionEditor(container, meta = {}) {
   if (!container) return;
 
@@ -6549,22 +6751,7 @@ function attachFieldListeners(container, sectionId, type, currentData) {
   });
 }
 
-
 /* ==================== MODULE: components/interactiveCanvas.js ==================== */
-/**
- * Readmify - Interactive Canvas Engine (v5 Simple Living Document)
- * Ultra-simple, kid-friendly direct in-place editing:
- * - 1-Click direct on-image editing (width, corners, crop ratio, file upload, URL swap, delete)
- * - Clean SVG icons throughout (zero emojis)
- * - Effortless outline & inline add/remove/reorder
- */
-
-
-
-
-
-
-
 
 let activeBadgePopoverSectionId = null;
 
@@ -6592,9 +6779,6 @@ const SVG_ICONS = {
   image: '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>'
 };
 
-/**
- * Main entry point: renders the interactive document canvas
- */
 function renderInteractiveCanvas(container, state, meta = {}) {
   if (!container) return;
 
@@ -6645,14 +6829,14 @@ function renderInteractiveCanvas(container, state, meta = {}) {
     const isFirst = idx === 0;
     const isLast = idx === sections.length - 1;
 
-    // Top In-between Section Add Divider
+    // Top In-between Section Add Divider (also a drop target for drag reorder + library cards)
     html += `
-      <div class="add-section-divider group/divider py-1.5 flex items-center justify-center relative select-none">
+      <div class="add-section-divider group/divider py-2 flex items-center justify-center relative select-none min-h-[20px]" data-drop-index="${idx}">
         <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
-        <button 
+        <button
           class="insert-section-btn absolute opacity-0 group-hover/divider:opacity-100 transition-all px-2.5 py-0.5 text-[10px] font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1 cursor-pointer"
           data-insert-index="${idx}"
-          title="Insert section here"
+          title="Insert section here (or drop a dragged section / library card)"
         >
           ${SVG_ICONS.plus}
           <span>Add Section</span>
@@ -6660,16 +6844,18 @@ function renderInteractiveCanvas(container, state, meta = {}) {
       </div>
     `;
 
-    // Section Block
+    // Section Block (draggable via grip handle)
     html += `
-      <section 
+      <section
         class="interactive-section-block group relative rounded-lg border border-transparent hover:border-zinc-700/80 p-3 sm:p-4 transition-all ${
           sec.id === activeSectionId ? 'canvas-section-focused' : ''
         }"
         data-section-id="${sec.id}"
+        draggable="false"
       >
         <!-- Floating Section Action Toolbar (Top Right on Hover) -->
-        <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
+        <div class="section-hover-toolbar absolute -top-3.5 right-3 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-all duration-150 flex items-center gap-0.5 bg-zinc-900 border border-zinc-700/80 rounded-md px-1.5 py-0.5 shadow-xl text-xs z-30 select-none">
+          <span class="drag-grip px-1 text-zinc-500 hover:text-zinc-100 cursor-grab" draggable="true" data-grip-id="${sec.id}" title="Drag to reorder">⠿</span>
           <span class="text-[10px] text-zinc-400 font-mono px-1 font-semibold">${idx + 1}</span>
           <button class="sec-move-up-btn p-1 text-zinc-400 hover:text-zinc-100 rounded hover:bg-zinc-800 transition ${isFirst ? 'opacity-30 pointer-events-none' : ''}" title="Move Up" data-id="${sec.id}">
             ${SVG_ICONS.up}
@@ -6696,9 +6882,9 @@ function renderInteractiveCanvas(container, state, meta = {}) {
     `;
   });
 
-  // Bottom In-between Add Divider
+  // Bottom In-between Add Divider (drop target)
   html += `
-    <div class="add-section-divider group/divider py-3 flex items-center justify-center relative select-none">
+    <div class="add-section-divider group/divider py-3 flex items-center justify-center relative select-none min-h-[24px]" data-drop-index="${sections.length}">
       <div class="divider-line h-[1px] bg-border/40 w-full group-hover/divider:bg-zinc-600 transition"></div>
       <button 
         class="insert-section-btn px-3 py-1 text-xs font-medium rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 border border-zinc-700 shadow-sm flex items-center gap-1.5 cursor-pointer opacity-70 hover:opacity-100 transition"
@@ -6717,10 +6903,6 @@ function renderInteractiveCanvas(container, state, meta = {}) {
   attachCanvasEventListeners(container, state);
 }
 
-/**
- * Direct 1-Click On-Image Toolbar & Wrapper
- * Provides 1-click resize pills, corner radius pills, crop ratio presets, replace file picker, and remove button.
- */
 function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = 'hero') {
   const { width = '100%', radius = '8px', ratio = 'auto' } = options;
   const ratioStyle = ratio && ratio !== 'auto' ? `aspect-ratio: ${ratio}; object-fit: cover;` : '';
@@ -6729,11 +6911,12 @@ function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = '
     <div class="direct-image-editor-container group/imgctrl relative inline-block my-3 max-w-full" data-section-id="${sectionId}" data-image-type="${imageType}">
       <!-- Image Display Card -->
       <div class="relative inline-block max-w-full overflow-hidden transition-all shadow-md bg-zinc-900 border border-border/60" style="border-radius: ${radius};">
-        <img 
-          src="${imageUrl}" 
-          alt="Image" 
-          style="width: ${width}; ${ratioStyle}" 
-          class="max-w-full mx-auto block transition-all" 
+        <img
+          src="${imageUrl}"
+          alt="Image"
+          loading="lazy" decoding="async"
+          style="width: ${width}; ${ratioStyle}"
+          class="max-w-full mx-auto block transition-all"
         />
       </div>
 
@@ -6823,9 +7006,6 @@ function renderDirectImageEditorHtml(imageUrl, options, sectionId, imageType = '
   `;
 }
 
-/**
- * Friendly Kid-friendly Dropzone Box when no image is present
- */
 function renderKidFriendlyDropzone(sectionId, title = 'Add Project Banner / Logo', imageType = 'hero') {
   return `
     <div class="kid-dropzone-box border-2 border-dashed border-zinc-700/80 hover:border-zinc-500 rounded-xl p-5 text-center transition bg-zinc-900/30 hover:bg-zinc-900/60 select-none my-3 cursor-pointer group" data-section-id="${sectionId}" data-image-type="${imageType}">
@@ -6848,9 +7028,6 @@ function renderKidFriendlyDropzone(sectionId, title = 'Add Project Banner / Logo
   `;
 }
 
-/**
- * Render individual section interactive preview
- */
 function renderSectionInteractiveContent(section, state) {
   const { type, data, id } = section;
 
@@ -6873,7 +7050,7 @@ function renderSectionInteractiveContent(section, state) {
         <div class="${alignClass} space-y-2 py-2">
           ${bannerHtml}
           <div>
-            <h1 
+            <h1
               class="canvas-editable-heading text-3xl font-bold tracking-tight text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-0.5 transition cursor-text inline-block min-w-[120px]"
               contenteditable="true"
               data-field="projectName"
@@ -6882,13 +7059,17 @@ function renderSectionInteractiveContent(section, state) {
             >${escapeHtml(data.projectName || 'Project Title')}</h1>
           </div>
           <div>
-            <p 
+            <p
               class="canvas-editable-text text-base text-zinc-400 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-2 py-1 transition cursor-text inline-block min-w-[200px]"
               contenteditable="true"
               data-field="tagline"
               data-section-id="${id}"
               title="Click to edit tagline"
             >${escapeHtml(data.tagline || 'A modern open-source project built with passion.')}</p>
+          </div>
+          <div class="flex items-center ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'} gap-1.5 pt-1 select-none">
+            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.animateTagline ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="animateTagline" title="Animated typing tagline (online)">✨ Typing</button>
+            <button class="hero-visual-toggle px-2 py-0.5 text-[10px] rounded-md border transition cursor-pointer ${data.showCapsuleBanner ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="showCapsuleBanner" title="Capsule-render header banner (online)">🌊 Banner</button>
           </div>
         </div>
       `;
@@ -6902,19 +7083,20 @@ function renderSectionInteractiveContent(section, state) {
       const style = data.style || 'for-the-badge';
 
       const badges = [];
-      if (data.showStars) badges.push('<img src="https://img.shields.io/github/stars/' + owner + '/' + repo + '?style=' + style + '" alt="Stars" class="h-5" />');
-      if (data.showForks) badges.push('<img src="https://img.shields.io/github/forks/' + owner + '/' + repo + '?style=' + style + '" alt="Forks" class="h-5" />');
-      if (data.showIssues) badges.push('<img src="https://img.shields.io/github/issues/' + owner + '/' + repo + '?style=' + style + '" alt="Issues" class="h-5" />');
-      if (data.showPRs) badges.push('<img src="https://img.shields.io/github/issues-pr/' + owner + '/' + repo + '?style=' + style + '" alt="PRs" class="h-5" />');
-      if (data.showLicense) badges.push('<img src="https://img.shields.io/badge/License-MIT-blue.svg?style=' + style + '" alt="License" class="h-5" />');
-      if (data.showRelease) badges.push('<img src="https://img.shields.io/github/v/release/' + owner + '/' + repo + '?style=' + style + '" alt="Release" class="h-5" />');
+      const lazy = 'loading="lazy" decoding="async"';
+      if (data.showStars) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/stars/' + owner + '/' + repo + '?style=' + style + '" alt="Stars" class="h-5" />');
+      if (data.showForks) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/forks/' + owner + '/' + repo + '?style=' + style + '" alt="Forks" class="h-5" />');
+      if (data.showIssues) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues/' + owner + '/' + repo + '?style=' + style + '" alt="Issues" class="h-5" />');
+      if (data.showPRs) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/issues-pr/' + owner + '/' + repo + '?style=' + style + '" alt="PRs" class="h-5" />');
+      if (data.showLicense) badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/License-MIT-blue.svg?style=' + style + '" alt="License" class="h-5" />');
+      if (data.showRelease) badges.push('<img ' + lazy + ' src="https://img.shields.io/github/v/release/' + owner + '/' + repo + '?style=' + style + '" alt="Release" class="h-5" />');
 
       if (Array.isArray(data.customBadges)) {
         data.customBadges.forEach(cb => {
           const l = encodeURIComponent(cb.label || 'Badge');
           const m = encodeURIComponent(cb.message || 'Value');
           const c = encodeURIComponent(cb.color || 'blue');
-          badges.push('<img src="https://img.shields.io/badge/' + l + '-' + m + '-' + c + '?style=' + style + '" alt="' + cb.label + '" class="h-5" />');
+          badges.push('<img ' + lazy + ' src="https://img.shields.io/badge/' + l + '-' + m + '-' + c + '?style=' + style + '" alt="' + cb.label + '" class="h-5" />');
         });
       }
 
@@ -6966,12 +7148,15 @@ function renderSectionInteractiveContent(section, state) {
       const techs = data.technologies || [];
       const style = data.style || 'for-the-badge';
       const align = data.align || 'center';
+      const tileSize = data.tileSize || 'medium';
+      const tileStyle = data.tileStyle || 'badges';
       const alignClass = align === 'center' ? 'justify-center' : (align === 'right' ? 'justify-end' : 'justify-start');
+      const imgH = tileSize === 'small' ? 'h-5' : tileSize === 'large' ? 'h-7' : tileSize === 'xlarge' ? 'h-8' : 'h-6';
 
       return `
         <div class="space-y-3">
           <div class="flex items-center justify-between border-b border-zinc-800 pb-1.5">
-            <h2 
+            <h2
               class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
               contenteditable="true"
               data-field="heading"
@@ -6979,29 +7164,35 @@ function renderSectionInteractiveContent(section, state) {
             >${escapeHtml(data.heading || 'Built With')}</h2>
 
             <div class="flex items-center gap-1.5 select-none">
+              <div class="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-md p-0.5 text-[10px]">
+                ${['small', 'medium', 'large'].map(sz => `
+                  <button class="tile-size-btn px-1.5 py-0.5 rounded transition cursor-pointer ${tileSize === sz ? 'bg-zinc-100 text-zinc-950 font-semibold' : 'text-zinc-400 hover:text-zinc-200'}" data-size="${sz}" data-id="${id}" title="Tile size ${sz}">${sz[0].toUpperCase()}</button>
+                `).join('')}
+              </div>
               <button class="open-tech-picker-canvas-btn btn-primary text-xs px-2.5 py-1 flex items-center gap-1 shadow-xs cursor-pointer">
                 ${SVG_ICONS.plus}
-                <span>Add Technology</span>
+                <span>Tiles</span>
               </button>
             </div>
           </div>
 
-          <div class="flex flex-wrap items-center ${alignClass} gap-2 pt-1">
+          <div class="tile-grid tile-size-${tileSize} tile-style-${tileStyle} ${alignClass} pt-1" data-tech-dropzone="${id}">
             ${techs.map(tId => {
               const tech = TECH_CATALOG.find(t => t.id === tId) || { name: tId, logo: tId, color: 'blue' };
               const badgeUrl = getBadgeUrl(tech, style);
               return `
-                <div class="tech-badge-chip group/chip relative inline-flex items-center select-none" data-id="${tId}">
-                  <img src="${badgeUrl}" alt="${tech.name}" class="h-6 rounded shadow-xs" />
-                  <button 
-                    class="remove-canvas-tech-btn absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-600 text-white rounded-full text-[10px] opacity-0 group-hover/chip:opacity-100 transition flex items-center justify-center shadow-md cursor-pointer hover:bg-rose-500"
+                <div class="tile-chip tech-badge-chip group/chip" draggable="true" data-tech-id="${tId}" data-id="${tId}" title="Drag to reorder — hover to remove">
+                  <span class="drag-grip text-zinc-600 text-[10px]">⠿</span>
+                  <img src="${badgeUrl}" alt="${tech.name}" loading="lazy" decoding="async" class="${imgH} rounded shadow-xs pointer-events-none" />
+                  <button
+                    class="remove-canvas-tech-btn w-4 h-4 bg-rose-600/80 text-white rounded-full text-[10px] opacity-0 group-hover/chip:opacity-100 transition flex items-center justify-center cursor-pointer hover:bg-rose-500"
                     data-tech-id="${tId}"
                     title="Remove ${tech.name}"
                   >✕</button>
                 </div>
               `;
             }).join('')}
-            ${techs.length === 0 ? '<p class="text-xs text-muted-foreground italic">No technologies added yet. Click "+ Add Technology" above.</p>' : ''}
+            ${techs.length === 0 ? '<p class="text-xs text-muted-foreground italic w-full">No tiles yet. Click “Tiles” or drag from Tech Picker. Tip: drop images anywhere to set banners.</p>' : ''}
           </div>
         </div>
       `;
@@ -7263,17 +7454,51 @@ function renderSectionInteractiveContent(section, state) {
       `;
     }
 
+    case SECTION_TYPES.STATS: {
+      const toggles = [
+        { key: 'showActivityGraph', label: 'Activity graph' },
+        { key: 'showContributors', label: 'Contributors' },
+        { key: 'showStarHistory', label: 'Star history' },
+        { key: 'showTopLangs', label: 'Top langs' },
+        { key: 'showStreak', label: 'Streak' },
+        { key: 'showVisitors', label: 'Visitors' }
+      ];
+      return `
+        <div class="space-y-3">
+          <div class="border-b border-zinc-800 pb-1.5">
+            <h2
+              class="canvas-editable-heading text-xl font-semibold text-foreground outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
+              contenteditable="true"
+              data-field="heading"
+              data-section-id="${id}"
+            >${escapeHtml(data.heading || 'Stats & Activity')}</h2>
+            <p class="text-[11px] text-muted-foreground mt-0.5">Opt-in online visuals — README still works offline, images load on GitHub.</p>
+          </div>
+          <div class="flex flex-wrap gap-1.5 select-none">
+            ${toggles.map(t => `
+              <button class="stats-toggle-btn px-2.5 py-1 text-[11px] rounded-md border transition cursor-pointer ${data[t.key] ? 'bg-zinc-100 text-zinc-950 font-semibold border-zinc-100' : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200'}" data-flag="${t.key}" data-id="${id}">${data[t.key] ? '✓ ' : '+ '}${t.label}</button>
+            `).join('')}
+          </div>
+          <div
+            class="canvas-editable-text text-xs text-zinc-400 outline-none hover:bg-zinc-800/40 rounded px-1.5 py-0.5 cursor-text"
+            contenteditable="true" data-field="githubUser" data-section-id="${id}"
+            title="GitHub username for stats"
+          >${escapeHtml(data.githubUser || 'yourusername')}</div>
+        </div>
+      `;
+    }
+
     case SECTION_TYPES.CUSTOM: {
       return `
         <div class="space-y-2">
-          <h2 
+          <h2
             class="canvas-editable-heading text-xl font-semibold text-foreground border-b border-zinc-800 pb-1.5 outline-none hover:bg-zinc-800/40 focus:bg-zinc-800/60 rounded px-1.5 transition cursor-text"
             contenteditable="true"
             data-field="heading"
             data-section-id="${id}"
           >${escapeHtml(data.heading || 'Custom Section')}</h2>
 
-          <div 
+          <div
             class="canvas-editable-text font-mono text-xs text-zinc-300 bg-zinc-950/60 border border-zinc-800/80 rounded-lg p-3 outline-none hover:border-zinc-700 focus:border-zinc-600 transition cursor-text min-h-[100px] whitespace-pre-wrap leading-relaxed"
             contenteditable="true"
             data-field="markdown"
@@ -7305,9 +7530,6 @@ function renderSectionInteractiveContent(section, state) {
   }
 }
 
-/**
- * Render popover for quick badge customization right on the canvas
- */
 function renderBadgePopoverHtml(data, sectionId) {
   const flags = [
     { key: 'showStars', label: 'GitHub Stars' },
@@ -7349,9 +7571,90 @@ function renderBadgePopoverHtml(data, sectionId) {
   `;
 }
 
-/**
- * Attach dynamic event listeners for direct in-place editing and block manipulation
- */
+function setupCanvasDragDrop(container) {
+  if (container.dataset.dndBound === 'true') return;
+  container.dataset.dndBound = 'true';
+  let dragSectionId = null;
+
+  container.addEventListener('dragstart', (e) => {
+    const grip = e.target.closest?.('[data-grip-id]');
+    const block = e.target.closest?.('.interactive-section-block');
+    const chip = e.target.closest?.('.tile-chip[data-tech-id]');
+    if (grip) {
+      dragSectionId = grip.dataset.gripId;
+      e.dataTransfer.setData('text/readmify-section-id', dragSectionId);
+      e.dataTransfer.effectAllowed = 'move';
+      block?.classList.add('dragging');
+    } else if (chip && e.target.closest('.tile-grid')) {
+      e.dataTransfer.setData('text/readmify-tech-id', chip.dataset.techId);
+      e.dataTransfer.setData('text/readmify-tech-from', chip.closest('.interactive-section-block')?.dataset.sectionId || '');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+  });
+  container.addEventListener('dragend', () => {
+    dragSectionId = null;
+    container.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    container.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+  });
+  container.addEventListener('dragover', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    const block = e.target.closest?.('.interactive-section-block');
+    if (divider || block) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      divider?.classList.add('drop-target');
+    }
+  });
+  container.addEventListener('dragleave', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    if (divider && !divider.contains(e.relatedTarget)) divider.classList.remove('drop-target');
+  });
+  container.addEventListener('drop', (e) => {
+    const divider = e.target.closest?.('.add-section-divider');
+    if (!divider) return;
+    e.preventDefault();
+    divider.classList.remove('drop-target');
+    const dropIndex = parseInt(divider.dataset.dropIndex, 10);
+    const movingId = e.dataTransfer.getData('text/readmify-section-id');
+    const libType = e.dataTransfer.getData('text/readmify-section-type');
+    const techId = e.dataTransfer.getData('text/readmify-tech-id');
+    const state = store.getState();
+    if (movingId) {
+      const from = state.sections.findIndex(s => s.id === movingId);
+      if (from !== -1) {
+        let to = isNaN(dropIndex) ? state.sections.length : dropIndex;
+        // Adjust for removal shift when moving down
+        const without = state.sections.filter(s => s.id !== movingId);
+        to = Math.max(0, Math.min(to > from ? to - 1 : to, without.length));
+        const [item] = state.sections.splice(from, 1);
+        state.sections.splice(to, 0, item);
+        store.notify({ type: 'REORDER_SECTIONS', force: true });
+        showToast('Section reordered', 'success');
+      }
+      return;
+    }
+    if (libType) {
+      store.addSectionFromType(libType, null, isNaN(dropIndex) ? null : dropIndex);
+      showToast('Section added', 'success');
+      return;
+    }
+    if (techId) {
+      // Drop tech onto nearest tech section near divider
+      const all = store.getState().sections;
+      const techSec = all.slice(0, isNaN(dropIndex) ? all.length : dropIndex).reverse().find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled)
+        || all.find(s => s.type === SECTION_TYPES.TECH_STACK && s.enabled);
+      if (techSec) {
+        const list = [...(techSec.data.technologies || [])];
+        if (!list.includes(techId)) {
+          list.push(techId);
+          store.updateSectionData(techSec.id, { technologies: list });
+          showToast('Tech added via drag & drop', 'success');
+        }
+      }
+    }
+  });
+}
+
 function attachCanvasEventListeners(container, state) {
   const getSec = (id) => store.getState().sections.find(s => s.id === id);
 
@@ -7438,12 +7741,24 @@ function attachCanvasEventListeners(container, state) {
   container.querySelectorAll('.sec-delete-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const sec = getSec(btn.dataset.id);
-      if (confirm(`Remove the section "${sec?.title || 'this section'}"?`)) {
-        store.removeSection(btn.dataset.id);
-        showToast('Section removed', 'info');
+      const removed = store.removeSection(btn.dataset.id);
+      if (removed) {
+        showToast(`Removed "${sec?.title || 'section'}" — Undo?`, 'info');
+        // One-click undo via toast click (no confirm friction)
+        const toasts = document.querySelectorAll('#readmify-toast-container > div');
+        const last = toasts[toasts.length - 1];
+        if (last) {
+          last.style.cursor = 'pointer';
+          last.title = 'Click to undo';
+          last.addEventListener('click', () => store.undoRemoveSection(), { once: true });
+          setTimeout(() => { try { last.style.cursor = ''; } catch (e) {} }, 4000);
+        }
       }
     });
   });
+
+  // 2b. Drag & drop reorder (grip -> section/divider). Native HTML5, no deps.
+  try { setupCanvasDragDrop(container); } catch (e) { console.warn('dnd setup failed', e); }
 
   // 3. In-between Section Adders
   container.querySelectorAll('.insert-section-btn').forEach(btn => {
@@ -7650,9 +7965,16 @@ function attachCanvasEventListeners(container, state) {
     });
   });
 
-  // 6. Tech Stack Handlers
+  // 6. Tech Stack Handlers (tiles: size, drag reorder, drop add)
   container.querySelectorAll('.open-tech-picker-canvas-btn').forEach(btn => {
     btn.addEventListener('click', () => renderTechPickerModal());
+  });
+
+  container.querySelectorAll('.tile-size-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (btn.dataset.id) store.updateSectionData(btn.dataset.id, { tileSize: btn.dataset.size });
+    });
   });
 
   container.querySelectorAll('.remove-canvas-tech-btn').forEach(btn => {
@@ -7664,6 +7986,55 @@ function attachCanvasEventListeners(container, state) {
         const sec = getSec(secId);
         const list = sec?.data?.technologies || [];
         store.updateSectionData(secId, { technologies: list.filter(t => t !== tId) });
+      }
+    });
+  });
+
+  // Tile drag reorder within + across tech sections
+  container.querySelectorAll('[data-tech-dropzone]').forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      if (e.dataTransfer.types?.includes('text/readmify-tech-id') || e.dataTransfer.types?.includes('text/readmify-section-type')) return;
+      // allow tech chips
+      if ([... (e.dataTransfer.types || [])].join(' ').includes('tech') || e.dataTransfer.getData) {
+        e.preventDefault();
+      } else {
+        // Fallback: allow any dragover so drop works in most browsers
+        try { e.preventDefault(); } catch (err) {}
+      }
+    });
+    zone.addEventListener('drop', (e) => {
+      const techId = e.dataTransfer.getData('text/readmify-tech-id');
+      const fromSec = e.dataTransfer.getData('text/readmify-tech-from');
+      const toSec = zone.dataset.techDropzone;
+      if (!techId || !toSec) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const toSection = getSec(toSec);
+      if (!toSection) return;
+      // Remove from source if different section
+      if (fromSec && fromSec !== toSec) {
+        const fromSection = getSec(fromSec);
+        if (fromSection) {
+          const fl = (fromSection.data.technologies || []).filter(t => t !== techId);
+          store.updateSectionData(fromSec, { technologies: fl });
+        }
+      } else if (fromSec === toSec) {
+        // Reorder to end (simple) — full positional reorder via drag order
+        const cur = [...(toSection.data.technologies || [])].filter(t => t !== techId);
+        // Insert near drop target chip if hovering one
+        const overChip = e.target.closest?.('.tile-chip');
+        if (overChip?.dataset.techId) {
+          const at = cur.indexOf(overChip.dataset.techId);
+          cur.splice(at >= 0 ? at : cur.length, 0, techId);
+        } else cur.push(techId);
+        store.updateSectionData(toSec, { technologies: cur });
+        return;
+      }
+      const list = [...(toSection.data.technologies || [])];
+      if (!list.includes(techId)) {
+        list.push(techId);
+        store.updateSectionData(toSec, { technologies: list });
+        showToast('Tile added', 'success');
       }
     });
   });
@@ -7834,11 +8205,30 @@ function attachCanvasEventListeners(container, state) {
       if (secId) store.updateSectionData(secId, { style: sel.value });
     });
   });
+
+  // 12. Stats toggles + hero visual toggles
+  container.querySelectorAll('.stats-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const secId = btn.dataset.id || btn.closest('.interactive-section-block')?.dataset.sectionId;
+      const flag = btn.dataset.flag;
+      if (!secId || !flag) return;
+      const sec = getSec(secId);
+      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
+    });
+  });
+  container.querySelectorAll('.hero-visual-toggle').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const secId = btn.closest('.interactive-section-block')?.dataset.sectionId;
+      const flag = btn.dataset.flag;
+      if (!secId || !flag) return;
+      const sec = getSec(secId);
+      store.updateSectionData(secId, { [flag]: !(sec?.data?.[flag]) });
+    });
+  });
 }
 
-/**
- * Slide-Over Inspector Drawer Controller
- */
 function openSlideOverInspector(sectionId) {
   const panel = document.getElementById('slide-over-inspector');
   if (!panel) return;
@@ -7859,16 +8249,7 @@ function closeSlideOverInspector() {
   }
 }
 
-
 /* ==================== MODULE: components/wizard.js ==================== */
-/**
- * Readmify - Easy Guide & Deep Repository Scanner Hub
- * Smart auto-detection, live scanning visualizer, and streamlined manual setup
- */
-
-
-
-
 
 // Guide states: 'hub' | 'scanning' | 'report' | 'manual-step-1' | 'manual-step-2' | 'manual-step-3'
 let guideView = 'hub';
@@ -8155,6 +8536,16 @@ function getGuideBodyHtml() {
                 </div>
               `).join('')}
             </div>
+          </div>
+
+          <!-- Smart extras: social card, contributors, release -->
+          <div class="p-3 bg-card border border-border rounded-lg space-y-1.5 text-[11px] text-muted-foreground">
+            <span class="text-xs font-medium text-foreground">Smart extras (auto-filled, all optional)</span>
+            ${a.ogImage ? `<div class="flex items-center gap-2 pt-1"><img src="${a.ogImage}" alt="Social card" loading="lazy" class="h-10 rounded border border-border" /><span>GitHub social card will prefill your banner (off by default).</span></div>` : ''}
+            ${(a.topContributors?.length || 0) > 0 ? `<div>Top contributors: ${(a.topContributors || []).map(c => `<a href="${c.url}" class="underline">${c.login}</a>`).join(', ')}</div>` : ''}
+            ${a.latestRelease ? `<div>Latest release: <span class="text-foreground font-medium">${a.latestRelease}</span></div>` : ''}
+            ${a.homepage ? `<div>Homepage: <a href="${a.homepage}" class="underline break-all">${a.homepage}</a></div>` : ''}
+            <div class="pt-1">Tip: after Generate, open Tiles to resize, drag to reorder, or press Ctrl+K for actions.</div>
           </div>
         </div>
       `;
@@ -8447,9 +8838,6 @@ function attachGuideListeners(modal) {
   });
 }
 
-/**
- * Perform deep repository scanning with live progress updates
- */
 async function startDeepScan(repoInput) {
   const parsed = parseGitHubRepoInput(repoInput);
   if (!parsed) {
@@ -8482,12 +8870,114 @@ async function startDeepScan(repoInput) {
   }
 }
 
+/* ==================== MODULE: components/palette.js ==================== */
+
+let paletteOpen = false;
+let activeIdx = 0;
+let currentItems = [];
+
+function coreActions() {
+  return [
+    { id: 'add-section', label: 'Add section…', hint: 'Library', run: () => openSectionLibrary() },
+    { id: 'scan-repo', label: 'Scan GitHub repo…', hint: 'Deep scan', run: () => openWizard('', false) },
+    { id: 'preview', label: 'Go to Preview', hint: 'View', run: () => store.setViewMode('preview') },
+    { id: 'editor', label: 'Go to Editor', hint: 'View', run: () => store.setViewMode('canvas') },
+    { id: 'code', label: 'Go to Code', hint: 'View', run: () => store.setViewMode('raw') },
+    { id: 'copy', label: 'Copy markdown', hint: 'Export', run: () => copyToClipboard(window.__readmifyMarkdown || '', 'Markdown copied!') },
+    { id: 'download', label: 'Download README.md', hint: 'Export', run: () => downloadReadmeFile(window.__readmifyMarkdown || '', 'README.md') },
+    { id: 'import', label: 'Import README…', hint: 'File', run: () => document.getElementById('nav-import-btn')?.click() },
+    { id: 'guide', label: 'Open Quick Guide', hint: 'Help', run: () => document.getElementById('nav-wizard-btn')?.click() },
+    { id: 'theme', label: 'Toggle theme', hint: 'View', run: () => document.getElementById('theme-toggle-btn')?.click() },
+  ];
+}
+function openPalette() {
+  const bd = document.getElementById('cmd-palette-backdrop');
+  const input = document.getElementById('cmd-palette-input');
+  if (!bd || !input) return;
+  paletteOpen = true;
+  activeIdx = 0;
+  bd.classList.remove('hidden');
+  input.value = '';
+  renderPalette('');
+  setTimeout(() => input.focus(), 30);
+}
+function closePalette() {
+  const bd = document.getElementById('cmd-palette-backdrop');
+  if (bd) bd.classList.add('hidden');
+  paletteOpen = false;
+}
+function isPaletteOpen() { return paletteOpen; }
+
+function allItems(query) {
+  const q = (query || '').toLowerCase().trim();
+  const actions = coreActions().map(a => ({ kind: 'action', title: a.label, sub: a.hint, run: a.run, id: a.id }));
+  const secs = (SECTION_CATALOG || []).map(c => ({
+    kind: 'section', title: `Add: ${c.title}`, sub: c.desc || c.category,
+    type: c.type, id: `sec-${c.type}`
+  }));
+  const all = [...actions, ...secs];
+  if (!q) return all.slice(0, 14);
+  return all.filter(i => `${i.title} ${i.sub || ''}`.toLowerCase().includes(q)).slice(0, 14);
+}
+
+function renderPalette(query) {
+  const list = document.getElementById('cmd-palette-list');
+  if (!list) return;
+  currentItems = allItems(query);
+  list.innerHTML = currentItems.map((it, idx) => `
+    <div class="cmd-item ${idx === activeIdx ? 'active' : ''} flex items-center justify-between px-2.5 py-2 rounded-md cursor-pointer"
+      data-idx="${idx}" ${it.kind === 'section' ? `draggable="true" data-section-type="${it.type}"` : ''}>
+      <span class="font-medium ${idx === activeIdx ? 'text-foreground' : 'text-zinc-200'}">${it.title}</span>
+      <span class="text-[10px] text-muted-foreground">${it.sub || ''}</span>
+    </div>`).join('') || `<div class="px-3 py-6 text-center text-muted-foreground">No matches</div>`;
+
+  list.querySelectorAll('.cmd-item').forEach(el => {
+    el.addEventListener('click', () => runItem(parseInt(el.dataset.idx, 10)));
+    el.addEventListener('dragstart', (e) => {
+      const it = currentItems[parseInt(el.dataset.idx, 10)];
+      if (it?.kind === 'section') {
+        e.dataTransfer.setData('text/readmify-section-type', it.type);
+        e.dataTransfer.effectAllowed = 'copy';
+      }
+    });
+  });
+}
+
+function runItem(idx) {
+  const it = currentItems[idx];
+  if (!it) return;
+  closePalette();
+  if (it.kind === 'action' && typeof it.run === 'function') it.run();
+  else if (it.kind === 'section') store.addSectionFromType(it.type);
+}
+function initPalette() {
+  const bd = document.getElementById('cmd-palette-backdrop');
+  const input = document.getElementById('cmd-palette-input');
+  const btn = document.getElementById('nav-palette-btn');
+  if (!bd || !input) return;
+  if (bd.dataset.bound) return;
+  bd.dataset.bound = 'true';
+
+  btn?.addEventListener('click', openPalette);
+  bd.addEventListener('click', (e) => { if (e.target === bd) closePalette(); });
+  input.addEventListener('input', () => { activeIdx = 0; renderPalette(input.value); });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, currentItems.length - 1); renderPalette(input.value); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); renderPalette(input.value); }
+    else if (e.key === 'Enter') { e.preventDefault(); runItem(activeIdx); }
+    else if (e.key === 'Escape') closePalette();
+  });
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (isPaletteOpen()) closePalette(); else openPalette();
+    }
+    if (e.key === 'Escape' && isPaletteOpen()) closePalette();
+  });
+}
 
 /* ==================== MODULE: app.js ==================== */
-/**
- * Readmify - Main Application Controller (v3 with Interactive Living Canvas)
- * Coordinates store state, interactive canvas, sidebar, preview rendering, GitHub API, and export actions
- */
+
 function escapeHtml(str) {
   if (!str) return '';
   return String(str)
@@ -8510,6 +9000,9 @@ let previewBody;
 let rawMarkdownTextarea;
 let currentMarkdown = '';
 
+let markdownDebounceTimer = null;
+let pendingMarkdownState = null;
+
 function initApp() {
   canvasViewContainer = document.getElementById('canvas-view-container');
   canvasBodyContainer = document.getElementById('interactive-canvas-body');
@@ -8531,9 +9024,32 @@ function initApp() {
   setupNavbarControls();
   setupViewModeSwitcher();
   setupImportModal();
+  setupOverflowAndExport();
+  setupGlobalDrop();
+  setupSavedIndicator();
+  try { initPalette(); } catch (e) { console.warn('palette init failed', e); }
 
-  // Subscribe to store updates
-  store.subscribe(renderApp);
+  // Subscribe to store updates (debounce typing path for smoothness)
+  store.subscribe((state, meta) => {
+    if (meta && meta.type === 'UPDATE_SECTION_DATA' && !meta.force) {
+      pendingMarkdownState = { state, meta };
+      if (markdownDebounceTimer) return;
+      markdownDebounceTimer = setTimeout(() => {
+        markdownDebounceTimer = null;
+        const p = pendingMarkdownState;
+        pendingMarkdownState = null;
+        if (p) renderApp(p.state, p.meta);
+      }, 220);
+      // Instant lightweight pill-active update only (no full rebuild)
+      return;
+    }
+    if (markdownDebounceTimer) {
+      clearTimeout(markdownDebounceTimer);
+      markdownDebounceTimer = null;
+      pendingMarkdownState = null;
+    }
+    renderApp(state, meta);
+  });
 
   // Initial render
   renderApp(store.getState(), { force: true });
@@ -8552,10 +9068,12 @@ function renderApp(state, meta = {}) {
 
   // 1. Always update markdown representation & health score
   currentMarkdown = generateMarkdown(state.sections);
-  updateHealthAndStats(state.sections, currentMarkdown);
-  if (rawMarkdownTextarea) {
+  try { window.__readmifyMarkdown = currentMarkdown; } catch (e) {}
+  // Only touch raw textarea when visible or forced (avoids layout thrash while typing)
+  if (rawMarkdownTextarea && (mode === 'raw' || meta.force)) {
     rawMarkdownTextarea.value = currentMarkdown;
   }
+  updateHealthAndStats(state.sections, currentMarkdown);
 
   // 2. Render Section Pills & Drawer
   renderSidebar(state, meta);
@@ -8621,28 +9139,33 @@ function renderSidebar(state, meta = {}) {
       });
     });
 
-    // Auto-scroll active pill into view
-    const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
-    if (activePill) {
-      activePill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+    // Auto-scroll active pill into view only on explicit navigation (avoids scroll thrash while typing)
+    if (meta && (meta.type === 'SET_ACTIVE_SECTION' || meta.type === 'ADD_SECTION' || meta.force === true && meta.type !== 'UPDATE_SECTION_DATA')) {
+      const activePill = sectionPillBar.querySelector(`.section-pill[data-section-id="${activeSectionId}"]`);
+      if (activePill) {
+        try { activePill.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'nearest' }); } catch (e) {}
+      }
     }
   }
 
-  // 1B. Render Drawer List Items
+  // 1B. Render Drawer List Items (draggable outline)
   if (sectionListContainer) {
     sectionListContainer.innerHTML = sections.map((sec, idx) => {
       const isActive = sec.id === activeSectionId;
       return `
-        <div 
+        <div
           class="section-item group flex items-center justify-between px-2.5 py-1.5 rounded-md border cursor-pointer select-none transition-all ${
-            isActive 
-              ? 'active bg-muted border-border text-foreground font-medium shadow-xs' 
+            isActive
+              ? 'active bg-muted border-border text-foreground font-medium shadow-xs'
               : 'bg-transparent border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/50'
           } ${!sec.enabled ? 'opacity-50' : ''}"
           data-section-id="${sec.id}"
           data-index="${idx}"
+          draggable="true"
+          title="Drag to reorder"
         >
           <div class="flex items-center gap-2 flex-1 min-w-0">
+            <span class="drag-grip text-zinc-600 text-[10px] cursor-grab">⠿</span>
             <span class="text-zinc-500 text-[10px] font-mono w-3.5">${idx + 1}</span>
             <span class="text-xs truncate">${escapeHtml(sec.title)}</span>
           </div>
@@ -8693,6 +9216,37 @@ function renderSidebar(state, meta = {}) {
         store.toggleSection(cb.dataset.id, cb.checked);
       });
     });
+
+    // Drawer drag reorder (native, no deps)
+    if (!sectionListContainer.dataset.dndBound) {
+      sectionListContainer.dataset.dndBound = 'true';
+      let dragIdx = null;
+      sectionListContainer.addEventListener('dragstart', (e) => {
+        const row = e.target.closest?.('.section-item');
+        if (!row) return;
+        dragIdx = parseInt(row.dataset.index, 10);
+        e.dataTransfer.setData('text/readmify-drawer-index', String(dragIdx));
+        e.dataTransfer.setData('text/readmify-section-id', row.dataset.sectionId);
+        e.dataTransfer.effectAllowed = 'move';
+        row.classList.add('dragging');
+      });
+      sectionListContainer.addEventListener('dragend', () => {
+        dragIdx = null;
+        sectionListContainer.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+      });
+      sectionListContainer.addEventListener('dragover', (e) => {
+        if (e.target.closest?.('.section-item')) e.preventDefault();
+      });
+      sectionListContainer.addEventListener('drop', (e) => {
+        const over = e.target.closest?.('.section-item');
+        if (!over) return;
+        e.preventDefault();
+        const to = parseInt(over.dataset.index, 10);
+        const fromStr = e.dataTransfer.getData('text/readmify-drawer-index');
+        const from = fromStr !== '' ? parseInt(fromStr, 10) : dragIdx;
+        if (from !== null && !isNaN(from) && from !== to) store.reorderSections(from, to);
+      });
+    }
   }
 
   // 1C. Pill Bar & Drawer Buttons (Bind once)
@@ -8801,12 +9355,144 @@ function updateHealthAndStats(sections, markdownText) {
 
   if (scoreTip) {
     if (health.tips.length > 0) {
-      scoreTip.textContent = `Tip: ${health.tips[0]}`;
+      const top = health.tips[0];
+      scoreTip.innerHTML = '';
+      const tipSpan = document.createElement('span');
+      tipSpan.textContent = `Tip: ${typeof top === 'string' ? top : top.text} `;
+      scoreTip.appendChild(tipSpan);
+      // One-click suggestion: enable missing section directly
+      if (top && typeof top === 'object' && top.action) {
+        const btn = document.createElement('button');
+        btn.id = 'health-suggest-btn';
+        btn.className = 'ml-2 px-2 py-0.5 rounded border border-border bg-muted text-foreground text-[11px] font-medium';
+        btn.textContent = top.actionLabel || 'Fix it';
+        btn.addEventListener('click', () => {
+          try {
+            if (top.action.type === 'enable' && top.action.sectionType) {
+              store.addSectionFromType(top.action.sectionType);
+              showToast('Section enabled', 'success');
+            } else if (top.action.type === 'view' && top.action.mode) {
+              store.setViewMode(top.action.mode);
+            }
+          } catch (e) { console.warn(e); }
+        });
+        scoreTip.appendChild(btn);
+      }
       scoreTip.classList.remove('hidden');
     } else {
       scoreTip.textContent = 'Your README is in top-tier shape!';
     }
   }
+}
+
+function setupOverflowAndExport() {
+  const overflowBtn = document.getElementById('nav-overflow-btn');
+  const overflowMenu = document.getElementById('nav-overflow-menu');
+  const exportBtn = document.getElementById('export-menu-btn');
+  const exportMenu = document.getElementById('export-menu');
+  const toggle = (el) => el?.classList.toggle('hidden');
+  overflowBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    exportMenu?.classList.add('hidden');
+    toggle(overflowMenu);
+  });
+  exportBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    overflowMenu?.classList.add('hidden');
+    toggle(exportMenu);
+  });
+  document.addEventListener('click', () => {
+    overflowMenu?.classList.add('hidden');
+    exportMenu?.classList.add('hidden');
+  });
+  overflowMenu?.querySelectorAll('[data-overflow]')?.forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.overflow;
+      if (k === 'guide') document.getElementById('nav-wizard-btn')?.click();
+      else if (k === 'import') document.getElementById('nav-import-btn')?.click();
+      else if (k === 'theme') document.getElementById('theme-toggle-btn')?.click();
+      else if (k === 'copy') document.getElementById('nav-copy-btn')?.click();
+      else if (k === 'reset') document.getElementById('reset-template-btn')?.click();
+    });
+  });
+  document.getElementById('export-menu-copy')?.addEventListener('click', () => document.getElementById('nav-copy-btn')?.click());
+  document.getElementById('export-menu-download')?.addEventListener('click', () => document.getElementById('nav-download-btn')?.click());
+  document.getElementById('export-menu-license')?.addEventListener('click', () => {
+    // Trigger license download from inspector/canvas if present, else toast
+    const btn = document.querySelector('.download-canvas-lic-btn, #download-license-file-btn');
+    if (btn) btn.click();
+    else showToast('Open License section → Download LICENSE', 'info');
+  });
+}
+
+function setupSavedIndicator() {
+  const dot = document.getElementById('save-state-dot');
+  const txt = document.getElementById('save-state-text');
+  if (!dot && !txt) return;
+  const markDirty = () => {
+    if (dot) { dot.classList.remove('saved'); dot.classList.add('dirty'); }
+    if (txt) txt.textContent = 'Saving…';
+  };
+  const markSaved = () => {
+    if (dot) { dot.classList.remove('dirty'); dot.classList.add('saved'); }
+    if (txt) {
+      const d = new Date();
+      txt.textContent = `Saved ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    }
+  };
+  // Any store notify => dirty, debounced save event => saved
+  const origNotify = store.notify.bind(store);
+  store.notify = (meta) => { try { markDirty(); } catch (e) {} return origNotify(meta); };
+  window.addEventListener('readmify:saved', markSaved);
+  // Flush on unload so no work is lost
+  window.addEventListener('beforeunload', () => { try { store.flushSave(); } catch (e) {} });
+}
+
+function setupGlobalDrop() {
+  const overlay = document.getElementById('global-drop-overlay');
+  const viewport = document.getElementById('canvas-scroll-viewport');
+  let dragDepth = 0;
+  const show = () => overlay && (overlay.classList.remove('hidden'), overlay.classList.add('flex'));
+  const hide = () => overlay && (overlay.classList.add('hidden'), overlay.classList.remove('flex'));
+  window.addEventListener('dragenter', (e) => {
+    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
+    dragDepth++;
+    show();
+    viewport?.classList.add('global-drag-over');
+  });
+  window.addEventListener('dragleave', () => {
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) { hide(); viewport?.classList.remove('global-drag-over'); }
+  });
+  window.addEventListener('dragover', (e) => { if (overlay && !overlay.classList.contains('hidden')) e.preventDefault(); });
+  window.addEventListener('drop', (e) => {
+    if (!overlay || overlay.classList.contains('hidden')) return;
+    // Only handle file drops here; section-type drops are handled on canvas dividers
+    if (!e.dataTransfer || ![... (e.dataTransfer.types || [])].includes('Files')) return;
+    e.preventDefault();
+    dragDepth = 0;
+    hide();
+    viewport?.classList.remove('global-drag-over');
+    const file = e.dataTransfer.files?.[0];
+    if (!file || !file.type.startsWith('image/')) {
+      if (file) showToast('Only images can be dropped as banners', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const url = evt.target.result;
+      const state = store.getState();
+      // Prefer hero, fallback to demo, else create hero
+      let target = state.sections.find(s => s.enabled && s.type === SECTION_TYPES.HERO)
+        || state.sections.find(s => s.enabled && s.type === 'demo')
+        || state.sections.find(s => s.type === SECTION_TYPES.HERO);
+      if (!target) return;
+      if (target.type === SECTION_TYPES.HERO) store.updateSectionData(target.id, { showLogo: true, logoUrl: url });
+      else store.updateSectionData(target.id, { imageUrl: url });
+      showToast('Banner added via drag & drop!', 'success');
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // --- 3. NAVBAR CONTROLS ---
@@ -9004,6 +9690,37 @@ function setupImportModal() {
     }
   });
 
+  // Drag & drop .md/.txt files onto import modal + textarea
+  const dropZone = modal.querySelector('.bg-card');
+  const handleFile = (file) => {
+    if (!file) return;
+    if (!/(\.md|\.markdown|\.txt)$/i.test(file.name) && file.type !== 'text/markdown' && !file.type.startsWith('text/')) {
+      showToast('Drop a .md / .txt file', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (evt) => { if (importTextarea) importTextarea.value = evt.target.result; };
+    reader.readAsText(file);
+  };
+  ['dragover', 'dragenter'].forEach(ev => modal.addEventListener(ev, (e) => {
+    e.preventDefault();
+    dropZone?.classList.add('drag-over');
+  }));
+  ['dragleave', 'drop'].forEach(ev => modal.addEventListener(ev, (e) => {
+    if (ev === 'drop') {
+      e.preventDefault();
+      const f = e.dataTransfer?.files?.[0];
+      if (f) handleFile(f);
+    }
+    dropZone?.classList.remove('drag-over');
+  }));
+  importTextarea?.addEventListener('drop', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const f = e.dataTransfer?.files?.[0];
+    if (f) handleFile(f);
+  });
+
   applyBtn?.addEventListener('click', () => {
     const text = importTextarea?.value || '';
     if (!text.trim()) {
@@ -9042,7 +9759,6 @@ if (document.readyState === 'loading') {
 } else {
   initApp();
 }
-
 
 // Robust DOM Ready execution
 if (document.readyState === 'loading') {
