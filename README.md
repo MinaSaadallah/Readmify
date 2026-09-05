@@ -3,12 +3,15 @@
   <br/>
   <h1>Readmify 🚀</h1>
   <p><strong>The easiest, ultra-lightweight GitHub README builder on the web.</strong></p>
+  <p>
+    <a href="https://minasaadallah.github.io/Readmify/"><strong>🌐 Launch Web App (Instant Free Access) ↗</strong></a>
+  </p>
 
   <div>
+    <a href="https://minasaadallah.github.io/Readmify/"><img src="https://img.shields.io/badge/Live_App-Open_Readmify-2563eb?style=for-the-badge&logo=githubpages&logoColor=white" alt="Live App" /></a>
     <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License" />
     <img src="https://img.shields.io/badge/Zero--Build-100%25-brightgreen?style=for-the-badge" alt="Zero-Build" />
-    <img src="https://img.shields.io/badge/GitHub--Pages-Ready-orange?style=for-the-badge&logo=github" alt="GitHub Pages Ready" />
-    <img src="https://img.shields.io/badge/Tech--Badges-130+-purple?style=for-the-badge" alt="130+ Badges" />
+    <img src="https://img.shields.io/badge/Tech--Badges-140+-purple?style=for-the-badge" alt="140+ Badges" />
   </div>
 </div>
 
