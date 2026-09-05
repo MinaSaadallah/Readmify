@@ -30,37 +30,36 @@ Creating a stunning GitHub `README.md` should not take hours of wrestling with M
 
 ---
 
-## ⚡ Instant Local Run
+## ⚡ Instant Direct Usage
 
-Because Readmify is built with 100% pure web standards:
-1. Clone or download this repository.
-2. Double-click `index.html` to open it in Chrome, Edge, Safari, or Firefox.
-3. That's it! It runs completely offline and saves drafts automatically in your browser's `localStorage`.
+Readmify requires **zero installation, zero build tools, and no server**:
+
+1. **Directly open `index.html`** in any web browser (Chrome, Edge, Safari, Firefox).
+2. **100% Client-Side & Private**: All editing, image manipulation, and GitHub scanning runs entirely inside your browser. Your drafts are automatically saved in `localStorage`.
+3. **Works Anywhere**: Fully functional offline directly from your local disk or anywhere you place the files.
 
 ---
 
-## 🌐 2-Step GitHub Pages Deployment
+## 🎯 How to Use Readmify
 
-Hosting Readmify for free on GitHub Pages takes under 30 seconds:
+1. **⚡ Deep Scan Your Repo**:
+   - Paste your GitHub repo name or URL (e.g. `owner/repo`) into the Deep Scanner.
+   - Readmify automatically inspects dependencies, manifest files, scripts, and directory structure to pre-fill your README.
 
-1. **Push this repository to GitHub**:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: Readmify v3.0 release"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/readmify.git
-   git push -u origin main
-   ```
+2. **🎨 Customize Sections & Tech Stack**:
+   - Add, reorder, or toggle any of the 16+ section modules from the **Section Library**.
+   - Pick your tech stack badges from over 140+ technologies with custom sizing, alignment, and official documentation links.
 
-2. **Enable GitHub Pages**:
-   * Go to your repository on GitHub.
-   * Click **Settings** → **Pages** (in the left sidebar).
-   * Under **Build and deployment** → **Source**, select **Deploy from a branch**.
-   * Under **Branch**, select `main` and `/ (root)`.
-   * Click **Save**.
+3. **🖼️ Pro Image Studio**:
+   - Upload or paste banners and screenshot demos.
+   - Crop, resize, wrap in macOS browser or terminal mockup frames, adjust visual filters, and download.
 
-Your site will be live immediately at `https://<your-username>.github.io/readmify/`!
+4. **⚖️ Open-Source License Studio**:
+   - Choose from 9 standard legal licenses with full permissions/limitations breakdown.
+   - 1-click download your root `LICENSE` file ready to drop into your repo root.
+
+5. **💾 Export & Done**:
+   - 1-click copy your formatted markdown or click **Download README.md** to place directly into your project!
 
 ---
 
@@ -69,7 +68,7 @@ Your site will be live immediately at `https://<your-username>.github.io/readmif
 ```
 readmify/
 ├── index.html                    # Main HTML5 layout, top pill bar, and modal shells
-├── README.md                     # Documentation and deployment guide
+├── README.md                     # Documentation and user guide
 ├── assets/
 │   └── favicon.svg               # SVG brand logo and favicon
 ├── css/
